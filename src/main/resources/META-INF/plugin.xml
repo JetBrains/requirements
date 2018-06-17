@@ -21,6 +21,7 @@
                                   implementationClass="ru.meanmail.RequirementsSyntaxHighlighterFactory"/>
         <psiStructureViewFactory language="requirements.txt"
                                  implementationClass="ru.meanmail.RequirementsStructureViewFactory"/>
+        <commenter language="requirements.txt" implementationClass="ru.meanmail.RequirementsCommenter"/>
     </extensions>
     <actions>
 
