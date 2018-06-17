@@ -23,25 +23,25 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
     boolean r;
     b = adapt_builder_(t, b, this, null);
     Marker m = enter_section_(b, 0, _COLLAPSE_, null);
-    if (t == EDITABLE_REQUIREMENT_STMT) {
+    if (t == Companion.getEDITABLE_REQUIREMENT_STMT()) {
       r = editable_requirement_stmt(b, 0);
     }
-    else if (t == EXTRA) {
+    else if (t == Companion.getEXTRA()) {
       r = extra(b, 0);
     }
-    else if (t == PACKAGE_STMT) {
+    else if (t == Companion.getPACKAGE_STMT()) {
       r = package_stmt(b, 0);
     }
-    else if (t == PATH_STMT) {
+    else if (t == Companion.getPATH_STMT()) {
       r = path_stmt(b, 0);
     }
-    else if (t == REQUIREMENT_STMT) {
+    else if (t == Companion.getREQUIREMENT_STMT()) {
       r = requirement_stmt(b, 0);
     }
-    else if (t == SIMPLE_PACKAGE_STMT) {
+    else if (t == Companion.getSIMPLE_PACKAGE_STMT()) {
       r = simple_package_stmt(b, 0);
     }
-    else if (t == URL_STMT) {
+    else if (t == Companion.getURL_STMT()) {
       r = url_stmt(b, 0);
     }
     else {
@@ -58,12 +58,12 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
   // REQUIREMENT_EDITABLE url_stmt
   public static boolean editable_requirement_stmt(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "editable_requirement_stmt")) return false;
-    if (!nextTokenIs(b, REQUIREMENT_EDITABLE)) return false;
+    if (!nextTokenIs(b, Companion.getREQUIREMENT_EDITABLE())) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, REQUIREMENT_EDITABLE);
+    r = consumeToken(b, Companion.getREQUIREMENT_EDITABLE());
     r = r && url_stmt(b, l + 1);
-    exit_section_(b, m, EDITABLE_REQUIREMENT_STMT, r);
+    exit_section_(b, m, Companion.getEDITABLE_REQUIREMENT_STMT(), r);
     return r;
   }
 
@@ -71,11 +71,11 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
   // LSBRACE PACKAGE RSBRACE
   public static boolean extra(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "extra")) return false;
-    if (!nextTokenIs(b, LSBRACE)) return false;
+    if (!nextTokenIs(b, Companion.getLSBRACE())) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, LSBRACE, PACKAGE, RSBRACE);
-    exit_section_(b, m, EXTRA, r);
+    r = consumeTokens(b, 0, Companion.getLSBRACE(), Companion.getPACKAGE(), Companion.getRSBRACE());
+    exit_section_(b, m, Companion.getEXTRA(), r);
     return r;
   }
 
@@ -85,8 +85,8 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "item_")) return false;
     boolean r;
     r = stmt(b, l + 1);
-    if (!r) r = consumeToken(b, COMMENT);
-    if (!r) r = consumeToken(b, CRLF);
+    if (!r) r = consumeToken(b, Companion.getCOMMENT());
+    if (!r) r = consumeToken(b, Companion.getCRLF());
     return r;
   }
 
@@ -94,12 +94,12 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
   // simple_package_stmt extra?
   public static boolean package_stmt(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "package_stmt")) return false;
-    if (!nextTokenIs(b, PACKAGE)) return false;
+    if (!nextTokenIs(b, Companion.getPACKAGE())) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = simple_package_stmt(b, l + 1);
     r = r && package_stmt_1(b, l + 1);
-    exit_section_(b, m, PACKAGE_STMT, r);
+    exit_section_(b, m, Companion.getPACKAGE_STMT(), r);
     return r;
   }
 
@@ -114,11 +114,11 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
   // SCHEMA? PATH
   public static boolean path_stmt(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "path_stmt")) return false;
-    if (!nextTokenIs(b, "<path stmt>", PATH, SCHEMA)) return false;
+    if (!nextTokenIs(b, "<path stmt>", Companion.getPATH(), Companion.getSCHEMA())) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, PATH_STMT, "<path stmt>");
+    Marker m = enter_section_(b, l, _NONE_, Companion.getPATH_STMT(), "<path stmt>");
     r = path_stmt_0(b, l + 1);
-    r = r && consumeToken(b, PATH);
+    r = r && consumeToken(b, Companion.getPATH());
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -126,7 +126,7 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
   // SCHEMA?
   private static boolean path_stmt_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "path_stmt_0")) return false;
-    consumeToken(b, SCHEMA);
+    consumeToken(b, Companion.getSCHEMA());
     return true;
   }
 
@@ -134,11 +134,11 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
   // REQUIREMENT FILENAME
   public static boolean requirement_stmt(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "requirement_stmt")) return false;
-    if (!nextTokenIs(b, REQUIREMENT)) return false;
+    if (!nextTokenIs(b, Companion.getREQUIREMENT())) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, REQUIREMENT, FILENAME);
-    exit_section_(b, m, REQUIREMENT_STMT, r);
+    r = consumeTokens(b, 0, Companion.getREQUIREMENT(), Companion.getFILENAME());
+    exit_section_(b, m, Companion.getREQUIREMENT_STMT(), r);
     return r;
   }
 
@@ -158,12 +158,12 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
   // (PACKAGE SEPARATOR VERSION) | PACKAGE
   public static boolean simple_package_stmt(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "simple_package_stmt")) return false;
-    if (!nextTokenIs(b, PACKAGE)) return false;
+    if (!nextTokenIs(b, Companion.getPACKAGE())) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = simple_package_stmt_0(b, l + 1);
-    if (!r) r = consumeToken(b, PACKAGE);
-    exit_section_(b, m, SIMPLE_PACKAGE_STMT, r);
+    if (!r) r = consumeToken(b, Companion.getPACKAGE());
+    exit_section_(b, m, Companion.getSIMPLE_PACKAGE_STMT(), r);
     return r;
   }
 
@@ -172,7 +172,7 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "simple_package_stmt_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, PACKAGE, SEPARATOR, VERSION);
+    r = consumeTokens(b, 0, Companion.getPACKAGE(), Companion.getSEPARATOR(), Companion.getVERSION());
     exit_section_(b, m, null, r);
     return r;
   }
@@ -204,8 +204,8 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
   private static boolean stmt_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "stmt_1")) return false;
     boolean r;
-    r = consumeToken(b, CRLF);
-    if (!r) r = consumeToken(b, EOF);
+    r = consumeToken(b, Companion.getCRLF());
+    if (!r) r = consumeToken(b, Companion.getEOF());
     return r;
   }
 
@@ -213,9 +213,9 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
   // path_stmt BRANCH? (EGG simple_package_stmt)?
   public static boolean url_stmt(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "url_stmt")) return false;
-    if (!nextTokenIs(b, "<url stmt>", PATH, SCHEMA)) return false;
+    if (!nextTokenIs(b, "<url stmt>", Companion.getPATH(), Companion.getSCHEMA())) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, URL_STMT, "<url stmt>");
+    Marker m = enter_section_(b, l, _NONE_, Companion.getURL_STMT(), "<url stmt>");
     r = path_stmt(b, l + 1);
     r = r && url_stmt_1(b, l + 1);
     r = r && url_stmt_2(b, l + 1);
@@ -226,7 +226,7 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
   // BRANCH?
   private static boolean url_stmt_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "url_stmt_1")) return false;
-    consumeToken(b, BRANCH);
+    consumeToken(b, Companion.getBRANCH());
     return true;
   }
 
@@ -242,7 +242,7 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "url_stmt_2_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, EGG);
+    r = consumeToken(b, Companion.getEGG());
     r = r && simple_package_stmt(b, l + 1);
     exit_section_(b, m, null, r);
     return r;

@@ -12,9 +12,6 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <fileTypeFactory implementation="ru.meanmail.RequirementsFileTypeFactory"/>
-        <completion.contributor language="requirements.txt"
-                                implementationClass="ru.meanmail.RequirementsCompletionContributor"/>
-
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij.lang">
@@ -22,8 +19,6 @@
                           implementationClass="ru.meanmail.RequirementsParserDefinition"/>
         <syntaxHighlighterFactory language="requirements.txt"
                                   implementationClass="ru.meanmail.RequirementsSyntaxHighlighterFactory"/>
-        <findUsagesProvider language="requirements.txt"
-                            implementationClass="ru.meanmail.RequirementsFindUsageProvider"/>
         <psiStructureViewFactory language="requirements.txt"
                                  implementationClass="ru.meanmail.RequirementsStructureViewFactory"/>
     </extensions>
