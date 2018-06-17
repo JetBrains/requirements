@@ -1,0 +1,33 @@
+<idea-plugin>
+    <id>ru.meanmail.plugin.requirements</id>
+    <name>Requirements</name>
+    <version>SNAPSHOT</version>
+    <idea-version since-build="173"/>
+    <vendor email="plugin@meanmail.ru" url="https://meanmail.ru">meanmail</vendor>
+    <description>
+        Python requirements.txt
+    </description>
+
+    <depends>com.intellij.modules.lang</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileTypeFactory implementation="ru.meanmail.RequirementsFileTypeFactory"/>
+        <completion.contributor language="requirements.txt"
+                                implementationClass="ru.meanmail.RequirementsCompletionContributor"/>
+
+    </extensions>
+
+    <extensions defaultExtensionNs="com.intellij.lang">
+        <parserDefinition language="requirements.txt"
+                          implementationClass="ru.meanmail.RequirementsParserDefinition"/>
+        <syntaxHighlighterFactory language="requirements.txt"
+                                  implementationClass="ru.meanmail.RequirementsSyntaxHighlighterFactory"/>
+        <findUsagesProvider language="requirements.txt"
+                            implementationClass="ru.meanmail.RequirementsFindUsageProvider"/>
+        <psiStructureViewFactory language="requirements.txt"
+                                 implementationClass="ru.meanmail.RequirementsStructureViewFactory"/>
+    </extensions>
+    <actions>
+
+    </actions>
+</idea-plugin>

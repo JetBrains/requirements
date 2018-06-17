@@ -1,0 +1,41 @@
+{
+  parserClass="ru.meanmail.psi.parser.RequirementsParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Requirements"
+  psiImplClassSuffix="Impl"
+  psiPackage="ru.meanmail.psi"
+  psiImplPackage="ru.meanmail.psi.impl"
+
+  elementTypeHolderClass="ru.meanmail.psi.RequirementsTypes"
+  elementTypeClass="ru.meanmail.psi.RequirementsElementType"
+  tokenTypeClass="ru.meanmail.psi.RequirementsTokenType"
+
+  psiImplUtilClass="ru.meanmail.psi.RequirementsPsiImplUtil"
+}
+
+requirementsFile ::= item_*
+
+private item_ ::= (stmt|COMMENT|CRLF)
+
+private stmt ::= (package_stmt|requirement_stmt|editable_requirement_stmt|url_stmt) (CRLF|EOF)
+
+package_stmt ::= simple_package_stmt extra? {mixin="ru.meanmail.psi.impl.RequirementsNamedElementImpl"
+                                             implements="ru.meanmail.psi.RequirementsNamedElement"
+                                             methods=[getPackageName getVersion getExtraPackage
+                                             getName setName getNameIdentifier]}
+simple_package_stmt ::= (PACKAGE SEPARATOR VERSION) | PACKAGE
+extra ::= LSBRACE PACKAGE RSBRACE
+requirement_stmt ::= REQUIREMENT FILENAME {mixin="ru.meanmail.psi.impl.RequirementsNamedElementImpl"
+                                                  implements="ru.meanmail.psi.RequirementsNamedElement"
+                                                  methods=[getFilename getName setName getNameIdentifier]}
+path_stmt ::= SCHEMA? PATH
+url_stmt ::= path_stmt BRANCH? (EGG simple_package_stmt)? {mixin="ru.meanmail.psi.impl.RequirementsNamedElementImpl"
+                                                                  implements="ru.meanmail.psi.RequirementsNamedElement"
+                                                                  methods=[getURL getBranch getEgg
+                                                                  getName setName getNameIdentifier]}
+editable_requirement_stmt ::= REQUIREMENT_EDITABLE url_stmt {mixin="ru.meanmail.psi.impl.RequirementsNamedElementImpl"
+                                                            implements="ru.meanmail.psi.RequirementsNamedElement"
+                                                            methods=[getURL getBranch getEgg
+                                                            getName setName getNameIdentifier]}
