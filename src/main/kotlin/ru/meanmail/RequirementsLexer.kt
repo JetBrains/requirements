@@ -58,9 +58,7 @@ internal class RequirementsLexer
     /** denotes if the user-EOF-code has already been executed  */
     private var zzEOFDone: Boolean = false
     
-    override fun getTokenStart(): Int {
-        return zzStartRead
-    }
+    override fun getTokenStart() = zzStartRead
     
     override fun getTokenEnd(): Int {
         return tokenStart + yylength()
@@ -84,18 +82,12 @@ internal class RequirementsLexer
      *
      * @exception   java.io.IOException  if any I/O-Error occurs
      */
-    @Throws(java.io.IOException::class)
-    private fun zzRefill(): Boolean {
-        return true
-    }
-    
+    private fun zzRefill() = true
     
     /**
      * Returns the current lexical state.
      */
-    override fun yystate(): Int {
-        return zzLexicalState
-    }
+    override fun yystate() = zzLexicalState
     
     
     /**
@@ -155,11 +147,10 @@ internal class RequirementsLexer
      * @param   errorCode  the code of the errormessage to display
      */
     private fun zzScanError(errorCode: Int) {
-        var message: String
-        try {
-            message = ZZ_ERROR_MSG[errorCode]
+        val message = try {
+            ZZ_ERROR_MSG[errorCode]
         } catch (e: ArrayIndexOutOfBoundsException) {
-            message = ZZ_ERROR_MSG[ZZ_UNKNOWN_ERROR]
+            ZZ_ERROR_MSG[ZZ_UNKNOWN_ERROR]
         }
         
         throw Error(message)
@@ -398,18 +389,15 @@ internal class RequirementsLexer
     companion object {
         
         /** This character denotes the end of file  */
-        val YYEOF = -1
-        
-        /** initial size of the lookahead buffer  */
-        private val ZZ_BUFFERSIZE = 16384
+        const val YYEOF = -1
         
         /** lexical states  */
-        val YYINITIAL = 0
-        val WAITING_VERSION = 2
-        val WAITING_FILENAME = 4
-        val WAITING_URL = 6
-        val WAITING_PATH = 8
-        val WAITING_EGG = 10
+        const val YYINITIAL = 0
+        const val WAITING_VERSION = 2
+        const val WAITING_FILENAME = 4
+        const val WAITING_URL = 6
+        const val WAITING_PATH = 8
+        const val WAITING_EGG = 10
         
         /**
          * ZZ_LEXSTATE[l] is the state in the DFA for the lexical state l
@@ -429,7 +417,7 @@ internal class RequirementsLexer
         }
         
         /* The ZZ_CMAP_Z table has 1088 entries */
-        val ZZ_CMAP_Z = zzUnpackCMap(
+        private val ZZ_CMAP_Z = zzUnpackCMap(
                 "\u0001\u0000\u0001\u0001\u0001\u0002\u0001\u0003\u0001\u0004\u0001\u0005\u0001\u0006\u0001\u0007\u0001\u0008\u0001\u0009\u0001\u000a\u0001\u000b\u0001\u000c\u0006\u000d\u0001\u000e\u0013\u000d" +
                         "\u0001\u000f\u0001\u000d\u0001\u0010\u0001\u0011\u000a\u000d\u0001\u0012\u0008\u000a\u0001\u0013\u0001\u0014\u0001\u0015\u0001\u0016\u0001\u0017\u0001\u0018\u0001\u0019\u0001" +
                         "\u001a\u0001\u001b\u0001\u001c\u0001\u001d\u0001\u001e\u0002\u000a\u0001\u000d\u0001\u001f\u0003\u000a\u0001\u0020\u0008\u000a\u0001\u0021\u0001\u0022\u0005\u000d\u0001\u0023" +
@@ -438,7 +426,7 @@ internal class RequirementsLexer
                         "\u000a")
         
         /* The ZZ_CMAP_Y table has 3328 entries */
-        val ZZ_CMAP_Y = zzUnpackCMap(
+        private val ZZ_CMAP_Y = zzUnpackCMap(
                 "\u0001\u0000\u0001\u0001\u0001\u0002\u0001\u0003\u0001\u0004\u0001\u0005\u0001\u0006\u0001\u0007\u0001\u0008\u0001\u0001\u0001\u0009\u0001\u000a\u0001\u000b\u0001\u000c\u0001\u000b\u0001\u000c\u001c" +
                         "\u000b\u0001\u000d\u0001\u000e\u0001\u000f\u0001\u0001\u0007\u000b\u0001\u0010\u0001\u0011\u0001\u000b\u0001\u0012\u0004\u000b\u0001\u0013\u0008\u000b\u0001\u0012\u000a\u000b" +
                         "\u0001\u0014\u0001\u000b\u0001\u0015\u0001\u0014\u0001\u000b\u0001\u0016\u0001\u0014\u0001\u000b\u0001\u0017\u0001\u0018\u0001\u000b\u0001\u0019\u0001\u001a\u0001\u0001\u0001\u0019" +
@@ -499,7 +487,7 @@ internal class RequirementsLexer
                         "\u000b\u0001\u0068\u000d\u000b\u0001\u0021\u0068\u000b\u0001\u000e\u0015\u0001\u0021\u000b\u0001\u0021\u002e\u0001\u000f\u000b\u0021\u0001")
         
         /* The ZZ_CMAP_A table has 3232 entries */
-        val ZZ_CMAP_A = zzUnpackCMap(
+        private val ZZ_CMAP_A = zzUnpackCMap(
                 "\u0009\u0000\u0001\u0004\u0001\u0002\u0001\u0001\u0001\u0005\u0001\u0003\u0012\u0000\u0001\u0004\u0002\u0000\u0001\u0006\u0007\u0000\u0001\u0013\u0001\u0000\u0001\u001b\u0001\u000e\u0001\u000f\u000a" +
                         "\u000d\u0001\u000c\u0001\u0000\u0001\u0007\u0001\u0008\u0001\u0007\u0001\u0000\u0001\u0024\u001a\u000b\u0001\u0025\u0001\u000a\u0001\u0009\u0001\u0000\u0001\u000d\u0001\u0000\u0001\u0019" +
                         "\u0001\u001c\u0001\u001a\u0001\u0023\u0001\u0021\u0001\u001f\u0001\u0017\u0001\u0014\u0001\u0018\u0002\u0023\u0001\u0020\u0001\u0023\u0001\u0012\u0001\u0023\u0001\u0016\u0001\u0023" +
@@ -557,7 +545,7 @@ internal class RequirementsLexer
          */
         private val ZZ_ACTION = zzUnpackAction()
         
-        private val ZZ_ACTION_PACKED_0 = "\u0006\u0000\u0002\u0001\u0001\u0002\u0001\u0003\u0001\u0002\u0001\u0004\u0001\u0005\u0001\u0006" +
+        private const val ZZ_ACTION_PACKED_0 = "\u0006\u0000\u0002\u0001\u0001\u0002\u0001\u0003\u0001\u0002\u0001\u0004\u0001\u0005\u0001\u0006" +
                 "\u0001\u0007\u0001\u0006\u0006\u0001\u0001\u0008\u0002\u0009\u0001\u0006\u0002\u000a\u0001\u0006" +
                 "\u0009\u000b\u0003\u0006\u0001\u0004\u0001\u0005\u0004\u0001\u0001\u000c\u0001\u000d\u0002\u0001" +
                 "\u0004\u0000\u0006\u000b\u0002\u0000\u0001\u000e\u0006\u0001\u0002\u0000\u0002\u000b\u0001\u0000" +
@@ -568,8 +556,7 @@ internal class RequirementsLexer
         
         private fun zzUnpackAction(): IntArray {
             val result = IntArray(140)
-            var offset = 0
-            offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result)
+            zzUnpackAction(ZZ_ACTION_PACKED_0, 0, result)
             return result
         }
         
@@ -591,7 +578,7 @@ internal class RequirementsLexer
          */
         private val ZZ_ROWMAP = zzUnpackRowMap()
         
-        private val ZZ_ROWMAP_PACKED_0 = "\u0000\u0000\u0000\u0026\u0000\u004c\u0000\u0072\u0000\u0098\u0000\u00be\u0000\u00e4\u0000\u010a" +
+        private const val ZZ_ROWMAP_PACKED_0 = "\u0000\u0000\u0000\u0026\u0000\u004c\u0000\u0072\u0000\u0098\u0000\u00be\u0000\u00e4\u0000\u010a" +
                 "\u0000\u0130\u0000\u0156\u0000\u017c\u0000\u01a2\u0000\u01c8\u0000\u01c8\u0000\u01ee\u0000\u01ee" +
                 "\u0000\u0214\u0000\u023a\u0000\u0260\u0000\u0286\u0000\u02ac\u0000\u02d2\u0000\u01ee\u0000\u02f8" +
                 "\u0000\u031e\u0000\u0344\u0000\u036a\u0000\u0390\u0000\u03b6\u0000\u03dc\u0000\u0402\u0000\u0428" +
@@ -612,8 +599,7 @@ internal class RequirementsLexer
         
         private fun zzUnpackRowMap(): IntArray {
             val result = IntArray(140)
-            var offset = 0
-            offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result)
+            zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, 0, result)
             return result
         }
         
@@ -633,7 +619,7 @@ internal class RequirementsLexer
          */
         private val ZZ_TRANS = zzUnpackTrans()
         
-        private val ZZ_TRANS_PACKED_0 = "\u0001\u0007\u0001\u0008\u0001\u0009\u0001\u0008\u0001\u000a\u0001\u000b\u0001\u000c\u0001\u000d" +
+        private const val ZZ_TRANS_PACKED_0 = "\u0001\u0007\u0001\u0008\u0001\u0009\u0001\u0008\u0001\u000a\u0001\u000b\u0001\u000c\u0001\u000d" +
                 "\u0001\u000e\u0001\u000f\u0001\u0010\u0001\u0007\u0001\u0010\u0001\u0007\u0001\u0010\u0001\u0007" +
                 "\u0001\u0011\u0003\u0007\u0001\u0012\u0002\u0007\u0001\u0013\u0003\u0007\u0001\u0014\u0001\u0015" +
                 "\u0002\u0007\u0001\u0016\u0005\u0007\u0001\u0017\u0001\u0018\u0001\u0019\u0001\u0009\u0001\u0019" +
@@ -794,8 +780,7 @@ internal class RequirementsLexer
         
         private fun zzUnpackTrans(): IntArray {
             val result = IntArray(4864)
-            var offset = 0
-            offset = zzUnpackTrans(ZZ_TRANS_PACKED_0, offset, result)
+            zzUnpackTrans(ZZ_TRANS_PACKED_0, 0, result)
             return result
         }
         
@@ -814,9 +799,9 @@ internal class RequirementsLexer
         
         
         /* error codes */
-        private val ZZ_UNKNOWN_ERROR = 0
-        private val ZZ_NO_MATCH = 1
-        private val ZZ_PUSHBACK_2BIG = 2
+        private const val ZZ_UNKNOWN_ERROR = 0
+        private const val ZZ_NO_MATCH = 1
+        private const val ZZ_PUSHBACK_2BIG = 2
         
         /* error messages for the codes above */
         private val ZZ_ERROR_MSG = arrayOf("Unknown internal scanner error", "Error: could not match input", "Error: pushback value was too large")
@@ -826,7 +811,7 @@ internal class RequirementsLexer
          */
         private val ZZ_ATTRIBUTE = zzUnpackAttribute()
         
-        private val ZZ_ATTRIBUTE_PACKED_0 = "\u0006\u0000\u0008\u0001\u0002\u0009\u0006\u0001\u0001\u0009\u0013\u0001\u0001\u0009\u0008\u0001" +
+        private const val ZZ_ATTRIBUTE_PACKED_0 = "\u0006\u0000\u0008\u0001\u0002\u0009\u0006\u0001\u0001\u0009\u0013\u0001\u0001\u0009\u0008\u0001" +
                 "\u0004\u0000\u0006\u0001\u0002\u0000\u0007\u0001\u0002\u0000\u0002\u0001\u0001\u0000\u0003\u0001" +
                 "\u0002\u0000\u0001\u0009\u0007\u0001\u0003\u0000\u0001\u0001\u0004\u0000\u0001\u0001\u0002\u0000" +
                 "\u0007\u0001\u0009\u0000\u0001\u0009\u0002\u0001\u0004\u0000\u0002\u0001\u0002\u0000\u0004\u0001" +
@@ -834,8 +819,7 @@ internal class RequirementsLexer
         
         private fun zzUnpackAttribute(): IntArray {
             val result = IntArray(140)
-            var offset = 0
-            offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result)
+            zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, 0, result)
             return result
         }
         
@@ -879,6 +863,5 @@ internal class RequirementsLexer
             return map
         }
     }
-    
     
 }
