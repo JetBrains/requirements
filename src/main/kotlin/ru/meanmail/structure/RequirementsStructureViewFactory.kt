@@ -1,4 +1,4 @@
-package ru.meanmail
+package ru.meanmail.structure
 
 import com.intellij.ide.structureView.StructureViewBuilder
 import com.intellij.ide.structureView.StructureViewModel
