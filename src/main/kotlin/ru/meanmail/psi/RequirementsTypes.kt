@@ -10,22 +10,16 @@ interface RequirementsTypes {
     object Factory {
         fun createElement(node: ASTNode): PsiElement {
             val type = node.elementType
-            if (type === EDITABLE_REQUIREMENT_STMT) {
-                return RequirementsEditableRequirementStmtImpl(node)
-            } else if (type === EXTRA) {
-                return RequirementsExtraImpl(node)
-            } else if (type === PACKAGE_STMT) {
-                return RequirementsPackageStmtImpl(node)
-            } else if (type === PATH_STMT) {
-                return RequirementsPathStmtImpl(node)
-            } else if (type === REQUIREMENT_STMT) {
-                return RequirementsRequirementStmtImpl(node)
-            } else if (type === SIMPLE_PACKAGE_STMT) {
-                return RequirementsSimplePackageStmtImpl(node)
-            } else if (type === URL_STMT) {
-                return RequirementsUrlStmtImpl(node)
+            return when (type) {
+                EDITABLE_REQUIREMENT_STMT -> RequirementsEditableRequirementStmtImpl(node)
+                EXTRA -> RequirementsExtraImpl(node)
+                PACKAGE_STMT -> RequirementsPackageStmtImpl(node)
+                PATH_STMT -> RequirementsPathStmtImpl(node)
+                REQUIREMENT_STMT -> RequirementsRequirementStmtImpl(node)
+                SIMPLE_PACKAGE_STMT -> RequirementsSimplePackageStmtImpl(node)
+                URL_STMT -> RequirementsUrlStmtImpl(node)
+                else -> throw AssertionError("Unknown element type: $type")
             }
-            throw AssertionError("Unknown element type: $type")
         }
     }
     

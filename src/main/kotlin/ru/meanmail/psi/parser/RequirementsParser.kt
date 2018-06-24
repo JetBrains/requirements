@@ -51,15 +51,15 @@ class RequirementsParser : PsiParser, LightPsiParser {
         exit_section_(builder, 0, m, type, r, true, TRUE_CONDITION)
     }
     
-    private fun parse_root_(b: PsiBuilder, l: Int): Boolean {
-        return requirementsFile(b, l + 1)
-    }
-    
     companion object {
+        
+        private fun parse_root_(builder: PsiBuilder, l: Int): Boolean {
+            return requirementsFile(builder, l + 1)
+        }
         
         /* ********************************************************** */
         // REQUIREMENT_EDITABLE url_stmt
-        fun editable_requirement_stmt(b: PsiBuilder, l: Int): Boolean {
+        private fun editable_requirement_stmt(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "editable_requirement_stmt")) return false
             if (!nextTokenIs(b, REQUIREMENT_EDITABLE)) return false
             val m = enter_section_(b)
@@ -71,11 +71,11 @@ class RequirementsParser : PsiParser, LightPsiParser {
         
         /* ********************************************************** */
         // LSBRACE PACKAGE RSBRACE
-        fun extra(b: PsiBuilder, l: Int): Boolean {
+        private fun extra(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "extra")) return false
             if (!nextTokenIs(b, LSBRACE)) return false
-            val r = consumeTokens(b, 0, LSBRACE, PACKAGE, RSBRACE)
             val m = enter_section_(b)
+            val r = consumeTokens(b, 0, LSBRACE, PACKAGE, RSBRACE)
             exit_section_(b, m, EXTRA, r)
             return r
         }
@@ -92,11 +92,11 @@ class RequirementsParser : PsiParser, LightPsiParser {
         
         /* ********************************************************** */
         // simple_package_stmt extra?
-        fun package_stmt(b: PsiBuilder, l: Int): Boolean {
+        private fun package_stmt(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "package_stmt")) return false
             if (!nextTokenIs(b, PACKAGE)) return false
-            var r = simple_package_stmt(b, l + 1)
             val m = enter_section_(b)
+            var r = simple_package_stmt(b, l + 1)
             r = r && package_stmt_1(b, l + 1)
             exit_section_(b, m, PACKAGE_STMT, r)
             return r
@@ -111,11 +111,11 @@ class RequirementsParser : PsiParser, LightPsiParser {
         
         /* ********************************************************** */
         // SCHEMA? PATH
-        fun path_stmt(b: PsiBuilder, l: Int): Boolean {
+        private fun path_stmt(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "path_stmt")) return false
             if (!nextTokenIs(b, "<path stmt>", PATH, SCHEMA)) return false
-            var r = path_stmt_0(b, l + 1)
             val m = enter_section_(b, l, _NONE_, PATH_STMT, "<path stmt>")
+            var r = path_stmt_0(b, l + 1)
             r = r && consumeToken(b, PATH)
             exit_section_(b, l, m, r, false, null)
             return r
@@ -130,11 +130,11 @@ class RequirementsParser : PsiParser, LightPsiParser {
         
         /* ********************************************************** */
         // REQUIREMENT FILENAME
-        fun requirement_stmt(b: PsiBuilder, l: Int): Boolean {
+        private fun requirement_stmt(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "requirement_stmt")) return false
             if (!nextTokenIs(b, REQUIREMENT)) return false
-            val r = consumeTokens(b, 0, REQUIREMENT, FILENAME)
             val m = enter_section_(b)
+            val r = consumeTokens(b, 0, REQUIREMENT, FILENAME)
             exit_section_(b, m, REQUIREMENT_STMT, r)
             return r
         }
@@ -152,22 +152,29 @@ class RequirementsParser : PsiParser, LightPsiParser {
         }
         
         /* ********************************************************** */
-        // (PACKAGE SEPARATOR VERSION) | PACKAGE
-        fun simple_package_stmt(b: PsiBuilder, l: Int): Boolean {
+        // PACKAGE (SEPARATOR VERSION)?
+        private fun simple_package_stmt(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "simple_package_stmt")) return false
             if (!nextTokenIs(b, PACKAGE)) return false
             val m = enter_section_(b)
-            var r = simple_package_stmt_0(b, l + 1)
-            if (!r) r = consumeToken(b, PACKAGE)
+            var r = consumeToken(b, PACKAGE)
+            r = r && simple_package_stmt_1(b, l + 1)
             exit_section_(b, m, SIMPLE_PACKAGE_STMT, r)
             return r
         }
         
-        // PACKAGE SEPARATOR VERSION
-        private fun simple_package_stmt_0(b: PsiBuilder, l: Int): Boolean {
-            if (!recursion_guard_(b, l, "simple_package_stmt_0")) return false
-            val r = consumeTokens(b, 0, PACKAGE, SEPARATOR, VERSION)
+        // (SEPARATOR VERSION)?
+        private fun simple_package_stmt_1(b: PsiBuilder, l: Int): Boolean {
+            if (!recursion_guard_(b, l, "simple_package_stmt_1")) return false
+            simple_package_stmt_1_0(b, l + 1)
+            return true
+        }
+        
+        // SEPARATOR VERSION
+        private fun simple_package_stmt_1_0(b: PsiBuilder, l: Int): Boolean {
+            if (!recursion_guard_(b, l, "simple_package_stmt_1_0")) return false
             val m = enter_section_(b)
+            val r = consumeTokens(b, 0, SEPARATOR, VERSION)
             exit_section_(b, m, null, r)
             return r
         }
@@ -176,8 +183,8 @@ class RequirementsParser : PsiParser, LightPsiParser {
         // (package_stmt|requirement_stmt|editable_requirement_stmt|url_stmt) (CRLF|<<eof>>)
         private fun stmt(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "stmt")) return false
-            var r = stmt_0(b, l + 1)
             val m = enter_section_(b)
+            var r = stmt_0(b, l + 1)
             r = r && stmt_1(b, l + 1)
             exit_section_(b, m, null, r)
             return r
@@ -205,11 +212,11 @@ class RequirementsParser : PsiParser, LightPsiParser {
         
         /* ********************************************************** */
         // path_stmt BRANCH? (EGG simple_package_stmt)?
-        fun url_stmt(b: PsiBuilder, l: Int): Boolean {
+        private fun url_stmt(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "url_stmt")) return false
             if (!nextTokenIs(b, "<url stmt>", PATH, SCHEMA)) return false
-            var r = path_stmt(b, l + 1)
             val m = enter_section_(b, l, _NONE_, URL_STMT, "<url stmt>")
+            var r = path_stmt(b, l + 1)
             r = r && url_stmt_1(b, l + 1)
             r = r && url_stmt_2(b, l + 1)
             exit_section_(b, l, m, r, false, null)
@@ -233,8 +240,8 @@ class RequirementsParser : PsiParser, LightPsiParser {
         // EGG simple_package_stmt
         private fun url_stmt_2_0(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "url_stmt_2_0")) return false
-            var r = consumeToken(b, EGG)
             val m = enter_section_(b)
+            var r = consumeToken(b, EGG)
             r = r && simple_package_stmt(b, l + 1)
             exit_section_(b, m, null, r)
             return r

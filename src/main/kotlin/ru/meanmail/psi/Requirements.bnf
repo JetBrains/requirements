@@ -25,7 +25,7 @@ package_stmt ::= simple_package_stmt extra? {mixin="ru.meanmail.psi.impl.Require
                                              implements="ru.meanmail.psi.RequirementsNamedElement"
                                              methods=[getPackageName getVersion getExtraPackage
                                              getName setName getNameIdentifier]}
-simple_package_stmt ::= (PACKAGE SEPARATOR VERSION) | PACKAGE
+simple_package_stmt ::= PACKAGE (SEPARATOR VERSION)?
 extra ::= LSBRACE PACKAGE RSBRACE
 requirement_stmt ::= REQUIREMENT FILENAME {mixin="ru.meanmail.psi.impl.RequirementsNamedElementImpl"
                                                   implements="ru.meanmail.psi.RequirementsNamedElement"
