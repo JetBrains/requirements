@@ -4,9 +4,14 @@
     <version>SNAPSHOT</version>
     <idea-version since-build="173"/>
     <vendor email="plugin@meanmail.ru" url="https://meanmail.ru">meanmail</vendor>
-    <description>
+    <description>[<![CDATA[
         Python requirements.txt
+    ]]>
     </description>
+    <change-notes>[<![CDATA[
+        Fix: eof after package is syntax error
+    ]]>
+    </change-notes>
 
     <depends>com.intellij.modules.lang</depends>
 
