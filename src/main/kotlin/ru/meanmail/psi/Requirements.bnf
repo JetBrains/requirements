@@ -19,7 +19,7 @@ requirementsFile ::= item_*
 
 private item_ ::= (stmt|COMMENT|CRLF)
 
-private stmt ::= (package_stmt|requirement_stmt|editable_requirement_stmt|url_stmt) (CRLF|EOF)
+private stmt ::= (package_stmt|requirement_stmt|editable_requirement_stmt|url_stmt) (CRLF|<<eof>>)
 
 package_stmt ::= simple_package_stmt extra? {mixin="ru.meanmail.psi.impl.RequirementsNamedElementImpl"
                                              implements="ru.meanmail.psi.RequirementsNamedElement"

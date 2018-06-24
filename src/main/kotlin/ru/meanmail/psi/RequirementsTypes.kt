@@ -43,7 +43,6 @@ interface RequirementsTypes {
         val COMMENT: IElementType = RequirementsTokenType("COMMENT")
         val CRLF: IElementType = RequirementsTokenType("CRLF")
         val EGG: IElementType = RequirementsTokenType("EGG")
-        val EOF: IElementType = RequirementsTokenType("EOF")
         val FILENAME: IElementType = RequirementsTokenType("FILENAME")
         val LSBRACE: IElementType = RequirementsTokenType("LSBRACE")
         val PACKAGE: IElementType = RequirementsTokenType("PACKAGE")
