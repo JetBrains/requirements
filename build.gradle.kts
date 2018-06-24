@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "ru.meanmail"
-version = "0.1-alpha"
+version = "0.2-beta"
 
 repositories {
     mavenCentral()
