@@ -1,9 +1,9 @@
 package ru.meanmail;
 
 import com.intellij.lexer.FlexLexer;
+import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import ru.meanmail.psi.RequirementsTypes;
-import com.intellij.psi.TokenType;
 
 %%
 

@@ -147,13 +147,13 @@ internal class RequirementsLexer
      * @param   errorCode  the code of the error message to display
      */
     private fun zzScanError(errorCode: Int) {
-        val message = try {
-            ZZ_ERROR_MSG[errorCode]
-        } catch (e: ArrayIndexOutOfBoundsException) {
-            ZZ_ERROR_MSG[ZZ_UNKNOWN_ERROR]
-        }
-        
-        throw Error(message)
+        throw Error(
+                try {
+                    ZZ_ERROR_MSG[errorCode]
+                } catch (e: ArrayIndexOutOfBoundsException) {
+                    ZZ_ERROR_MSG[ZZ_UNKNOWN_ERROR]
+                }
+        )
     }
     
     
@@ -166,8 +166,9 @@ internal class RequirementsLexer
      * This number must not be greater than yylength()!
      */
     fun yypushback(number: Int) {
-        if (number > yylength())
+        if (number > yylength()) {
             zzScanError(ZZ_PUSHBACK_2BIG)
+        }
         
         zzMarkedPos -= number
     }
@@ -178,10 +179,7 @@ internal class RequirementsLexer
      * when the end of file is reached
      */
     private fun zzDoEOF() {
-        if (!zzEOFDone) {
-            zzEOFDone = true
-            
-        }
+        zzEOFDone = true
     }
     
     
@@ -223,7 +221,6 @@ internal class RequirementsLexer
                 zzAction = zzState
             }
             while (true) {
-                
                 if (zzCurrentPosL < zzEndReadL) {
                     zzInput = Character.codePointAt(zzBufferL, zzCurrentPosL/*, zzEndReadL*/)
                     zzCurrentPosL += Character.charCount(zzInput)
@@ -258,7 +255,6 @@ internal class RequirementsLexer
                     zzMarkedPosL = zzCurrentPosL
                     if (zzAttributes and 8 == 8) break
                 }
-                
             }
             
             // store back cached position
@@ -270,115 +266,65 @@ internal class RequirementsLexer
                 return null
             } else {
                 when (if (zzAction < 0) zzAction else ZZ_ACTION[zzAction]) {
-                    1 -> {
-                        return TokenType.BAD_CHARACTER
-                    }
-                // fall through
-                    17 -> {
-                    }
+                    1 -> return TokenType.BAD_CHARACTER
                     2 -> {
                         yybegin(YYINITIAL)
                         return RequirementsTypes.CRLF
                     }
-                // fall through
-                    18 -> {
-                    }
-                    3 -> {
-                        return TokenType.WHITE_SPACE
-                    }
-                // fall through
-                    19 -> {
-                    }
+                    3 -> return TokenType.WHITE_SPACE
                     4 -> {
                         yybegin(YYINITIAL)
                         return RequirementsTypes.COMMENT
-                    }
-                // fall through
-                    20 -> {
                     }
                     5 -> {
                         yybegin(WAITING_VERSION)
                         return RequirementsTypes.SEPARATOR
                     }
-                // fall through
-                    21 -> {
-                    }
                     6 -> {
                         yybegin(YYINITIAL)
                         return RequirementsTypes.PACKAGE
-                    }
-                // fall through
-                    22 -> {
                     }
                     7 -> {
                         yybegin(YYINITIAL)
                         return RequirementsTypes.LSBRACE
                     }
-                // fall through
-                    23 -> {
-                    }
                     8 -> {
                         yybegin(YYINITIAL)
                         return RequirementsTypes.RSBRACE
-                    }
-                // fall through
-                    24 -> {
                     }
                     9 -> {
                         yybegin(YYINITIAL)
                         return RequirementsTypes.VERSION
                     }
-                // fall through
-                    25 -> {
-                    }
                     10 -> {
                         yybegin(YYINITIAL)
                         return RequirementsTypes.FILENAME
-                    }
-                // fall through
-                    26 -> {
                     }
                     11 -> {
                         yybegin(WAITING_EGG)
                         return RequirementsTypes.PATH
                     }
-                // fall through
-                    27 -> {
-                    }
                     12 -> {
                         yybegin(WAITING_FILENAME)
                         return RequirementsTypes.REQUIREMENT
-                    }
-                // fall through
-                    28 -> {
                     }
                     13 -> {
                         yybegin(WAITING_URL)
                         return RequirementsTypes.REQUIREMENT_EDITABLE
                     }
-                // fall through
-                    29 -> {
-                    }
                     14 -> {
                         yybegin(WAITING_EGG)
                         return RequirementsTypes.BRANCH
-                    }
-                // fall through
-                    30 -> {
                     }
                     15 -> {
                         yybegin(WAITING_PATH)
                         return RequirementsTypes.SCHEMA
                     }
-                // fall through
-                    31 -> {
-                    }
                     16 -> {
                         yybegin(YYINITIAL)
                         return RequirementsTypes.EGG
                     }
-                // fall through
-                    32 -> {
+                    17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32 -> {
                     }
                     else -> zzScanError(ZZ_NO_MATCH)
                 }
@@ -488,7 +434,7 @@ internal class RequirementsLexer
                         "\u0015\u0001\u0021\u000b\u0001\u0022\u002e\u0001\u000f\u000b\u0021\u0001")
         
         /* The ZZ_CMAP_A table has 3424 entries */
-       private val ZZ_CMAP_A = zzUnpackCMap(
+        private val ZZ_CMAP_A = zzUnpackCMap(
                 "\u0009\u0000\u0001\u0004\u0001\u0002\u0001\u0001\u0001\u0005\u0001\u0003\u0012\u0000\u0001\u0004\u0001\u0009\u0001\u0000\u0001\u0006\u0007\u0000\u0001\u0020\u0001\u0000\u0001\u001f\u0001\u000e\u0001\u0023" +
                         "\u000a\u000d\u0001\u0021\u0001\u0000\u0001\u000a\u0001\u0008\u0001\u000a\u0001\u0000\u0001\u0039\u0001\u000f\u0001\u0010\u0001\u0011\u0001\u001d\u0001\u0016\u0002\u000b\u0001\u0015" +
                         "\u0001\u0019\u0002\u000b\u0001\u0013\u0002\u000b\u0001\u001b\u0001\u0014\u0001\u000b\u0001\u0012\u0001\u001c\u0001\u0017\u0001\u000b\u0001\u0018\u0001\u001a\u0003\u000b\u0001\u003a" +
@@ -805,7 +751,11 @@ internal class RequirementsLexer
         private const val ZZ_PUSHBACK_2BIG = 2
         
         /* error messages for the codes above */
-        private val ZZ_ERROR_MSG = arrayOf("Unknown internal scanner error", "Error: could not match input", "Error: pushback value was too large")
+        private val ZZ_ERROR_MSG = arrayOf(
+                "Unknown internal scanner error",
+                "Error: could not match input",
+                "Error: pushback value was too large"
+        )
         
         /**
          * ZZ_ATTRIBUTE[aState] contains the attributes of state `aState`
@@ -846,13 +796,11 @@ internal class RequirementsLexer
          */
         private fun zzUnpackCMap(packed: String): CharArray {
             var size = 0
-            run {
-                var i = 0
-                val length = packed.length
-                while (i < length) {
-                    size += packed[i].toInt()
-                    i += 2
-                }
+            var k = 0
+            val length = packed.length
+            while (k < length) {
+                size += packed[k].toInt()
+                k += 2
             }
             val map = CharArray(size)
             var i = 0  /* index in packed string  */
