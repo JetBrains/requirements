@@ -18,10 +18,32 @@ import com.intellij.psi.TokenType;
 CRLF=\R
 WHITE_SPACE=[\ \t\f]
 END_OF_LINE_COMMENT="#"[^\r\n]*
-SEPARATOR="<=" | "<" | "==" | ">=" | ">"
-PACKAGE_CHARACTER=[^:=<>\[\]\ \n\t\f\\.]
-VERSION=[^\ \n\t\f\\]
-DIRECTORY=([a-zA-Z]:\\\\)?([a-zA-Z0-9._\-\\]+) | [a-zA-Z0-9._\-/]+
+SEPARATOR="~=" | "==" "="? | "!=" | "<=" | ">=" | "<" | ">"
+PACKAGE_CHARACTER=[a-zA-Z0-9_\-]
+
+EPOCH=\d+ "!"
+RELEASE=\d+(\.\d+)*
+a=[aA]
+b=[bB]
+c=[cC]
+rc=[rR][cC]
+alpha=[aA][lL][pP][hH][aA]
+beta=[bB][eE][tT][aA]
+pre=[pP][rR][eE]
+preview=[pP][rR][eE][vV][iI][eE][wW]
+post=[pP][oO][sS][tT]
+rev=[rR][eE][vV]
+r=[rR]
+dev=[dD][eE][vV]
+v=[vV]
+V_SEP=[-_\.]
+PRE={V_SEP}?({a}|{b}|{c}|{rc}|{alpha}|{beta}|{pre}|{preview}){V_SEP}?\d*
+POST=-\d+|{V_SEP}?({post}|{rev}|{r}){V_SEP}?\d*
+DEV={V_SEP}?{dev}{V_SEP}?\d*
+LOCAL=\+[a-zA-Z0-9]+({V_SEP}[a-zA-Z0-9]+)*
+VERSION={v}? {EPOCH}? {RELEASE} {PRE}? {POST}? {DEV}? {LOCAL}?
+
+DIRECTORY=([a-zA-Z]:\\)?([a-zA-Z0-9._\-\\]+) | [a-zA-Z0-9._\-/]+
 FILENAME_CHARACTER={DIRECTORY}?[a-zA-Z0-9._-]+
 SVN="svn" | "svn+svn" | "svn+http" | "svn+https" | "svn+ssh"
 HTTP="http" | "https"
@@ -55,7 +77,7 @@ BRANCH="@"[^\ \n\t\f\\@#]+
 
 <WAITING_FILENAME> {FILENAME_CHARACTER}+ { yybegin(YYINITIAL); return RequirementsTypes.FILENAME; }
 
-<WAITING_VERSION> {VERSION}+             { yybegin(YYINITIAL); return RequirementsTypes.VERSION; }
+<WAITING_VERSION> {VERSION}              { yybegin(YYINITIAL); return RequirementsTypes.VERSION; }
 
 <WAITING_URL> {
     {SCHEMA}                             { yybegin(WAITING_PATH); return RequirementsTypes.SCHEMA; }

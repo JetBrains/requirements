@@ -9,7 +9,7 @@ import javax.swing.Icon
 object RequirementsFileType : LanguageFileType(RequirementsLanguage) {
     
     @NonNls
-    val DEFAULT_EXTENSION = "txt"
+    private val DEFAULT_EXTENSION = "txt"
     
     override fun getName(): String {
         return "requirements.txt"
