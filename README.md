@@ -9,7 +9,8 @@ https://plugins.jetbrains.com/plugin/10837
 Package version: https://www.python.org/dev/peps/pep-0440
 
 
-TODO:
+## TODO
+
 * Highlighting not installed packages
 * Check not exists packages
 * Check duplicate packages
