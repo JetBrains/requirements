@@ -33,5 +33,5 @@ tasks.withType<Wrapper> {
 
 intellij {
     pluginName = "requirements"
-    version = "2018.1"
+    version = "2018.2"
 }
