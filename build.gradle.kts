@@ -3,8 +3,8 @@ import org.gradle.api.tasks.wrapper.Wrapper
 
 plugins {
     java
-    kotlin("jvm") version "1.2.30"
-    id("org.jetbrains.intellij") version "0.3.4"
+    kotlin("jvm") version "1.3.21"
+    id("org.jetbrains.intellij") version "0.4.3"
 }
 
 group = "ru.meanmail"
