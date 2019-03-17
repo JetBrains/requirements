@@ -13,6 +13,7 @@ import ru.meanmail.psi.RequirementsTypes.Companion.EDITABLE_REQUIREMENT_STMT
 import ru.meanmail.psi.RequirementsTypes.Companion.EGG
 import ru.meanmail.psi.RequirementsTypes.Companion.EXTRA
 import ru.meanmail.psi.RequirementsTypes.Companion.FILENAME
+import ru.meanmail.psi.RequirementsTypes.Companion.FILENAME_STMT
 import ru.meanmail.psi.RequirementsTypes.Companion.LSBRACE
 import ru.meanmail.psi.RequirementsTypes.Companion.PACKAGE
 import ru.meanmail.psi.RequirementsTypes.Companion.PACKAGE_STMT
@@ -41,6 +42,7 @@ class RequirementsParser : PsiParser, LightPsiParser {
         val r = when (type) {
             EDITABLE_REQUIREMENT_STMT -> editable_requirement_stmt(builder, 0)
             EXTRA -> extra(builder, 0)
+            FILENAME_STMT -> filename_stmt(builder, 0)
             PACKAGE_STMT -> package_stmt(builder, 0)
             PATH_STMT -> path_stmt(builder, 0)
             REQUIREMENT_STMT -> requirement_stmt(builder, 0)
@@ -77,6 +79,17 @@ class RequirementsParser : PsiParser, LightPsiParser {
             val m = enter_section_(b)
             val r = consumeTokens(b, 0, LSBRACE, PACKAGE, RSBRACE)
             exit_section_(b, m, EXTRA, r)
+            return r
+        }
+        
+        /* ********************************************************** */
+        // FILENAME
+        private fun filename_stmt(b: PsiBuilder, l: Int): Boolean {
+            if (!recursion_guard_(b, l, "filename_stmt")) return false
+            if (!nextTokenIs(b, FILENAME)) return false
+            val m = enter_section_(b)
+            val r = consumeToken(b, FILENAME)
+            exit_section_(b, m, FILENAME_STMT, r)
             return r
         }
         
@@ -129,12 +142,13 @@ class RequirementsParser : PsiParser, LightPsiParser {
         }
         
         /* ********************************************************** */
-        // REQUIREMENT FILENAME
+        // REQUIREMENT filename_stmt
         private fun requirement_stmt(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "requirement_stmt")) return false
             if (!nextTokenIs(b, REQUIREMENT)) return false
             val m = enter_section_(b)
-            val r = consumeTokens(b, 0, REQUIREMENT, FILENAME)
+            var r = consumeToken(b, REQUIREMENT)
+            r = r && filename_stmt(b, l + 1)
             exit_section_(b, m, REQUIREMENT_STMT, r)
             return r
         }

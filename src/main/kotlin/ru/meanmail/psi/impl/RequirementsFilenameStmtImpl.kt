@@ -3,18 +3,20 @@ package ru.meanmail.psi.impl
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
+import com.intellij.psi.PsiReference
+import ru.meanmail.SubRequirementsReference
+import ru.meanmail.psi.RequirementsFilenameStmt
 import ru.meanmail.psi.RequirementsPsiImplUtil
-import ru.meanmail.psi.RequirementsRequirementStmt
 import ru.meanmail.psi.RequirementsVisitor
 
-class RequirementsRequirementStmtImpl(node: ASTNode) :
-        RequirementsNamedElementImpl(node), RequirementsRequirementStmt {
+class RequirementsFilenameStmtImpl(node: ASTNode) : RequirementsNamedElementImpl(node),
+        RequirementsFilenameStmt {
     
     override val filename: String?
         get() = RequirementsPsiImplUtil.getFilename(this)
     
     private fun accept(visitor: RequirementsVisitor) {
-        visitor.visitRequirementStmt(this)
+        visitor.visitFilenameStmt(this)
     }
     
     override fun accept(visitor: PsiElementVisitor) {
@@ -22,6 +24,10 @@ class RequirementsRequirementStmtImpl(node: ASTNode) :
             accept(visitor)
         else
             super.accept(visitor)
+    }
+    
+    override fun getReference(): PsiReference? {
+        return SubRequirementsReference(this)
     }
     
     override fun getName(): String? {
@@ -35,5 +41,4 @@ class RequirementsRequirementStmtImpl(node: ASTNode) :
     override fun getNameIdentifier(): PsiElement? {
         return RequirementsPsiImplUtil.getNameIdentifier(this)
     }
-    
 }

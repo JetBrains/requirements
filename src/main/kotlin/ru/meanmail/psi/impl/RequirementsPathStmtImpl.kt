@@ -7,16 +7,16 @@ import ru.meanmail.psi.RequirementsPathStmt
 import ru.meanmail.psi.RequirementsVisitor
 
 class RequirementsPathStmtImpl(node: ASTNode) : ASTWrapperPsiElement(node), RequirementsPathStmt {
-
-    fun accept(visitor: RequirementsVisitor) {
+    
+    private fun accept(visitor: RequirementsVisitor) {
         visitor.visitPathStmt(this)
     }
-
+    
     override fun accept(visitor: PsiElementVisitor) {
         if (visitor is RequirementsVisitor)
             accept(visitor)
         else
             super.accept(visitor)
     }
-
+    
 }

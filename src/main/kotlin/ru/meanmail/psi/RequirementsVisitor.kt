@@ -25,6 +25,11 @@ class RequirementsVisitor : PsiElementVisitor() {
         visitNamedElement(o)
     }
     
+    fun visitFilenameStmt(o: RequirementsFilenameStmt) {
+        visitPsiElement(o)
+    }
+    
+    
     fun visitSimplePackageStmt(o: RequirementsSimplePackageStmt) {
         visitPsiElement(o)
     }

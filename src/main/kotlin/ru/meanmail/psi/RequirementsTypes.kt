@@ -13,6 +13,7 @@ interface RequirementsTypes {
             return when (type) {
                 EDITABLE_REQUIREMENT_STMT -> RequirementsEditableRequirementStmtImpl(node)
                 EXTRA -> RequirementsExtraImpl(node)
+                FILENAME_STMT -> RequirementsFilenameStmtImpl(node)
                 PACKAGE_STMT -> RequirementsPackageStmtImpl(node)
                 PATH_STMT -> RequirementsPathStmtImpl(node)
                 REQUIREMENT_STMT -> RequirementsRequirementStmtImpl(node)
@@ -27,6 +28,7 @@ interface RequirementsTypes {
         
         val EDITABLE_REQUIREMENT_STMT: IElementType = RequirementsElementType("EDITABLE_REQUIREMENT_STMT")
         val EXTRA: IElementType = RequirementsElementType("EXTRA")
+        val FILENAME_STMT: IElementType = RequirementsElementType("FILENAME_STMT")
         val PACKAGE_STMT: IElementType = RequirementsElementType("PACKAGE_STMT")
         val PATH_STMT: IElementType = RequirementsElementType("PATH_STMT")
         val REQUIREMENT_STMT: IElementType = RequirementsElementType("REQUIREMENT_STMT")

@@ -49,6 +49,12 @@ object RequirementsPsiImplUtil {
     
     @JvmStatic
     fun getFilename(element: RequirementsRequirementStmt): String? {
+        return getValue(element, listOf(RequirementsTypes.FILENAME_STMT,
+                RequirementsTypes.FILENAME))
+    }
+    
+    @JvmStatic
+    fun getFilename(element: RequirementsFilenameStmt): String? {
         return getValue(element, listOf(RequirementsTypes.FILENAME))
     }
     
@@ -108,11 +114,11 @@ object RequirementsPsiImplUtil {
     
     @JvmStatic
     fun setName(element: RequirementsEditableRequirementStmt, newName: String): PsiElement {
-        val urlStmt = element.node.findChildByType(RequirementsTypes.URL_STMT)
-        val keyNode = urlStmt
-                ?.findChildByType(RequirementsTypes.SIMPLE_PACKAGE_STMT)
-                ?.findChildByType(RequirementsTypes.PACKAGE)
-                ?: urlStmt?.findChildByType(RequirementsTypes.PATH_STMT)
+        val urlStmt = getNode(element, listOf(RequirementsTypes.URL_STMT))?.psi ?: return element
+        val keyNode = getNode(urlStmt, listOf(
+                RequirementsTypes.SIMPLE_PACKAGE_STMT,
+                RequirementsTypes.PACKAGE))
+                ?: getNode(urlStmt, listOf(RequirementsTypes.PATH_STMT))
                 ?: return element
         val packageStmt = RequirementsElementFactory.createPackage(element.project, newName)
         val newKeyNode = packageStmt.firstChild.node
@@ -122,10 +128,10 @@ object RequirementsPsiImplUtil {
     
     @JvmStatic
     fun getNameIdentifier(element: RequirementsEditableRequirementStmt): PsiElement? {
-        val urlStmt = element.node.findChildByType(RequirementsTypes.URL_STMT)
-        val keyNode = urlStmt?.findChildByType(RequirementsTypes.SIMPLE_PACKAGE_STMT)
-                ?.findChildByType(RequirementsTypes.PACKAGE)
-                ?: urlStmt?.findChildByType(RequirementsTypes.PATH_STMT)
+        val urlStmt = getNode(element, listOf(RequirementsTypes.URL_STMT))?.psi ?: return null
+        val keyNode = getNode(urlStmt, listOf(RequirementsTypes.SIMPLE_PACKAGE_STMT,
+                RequirementsTypes.PACKAGE))
+                ?: getNode(urlStmt, listOf(RequirementsTypes.PATH_STMT))
         return keyNode?.psi
     }
     
@@ -163,8 +169,8 @@ object RequirementsPsiImplUtil {
     
     @JvmStatic
     fun setName(element: RequirementsPackageStmt, newName: String): PsiElement {
-        val keyNode = element.node.findChildByType(RequirementsTypes.SIMPLE_PACKAGE_STMT)
-                ?.findChildByType(RequirementsTypes.PACKAGE) ?: return element
+        val keyNode = getNode(element, listOf(RequirementsTypes.SIMPLE_PACKAGE_STMT,
+                RequirementsTypes.PACKAGE)) ?: return element
         val simplePackageStmt = RequirementsElementFactory.createSimplePackage(element.project, newName)
         val newKeyNode = simplePackageStmt.firstChild.node
         element.node.replaceChild(keyNode, newKeyNode)
@@ -173,19 +179,21 @@ object RequirementsPsiImplUtil {
     
     @JvmStatic
     fun getNameIdentifier(element: RequirementsPackageStmt): PsiElement? {
-        val keyNode = element.node.findChildByType(RequirementsTypes.SIMPLE_PACKAGE_STMT)
-                ?.findChildByType(RequirementsTypes.PACKAGE)
+        val keyNode = getNode(element, listOf(RequirementsTypes.SIMPLE_PACKAGE_STMT,
+                RequirementsTypes.PACKAGE))
         return keyNode?.psi
     }
     
     @JvmStatic
     fun getName(element: RequirementsRequirementStmt): String? {
-        return getValue(element, listOf(RequirementsTypes.FILENAME))
+        return getValue(element, listOf(RequirementsTypes.FILENAME_STMT,
+                RequirementsTypes.FILENAME))
     }
     
     @JvmStatic
     fun setName(element: RequirementsRequirementStmt, newName: String): PsiElement {
-        val keyNode = element.node.findChildByType(RequirementsTypes.FILENAME) ?: return element
+        val keyNode = getNode(element, listOf(RequirementsTypes.FILENAME_STMT,
+                RequirementsTypes.FILENAME)) ?: return element
         val requirementsStmt = RequirementsElementFactory.createRequirements(element.project, newName)
         val newKeyNode = requirementsStmt.firstChild.node
         element.node.replaceChild(keyNode, newKeyNode)
@@ -194,7 +202,28 @@ object RequirementsPsiImplUtil {
     
     @JvmStatic
     fun getNameIdentifier(element: RequirementsRequirementStmt): PsiElement? {
-        val keyNode = element.node.findChildByType(RequirementsTypes.FILENAME)
+        val keyNode = getNode(element, listOf(RequirementsTypes.FILENAME_STMT,
+                RequirementsTypes.FILENAME))
+        return keyNode?.psi
+    }
+    
+    @JvmStatic
+    fun getName(element: RequirementsFilenameStmt): String? {
+        return getValue(element, listOf(RequirementsTypes.FILENAME))
+    }
+    
+    @JvmStatic
+    fun setName(element: RequirementsFilenameStmt, newName: String): PsiElement {
+        val keyNode = getNode(element, listOf(RequirementsTypes.FILENAME)) ?: return element
+        val requirementsStmt = RequirementsElementFactory.createRequirements(element.project, newName)
+        val newKeyNode = requirementsStmt.firstChild.node
+        element.node.replaceChild(keyNode, newKeyNode)
+        return element
+    }
+    
+    @JvmStatic
+    fun getNameIdentifier(element: RequirementsFilenameStmt): PsiElement? {
+        val keyNode = getNode(element, listOf(RequirementsTypes.FILENAME))
         return keyNode?.psi
     }
     
