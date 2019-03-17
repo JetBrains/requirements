@@ -9,7 +9,33 @@
     ]]>
     </description>
     <change-notes><![CDATA[
-        Fix: eof after package is syntax error
+      <p>
+      <b>Mar 18, 2019 2019.2</b>
+      <br>
+          + Package installation. Not installed packages are highlighted<br>
+          + Support Reference to subrequirements files (Ctrl + click)
+      </p>
+      <br>
+
+      <p>
+      <b>Mar 01, 2019 2019.1</b>
+      <br>
+          Update IDE version
+      </p>
+      <br>
+
+      <p>
+      <b>Jun 25, 2018 0.2-beta</b>
+      <br>
+          Fix: eof after package is syntax error
+      </p>
+
+      <br>
+      <p>
+      <b>Jun 17, 2018 0.1-alpha</b>
+      <br>
+          First release
+      </p>
     ]]>
     </change-notes>
 
