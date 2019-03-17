@@ -4,7 +4,6 @@ import com.intellij.lang.ASTNode
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.progress.EmptyProgressIndicator
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
@@ -79,7 +78,10 @@ class RequirementsPackageStmtImpl(node: ASTNode) : RequirementsNamedElementImpl(
         ) {
             override fun run(indicator: ProgressIndicator) {
                 indicator.text = this.title
+                indicator.isIndeterminate = true
+                
                 val application = ApplicationManager.getApplication()
+                
                 application.runReadAction {
                     try {
                         RequirementsPsiImplUtil.getPackageManager(project)?.install(text)
@@ -106,7 +108,6 @@ class RequirementsPackageStmtImpl(node: ASTNode) : RequirementsNamedElementImpl(
             }
         }
         
-        ProgressManager.getInstance()
-                .runProcessWithProgressAsynchronously(task, EmptyProgressIndicator())
+        ProgressManager.getInstance().run(task)
     }
 }
