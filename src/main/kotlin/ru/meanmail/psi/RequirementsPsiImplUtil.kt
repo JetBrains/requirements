@@ -1,16 +1,27 @@
 package ru.meanmail.psi
 
+import com.intellij.lang.ASTNode
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.IElementType
+import com.jetbrains.python.packaging.PyPackageManager
+import com.jetbrains.python.sdk.PythonSdkType
 
 object RequirementsPsiImplUtil {
-    private fun getValue(element: PsiElement, types: List<IElementType>): String? {
+    @JvmStatic
+    private fun getNode(element: PsiElement, types: List<IElementType>): ASTNode? {
         var keyNode = element.node
         for (type in types) {
             keyNode = keyNode.findChildByType(type) ?: return null
         }
         
-        return keyNode.text
+        return keyNode
+    }
+    
+    @JvmStatic
+    private fun getValue(element: PsiElement, types: List<IElementType>): String? {
+        return getNode(element, types)?.text
     }
     
     @JvmStatic
@@ -20,9 +31,14 @@ object RequirementsPsiImplUtil {
     }
     
     @JvmStatic
-    fun getVersion(element: RequirementsPackageStmt): String? {
-        return getValue(element, listOf(RequirementsTypes.SIMPLE_PACKAGE_STMT,
+    fun getVersionNode(element: RequirementsPackageStmt): ASTNode? {
+        return getNode(element, listOf(RequirementsTypes.SIMPLE_PACKAGE_STMT,
                 RequirementsTypes.VERSION))
+    }
+    
+    @JvmStatic
+    fun getVersion(element: RequirementsPackageStmt): String? {
+        return getVersionNode(element)?.text
     }
     
     @JvmStatic
@@ -180,5 +196,15 @@ object RequirementsPsiImplUtil {
     fun getNameIdentifier(element: RequirementsRequirementStmt): PsiElement? {
         val keyNode = element.node.findChildByType(RequirementsTypes.FILENAME)
         return keyNode?.psi
+    }
+    
+    @JvmStatic
+    fun getPackageManager(project: Project): PyPackageManager? {
+        val projectRootManager = ProjectRootManager.getInstance(project)
+        val projectSdk = projectRootManager.projectSdk ?: return null
+        if (projectSdk.sdkType is PythonSdkType) {
+            return PyPackageManager.getInstance(projectSdk)
+        }
+        return null
     }
 }

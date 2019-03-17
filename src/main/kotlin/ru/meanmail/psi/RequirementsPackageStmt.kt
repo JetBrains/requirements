@@ -20,4 +20,7 @@ interface RequirementsPackageStmt : RequirementsNamedElement {
     
     override fun getNameIdentifier(): PsiElement?
     
+    val isInstalled: Boolean
+    
+    fun install()
 }

@@ -34,4 +34,5 @@ tasks.withType<Wrapper> {
 intellij {
     pluginName = "requirements"
     version = "2018.3.4"
+    setPlugins("PythonCore:2018.3.183.5429.30")
 }
