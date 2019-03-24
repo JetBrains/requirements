@@ -140,3 +140,4 @@ $RECYCLE.BIN/
 *.lnk
 
 /idea-flex.skeleton
+!/gradle/wrapper/gradle-wrapper.jar
