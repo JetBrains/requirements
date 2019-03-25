@@ -4,7 +4,7 @@ import org.gradle.api.tasks.wrapper.Wrapper
 plugins {
     java
     kotlin("jvm") version "1.3.21"
-    id("org.jetbrains.intellij") version "0.4.3"
+    id("org.jetbrains.intellij") version "0.4.5"
 }
 
 group = "ru.meanmail"
