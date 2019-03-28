@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "ru.meanmail"
-version = "2019.2"
+version = "2019.2.1"
 
 repositories {
     mavenCentral()
@@ -33,6 +33,6 @@ tasks.withType<Wrapper> {
 
 intellij {
     pluginName = "requirements"
-    version = "2018.3.4"
-    setPlugins("PythonCore:2018.3.183.5429.30")
+    version = "2019.1"
+    setPlugins("PythonCore:2019.1.191.6183.53")
 }

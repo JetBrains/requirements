@@ -5,10 +5,17 @@
     <idea-version since-build="173"/>
     <vendor email="plugin@meanmail.ru" url="https://meanmail.ru">meanmail</vendor>
     <description><![CDATA[
-        Python requirements.txt
+        Right python requirements.txt
     ]]>
     </description>
     <change-notes><![CDATA[
+      <p>
+      <b>Mar 29, 2019 2019.2.1</b>
+      <br>
+          Update IDE build
+      </p>
+      <br>
+
       <p>
       <b>Mar 18, 2019 2019.2</b>
       <br>
