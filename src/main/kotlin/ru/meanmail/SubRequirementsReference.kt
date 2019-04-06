@@ -9,12 +9,13 @@ import ru.meanmail.psi.RequirementsFilenameStmt
 class SubRequirementsReference(pathStmt: RequirementsFilenameStmt) :
         PsiReferenceBase<RequirementsFilenameStmt>(pathStmt, null, false) {
     override fun resolve(): PsiElement? {
-        val filename = myElement.filename ?: return null
-        val directory = myElement.containingFile.containingDirectory.virtualFile
-        return directory.findFileByRelativePath(filename)?.toPsi(myElement.project)
+        val filename = element.filename ?: return null
+        val directory = element.containingFile.containingDirectory.virtualFile
+        val file = resolveFile(filename, directory)
+        return file?.toPsi(element.project)
     }
     
     override fun getRangeInElement(): TextRange {
-        return TextRange(0, myElement.textLength)
+        return TextRange(0, element.textLength)
     }
 }

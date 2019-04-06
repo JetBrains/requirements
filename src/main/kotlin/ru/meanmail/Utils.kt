@@ -7,8 +7,11 @@ import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.vfs.VirtualFile
 import com.jetbrains.python.packaging.*
 import ru.meanmail.psi.RequirementsPsiImplUtil
+import java.io.File
 
 
 fun getPackage(project: Project, packageName: String): PyPackage? {
@@ -85,4 +88,13 @@ fun installPackage(project: Project, packageName: String,
     }
     
     ProgressManager.getInstance().run(task)
+}
+
+fun resolveFile(filepath: String, base: VirtualFile): VirtualFile? {
+    val target = File(filepath)
+    return if (target.isAbsolute) {
+        LocalFileSystem.getInstance().findFileByIoFile(target)
+    } else {
+        base.findFileByRelativePath(filepath)
+    }
 }

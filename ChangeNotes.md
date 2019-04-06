@@ -1,3 +1,11 @@
+## 2019.3 (Apr, 6, 2019)
+
+* Fix: after installing a package reloaded from disk
++ Show a error notification when a package is not installed
++ Improved detection of not installed package
++ Syntax highlight work without python plugin
++ Checking for the existence of “subrequirements” files
+
 ## 2019.2.1 (Mar 29, 2019)
 
 Update IDE build
