@@ -9,7 +9,7 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
-import com.intellij.psi.PsiManager
+import com.intellij.util.FileContentUtil
 import com.jetbrains.python.packaging.PyExecutionException
 import com.jetbrains.python.packaging.PyPackage
 import com.jetbrains.python.packaging.PyPackageUtil
@@ -84,9 +84,27 @@ class RequirementsPackageStmtImpl(node: ASTNode) : RequirementsNamedElementImpl(
                 
                 application.runReadAction {
                     try {
-                        RequirementsPsiImplUtil.getPackageManager(project)?.install(text)
+                        val packageManager = RequirementsPsiImplUtil.getPackageManager(project)
                         
-                        val pyPackage = pyPackage ?: return@runReadAction
+                        if (packageManager != null) {
+                            packageManager.install(text)
+                        } else {
+                            Notification("pip",
+                                    title,
+                                    "Package manager is not available",
+                                    NotificationType.ERROR).notify(project)
+                            return@runReadAction
+                        }
+                        val pyPackage = pyPackage
+                        
+                        if (pyPackage == null) {
+                            Notification("pip",
+                                    title,
+                                    "Failed. Not installed",
+                                    NotificationType.ERROR).notify(project)
+                            return@runReadAction
+                        }
+                        
                         Notification("pip",
                                 "${pyPackage.name} (${pyPackage.version})",
                                 "Successfully installed",
@@ -95,7 +113,7 @@ class RequirementsPackageStmtImpl(node: ASTNode) : RequirementsNamedElementImpl(
                         application.invokeLater {
                             application.runWriteAction {
                                 val file = this@RequirementsPackageStmtImpl.containingFile
-                                PsiManager.getInstance(project).reloadFromDisk(file)
+                                FileContentUtil.reparseFiles(file.virtualFile)
                             }
                         }
                     } catch (e: PyExecutionException) {

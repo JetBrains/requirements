@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4">
+  <component name="TemplatesService">
+    <option name="TEMPLATE_FOLDERS">
+      <list>
+        <option value="$MODULE_DIR$/build/idea-sandbox/plugins/python-ce/helpers/pydev/tests_pydevd_python/my_django_proj_17/my_app/templates" />
+      </list>
+    </option>
+  </component>
+</module>
