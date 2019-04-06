@@ -52,13 +52,6 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <fileTypeFactory implementation="ru.meanmail.RequirementsFileTypeFactory"/>
-        <localInspection language="requirements.txt"
-                         shortName="InstalledPackageInspection"
-                         suppressId="Requirements"
-                         groupName="requirements.txt"
-                         enabledByDefault="true"
-                         level="WARNING"
-                         implementationClass="ru.meanmail.codeInspection.InstalledPackageInspections"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij.lang">
