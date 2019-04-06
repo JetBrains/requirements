@@ -24,7 +24,7 @@ import ru.meanmail.psi.RequirementsTypes.Companion.REQUIREMENT_EDITABLE
 import ru.meanmail.psi.RequirementsTypes.Companion.REQUIREMENT_STMT
 import ru.meanmail.psi.RequirementsTypes.Companion.RSBRACE
 import ru.meanmail.psi.RequirementsTypes.Companion.SCHEMA
-import ru.meanmail.psi.RequirementsTypes.Companion.SEPARATOR
+import ru.meanmail.psi.RequirementsTypes.Companion.RELATION
 import ru.meanmail.psi.RequirementsTypes.Companion.SIMPLE_PACKAGE_STMT
 import ru.meanmail.psi.RequirementsTypes.Companion.URL_STMT
 import ru.meanmail.psi.RequirementsTypes.Companion.VERSION
@@ -166,7 +166,7 @@ class RequirementsParser : PsiParser, LightPsiParser {
         }
         
         /* ********************************************************** */
-        // PACKAGE (SEPARATOR VERSION)?
+        // PACKAGE (RELATION VERSION)?
         private fun simple_package_stmt(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "simple_package_stmt")) return false
             if (!nextTokenIs(b, PACKAGE)) return false
@@ -177,18 +177,18 @@ class RequirementsParser : PsiParser, LightPsiParser {
             return r
         }
         
-        // (SEPARATOR VERSION)?
+        // (RELATION VERSION)?
         private fun simple_package_stmt_1(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "simple_package_stmt_1")) return false
             simple_package_stmt_1_0(b, l + 1)
             return true
         }
         
-        // SEPARATOR VERSION
+        // RELATION VERSION
         private fun simple_package_stmt_1_0(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "simple_package_stmt_1_0")) return false
             val m = enter_section_(b)
-            val r = consumeTokens(b, 0, SEPARATOR, VERSION)
+            val r = consumeTokens(b, 0, RELATION, VERSION)
             exit_section_(b, m, null, r)
             return r
         }

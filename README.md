@@ -18,3 +18,20 @@ Package version: https://www.python.org/dev/peps/pep-0440
 * Check not exists packages
 * Check duplicate packages
 * Distinguish a plain text file from file requirements.txt
+* Support relations:
+
+    * "<"
+    
+    * "<="
+    
+    * ">"
+    
+    * ">="
+    
+    * "=="
+    
+    * "!="
+    
+    * "~="
+    
+    * "==="

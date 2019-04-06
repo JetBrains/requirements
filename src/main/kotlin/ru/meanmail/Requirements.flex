@@ -18,7 +18,7 @@ import ru.meanmail.psi.RequirementsTypes;
 CRLF=\R
 WHITE_SPACE=[\ \t\f]
 END_OF_LINE_COMMENT="#"[^\r\n]*
-SEPARATOR="~=" | "==" "="? | "!=" | "<=" | ">=" | "<" | ">"
+RELATION="~=" | "==" "="? | "!=" | "<=" | ">=" | "<" | ">"
 PACKAGE_CHARACTER=[a-zA-Z0-9_\-]
 
 EPOCH=\d+ "!"
@@ -69,7 +69,7 @@ BRANCH="@"[^\ \n\t\f\\@#]+
     "-r"                                 { yybegin(WAITING_FILENAME); return RequirementsTypes.REQUIREMENT; }
     "-e"                                 { yybegin(WAITING_URL); return RequirementsTypes.REQUIREMENT_EDITABLE; }
     {PACKAGE_CHARACTER}+                 { yybegin(YYINITIAL); return RequirementsTypes.PACKAGE; }
-    {SEPARATOR}                          { yybegin(WAITING_VERSION); return RequirementsTypes.SEPARATOR; }
+    {RELATION}                           { yybegin(WAITING_VERSION); return RequirementsTypes.RELATION; }
     "["                                  { yybegin(YYINITIAL); return RequirementsTypes.LSBRACE; }
     "]"                                  { yybegin(YYINITIAL); return RequirementsTypes.RSBRACE; }
     {SCHEMA}                             { yybegin(WAITING_PATH); return RequirementsTypes.SCHEMA; }

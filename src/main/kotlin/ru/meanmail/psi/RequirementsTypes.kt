@@ -43,11 +43,11 @@ interface RequirementsTypes {
         val LSBRACE: IElementType = RequirementsTokenType("LSBRACE")
         val PACKAGE: IElementType = RequirementsTokenType("PACKAGE")
         val PATH: IElementType = RequirementsTokenType("PATH")
+        val RELATION: IElementType = RequirementsTokenType("RELATION")
         val REQUIREMENT: IElementType = RequirementsTokenType("REQUIREMENT")
         val REQUIREMENT_EDITABLE: IElementType = RequirementsTokenType("REQUIREMENT_EDITABLE")
         val RSBRACE: IElementType = RequirementsTokenType("RSBRACE")
         val SCHEMA: IElementType = RequirementsTokenType("SCHEMA")
-        val SEPARATOR: IElementType = RequirementsTokenType("SEPARATOR")
         val VERSION: IElementType = RequirementsTokenType("VERSION")
     }
 }

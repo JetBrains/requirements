@@ -10,6 +10,8 @@ interface RequirementsPackageStmt : RequirementsNamedElement {
     
     val packageName: String?
     
+    val relation: String?
+    
     val version: String?
     
     val extraPackage: String?
@@ -19,8 +21,5 @@ interface RequirementsPackageStmt : RequirementsNamedElement {
     override fun setName(newName: String): PsiElement
     
     override fun getNameIdentifier(): PsiElement?
-    
-    val isInstalled: Boolean
-    
-    fun install()
+
 }

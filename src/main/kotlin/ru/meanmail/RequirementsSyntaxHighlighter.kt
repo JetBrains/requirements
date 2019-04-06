@@ -18,7 +18,7 @@ class RequirementsSyntaxHighlighter : SyntaxHighlighterBase() {
     
     override fun getTokenHighlights(tokenType: IElementType): Array<TextAttributesKey> {
         return when (tokenType) {
-            RequirementsTypes.SEPARATOR -> SEPARATOR_KEYS
+            RequirementsTypes.RELATION -> RELATION_KEYS
             RequirementsTypes.PACKAGE -> PACKAGE_KEYS
             RequirementsTypes.VERSION -> VERSION_KEYS
             RequirementsTypes.COMMENT -> COMMENT_KEYS
@@ -37,7 +37,7 @@ class RequirementsSyntaxHighlighter : SyntaxHighlighterBase() {
     }
     
     companion object {
-        val SEPARATOR = createTextAttributesKey("REQUIREMENTS_SEPARATOR", DefaultLanguageHighlighterColors.OPERATION_SIGN)
+        val RELATION = createTextAttributesKey("REQUIREMENTS_RELATION", DefaultLanguageHighlighterColors.OPERATION_SIGN)
         val PACKAGE = createTextAttributesKey("REQUIREMENTS_PACKAGE", DefaultLanguageHighlighterColors.KEYWORD)
         val VERSION = createTextAttributesKey("REQUIREMENTS_VERSION", DefaultLanguageHighlighterColors.STRING)
         val COMMENT = createTextAttributesKey("REQUIREMENTS_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
@@ -53,7 +53,7 @@ class RequirementsSyntaxHighlighter : SyntaxHighlighterBase() {
         val EGG = createTextAttributesKey("REQUIREMENTS_EGG", DefaultLanguageHighlighterColors.IDENTIFIER)
         
         private val BAD_CHAR_KEYS = arrayOf(BAD_CHARACTER)
-        private val SEPARATOR_KEYS = arrayOf(SEPARATOR)
+        private val RELATION_KEYS = arrayOf(RELATION)
         private val PACKAGE_KEYS = arrayOf(PACKAGE)
         private val VERSION_KEYS = arrayOf(VERSION)
         private val COMMENT_KEYS = arrayOf(COMMENT)

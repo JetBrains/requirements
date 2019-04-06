@@ -31,6 +31,17 @@ object RequirementsPsiImplUtil {
     }
     
     @JvmStatic
+    fun getRelationNode(element: RequirementsPackageStmt): ASTNode? {
+        return getNode(element, listOf(RequirementsTypes.SIMPLE_PACKAGE_STMT,
+                RequirementsTypes.RELATION))
+    }
+    
+    @JvmStatic
+    fun getRelation(element: RequirementsPackageStmt): String? {
+        return getRelationNode(element)?.text
+    }
+    
+    @JvmStatic
     fun getVersionNode(element: RequirementsPackageStmt): ASTNode? {
         return getNode(element, listOf(RequirementsTypes.SIMPLE_PACKAGE_STMT,
                 RequirementsTypes.VERSION))

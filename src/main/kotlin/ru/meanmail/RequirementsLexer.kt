@@ -278,7 +278,7 @@ internal class RequirementsLexer
                     }
                     5 -> {
                         yybegin(WAITING_VERSION)
-                        return RequirementsTypes.SEPARATOR
+                        return RequirementsTypes.RELATION
                     }
                     6 -> {
                         yybegin(YYINITIAL)

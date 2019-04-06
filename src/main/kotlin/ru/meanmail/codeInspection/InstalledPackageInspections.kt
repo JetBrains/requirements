@@ -5,6 +5,7 @@ import com.intellij.codeInspection.LocalInspectionToolSession
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
 import org.jetbrains.annotations.Nls
+import ru.meanmail.isInstalled
 import ru.meanmail.psi.RequirementsPackageStmt
 import ru.meanmail.quickfix.InstallPackageQuickFix
 
@@ -27,10 +28,14 @@ class InstalledPackageInspections : LocalInspectionTool() {
                 BaseInspectionVisitor(holder, onTheFly, session) {
             
             override fun visitPackageStmt(element: RequirementsPackageStmt) {
-                if (!element.isInstalled) {
-                    var description = "Install '${element.packageName}'"
+                val project = element.project
+                val packageName = element.packageName
+                val version = element.version
+                
+                if (!isInstalled(project, packageName, version)) {
+                    var description = "Install '$packageName'"
                     if (element.version != null) {
-                        description += " version '${element.version}'"
+                        description += " version '$version'"
                     }
                     holder.registerProblem(element, description,
                             InstallPackageQuickFix(element))
