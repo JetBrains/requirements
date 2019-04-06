@@ -28,7 +28,7 @@ Package version: https://www.python.org/dev/peps/pep-0440
     
     * ">="
     
-    * "=="
+    * "==" (support *)
     
     * "!="
     
