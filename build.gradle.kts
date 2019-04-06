@@ -38,7 +38,7 @@ intellij {
 }
 
 fun readChangeNotes(pathname: String): String {
-    val lines = File(pathname).readLines()
+    val lines = file(pathname).readLines()
     
     val notes: MutableList<MutableList<String>> = mutableListOf()
     
@@ -62,10 +62,10 @@ fun readChangeNotes(pathname: String): String {
             postfix = "</p><br>") {
         it.joinToString("<br>")
     } + "See the full change notes on the " +
-            "<a href='https://github.com/meanmail/requirements'> github</a>"
+            "<a href='https://github.com/meanmail/requirements'>github</a>"
 }
 
 tasks.withType<PatchPluginXmlTask> {
-    setPluginDescription(File("Description.txt").readText())
+    setPluginDescription(file("Description.txt").readText())
     setChangeNotes(readChangeNotes("ChangeNotes.md"))
 }
