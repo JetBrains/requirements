@@ -45,7 +45,7 @@ class RequirementsParserDefinition : ParserDefinition {
         return RequirementsFile(viewProvider)
     }
     
-    override fun spaceExistanceTypeBetweenTokens(left: ASTNode, right: ASTNode): ParserDefinition.SpaceRequirements {
+    override fun spaceExistenceTypeBetweenTokens(left: ASTNode, right: ASTNode): ParserDefinition.SpaceRequirements {
         return ParserDefinition.SpaceRequirements.MAY
     }
     
