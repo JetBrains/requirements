@@ -21,22 +21,31 @@ fun getPackage(project: Project, packageName: String): PyPackage? {
     return PyPackageUtil.findPackage(packages, packageName)
 }
 
-fun isInstalled(project: Project, packageName: String, version: String?): Boolean {
-    val pyPackage = getPackage(project, packageName) ?: return false
-    if (!pyPackage.isInstalled) {
-        return false
-    }
-    version ?: return true
-    val thisVersion = PyPackageVersionNormalizer.normalize(version) ?: return true
-    val installedVersion = PyPackageVersionNormalizer
-            .normalize(pyPackage.version) ?: return false
-    return PyPackageVersionComparator.compare(thisVersion, installedVersion) == 0
-}
-
 fun getCurrentVersion(project: Project, packageName: String): PyPackageVersion? {
     val pyPackage = getPackage(project, packageName) ?: return null
+    if (!pyPackage.isInstalled) {
+        return null
+    }
     return PyPackageVersionNormalizer
             .normalize(pyPackage.version) ?: return null
+}
+
+fun getVersions(project: Project,
+                packageName: String,
+                version: String?): Triple<PyPackageVersion?, PyPackageVersion?, PyPackageVersion?> {
+    val installed = getCurrentVersion(project, packageName)
+    val latest = getLatestVersion(project, packageName)
+    val required = if (version == null) {
+        latest
+    } else {
+        PyPackageVersionNormalizer.normalize(version)
+    }
+    
+    return Triple(
+            first = required,
+            second = installed,
+            third = latest
+    )
 }
 
 fun getLatestVersion(project: Project, packageName: String): PyPackageVersion? {
@@ -111,4 +120,17 @@ fun resolveFile(filepath: String, base: VirtualFile): VirtualFile? {
     } else {
         base.findFileByRelativePath(filepath)
     }
+}
+
+operator fun PyPackageVersion?.compareTo(b: PyPackageVersion?): Int {
+    if (this == null && b == null) {
+        return 0
+    }
+    if (this == null) {
+        return -1
+    }
+    if (b == null) {
+        return 1
+    }
+    return PyPackageVersionComparator.compare(this, b)
 }

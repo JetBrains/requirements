@@ -6,10 +6,10 @@ import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElementVisitor
+import com.jetbrains.python.packaging.PyPackageVersion
 import org.jetbrains.annotations.Nls
-import ru.meanmail.getCurrentVersion
-import ru.meanmail.getLatestVersion
-import ru.meanmail.isInstalled
+import ru.meanmail.compareTo
+import ru.meanmail.getVersions
 import ru.meanmail.psi.RequirementsPackageStmt
 import ru.meanmail.quickfix.InstallPackageQuickFix
 import java.util.concurrent.Future
@@ -33,58 +33,51 @@ class InstalledPackageInspections : LocalInspectionTool() {
                 BaseInspectionVisitor(holder, onTheFly, session) {
             
             override fun visitPackageStmt(element: RequirementsPackageStmt) {
-                val project = element.project
                 val packageName = element.packageName ?: return
-                val version = element.version
                 
-                val task = buildDescription(project, packageName, version)
+                val task = getVersionAsync(element.project,
+                        packageName, element.version)
+                val versions = task.get() ?: return
                 
-                val description = task.get() ?: return
+                val required = versions.first
+                val installed = versions.second
+                val latest = versions.third
                 
-                holder.registerProblem(element, description,
-                        InstallPackageQuickFix(element, description))
+                val versionsRepresentation =
+                        "required: ${required?.presentableText ?: "<unknown>"}, " +
+                                "installed: ${installed?.presentableText ?: "<nothing>"}, " +
+                                "latest: ${latest?.presentableText ?: "<unknown>"}"
+                
+                
+                if (required != null && required != installed) {
+                    val message = "'$packageName' version '${required.presentableText}' " +
+                            "is not installed ($versionsRepresentation)"
+                    holder.registerProblem(element,
+                            message,
+                            InstallPackageQuickFix(element,
+                                    "Install '${required.presentableText}' " +
+                                            "version ($versionsRepresentation)",
+                                    required.presentableText))
+                }
+                
+                if (latest != null && required != null && required < latest) {
+                    val message = "'$packageName' version '${required.presentableText}' " +
+                            "is outdated ($versionsRepresentation)"
+                    holder.registerProblem(element,
+                            message,
+                            InstallPackageQuickFix(element,
+                                    "Install '${latest.presentableText}' " +
+                                            "version ($versionsRepresentation)",
+                                    latest.presentableText))
+                }
             }
             
-            private fun buildDescription(project: Project,
-                                         packageName: String,
-                                         version: String?): Future<String?> {
+            private fun getVersionAsync(project: Project,
+                                        packageName: String,
+                                        version: String?): Future<Triple<PyPackageVersion?, PyPackageVersion?, PyPackageVersion?>> {
                 return ApplicationManager.getApplication()
-                        .executeOnPooledThread<String?> {
-                            if (isInstalled(project, packageName, version)) {
-                                return@executeOnPooledThread null
-                            }
-                            
-                            var description = "Install '$packageName'"
-                            if (version != null) {
-                                description += " version '$version'"
-                            }
-                            
-                            val installedVersion = getCurrentVersion(project, packageName)
-                            
-                            val versions = mutableListOf<String>()
-                            var installed = "installed: "
-                            installed += if (installedVersion != null) {
-                                "'${installedVersion.presentableText}'"
-                            } else {
-                                "<not installed>"
-                            }
-                            
-                            versions.add(installed)
-                            
-                            val latestVersion = getLatestVersion(project, packageName)
-                            
-                            var latest = "latest: "
-                            latest += if (latestVersion != null) {
-                                "'${latestVersion.presentableText}'"
-                            } else {
-                                "<unknown>"
-                            }
-                            
-                            versions.add(latest)
-                            val joined = versions.joinToString(prefix = "(", postfix = ")")
-                            description += " $joined"
-                            
-                            return@executeOnPooledThread description
+                        .executeOnPooledThread<Triple<PyPackageVersion?, PyPackageVersion?, PyPackageVersion?>> {
+                            return@executeOnPooledThread getVersions(project, packageName, version)
                         }
             }
         }

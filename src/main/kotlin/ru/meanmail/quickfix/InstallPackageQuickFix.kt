@@ -10,7 +10,8 @@ import ru.meanmail.installPackage
 import ru.meanmail.psi.RequirementsPackageStmt
 
 class InstallPackageQuickFix(element: RequirementsPackageStmt,
-                             private val description: String) : LocalQuickFixOnPsiElement(element) {
+                             private val description: String,
+                             private val version: String) : LocalQuickFixOnPsiElement(element) {
     override fun getText(): String {
         return description
     }
@@ -20,7 +21,6 @@ class InstallPackageQuickFix(element: RequirementsPackageStmt,
                         endElement: PsiElement) {
         val element = (startElement as? RequirementsPackageStmt) ?: return
         val packageName = element.packageName ?: return
-        val version = element.version ?: ""
         val relation = element.relation ?: ""
         
         installPackage(project, packageName, version, relation) {
