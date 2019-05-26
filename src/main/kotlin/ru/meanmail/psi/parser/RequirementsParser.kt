@@ -102,7 +102,7 @@ class RequirementsParser : PsiParser, LightPsiParser {
         
         /* ********************************************************** */
         // PACKAGE
-        fun package_name_stmt(b: PsiBuilder, l: Int): Boolean {
+        private fun package_name_stmt(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "package_name_stmt")) return false
             if (!nextTokenIs(b, PACKAGE)) return false
             val m = enter_section_(b)
@@ -272,7 +272,7 @@ class RequirementsParser : PsiParser, LightPsiParser {
         
         /* ********************************************************** */
         // VERSION
-        fun version_stmt(b: PsiBuilder, l: Int): Boolean {
+        private fun version_stmt(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "version_stmt")) return false
             if (!nextTokenIs(b, VERSION)) return false
             val m = enter_section_(b)

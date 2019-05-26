@@ -127,7 +127,7 @@ internal class RequirementsLexer
     /**
      * Returns the length of the matched text region.
      */
-    fun yylength(): Int {
+    private fun yylength(): Int {
         return zzMarkedPos - zzStartRead
     }
     

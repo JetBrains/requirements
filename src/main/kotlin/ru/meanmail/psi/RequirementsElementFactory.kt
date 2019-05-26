@@ -25,9 +25,9 @@ object RequirementsElementFactory {
     }
     
     fun createFile(project: Project, text: String): RequirementsFile {
-        val name = "requirements.txt";
+        val name = "requirements.txt"
         return PsiFileFactory.getInstance(project).createFileFromText(name,
-                RequirementsFileType, text) as RequirementsFile;
+                RequirementsFileType, text) as RequirementsFile
     }
     
     fun createVersion(version: String): ASTNode {

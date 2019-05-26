@@ -53,7 +53,7 @@ val cache = mutableMapOf<String, Pair<PyPackageVersion?, LocalDateTime>>()
 
 fun getLatestVersion(project: Project, packageName: String): PyPackageVersion? {
     val key = packageName.toLowerCase()
-    val cached = cache.get(key)
+    val cached = cache[key]
     if (cached != null) {
         val actual = cached.second.plusDays(1).isAfter(LocalDateTime.now())
         if (actual) {

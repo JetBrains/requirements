@@ -11,12 +11,10 @@ open class BaseInspectionVisitor(val holder: ProblemsHolder,
                                  val onTheFly: Boolean,
                                  val session: LocalInspectionToolSession) : PsiElementVisitor() {
     override fun visitElement(element: PsiElement?) {
-        if (element is RequirementsPackageStmt) {
-            visitPackageStmt(element)
-        } else if (element is RequirementsFilenameStmt) {
-            visitRequirementsFilenameStmt(element)
-        } else {
-            super.visitElement(element)
+        when (element) {
+            is RequirementsPackageStmt -> visitPackageStmt(element)
+            is RequirementsFilenameStmt -> visitRequirementsFilenameStmt(element)
+            else -> super.visitElement(element)
         }
     }
     
