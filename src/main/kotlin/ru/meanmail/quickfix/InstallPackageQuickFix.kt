@@ -9,9 +9,10 @@ import com.intellij.util.FileContentUtil
 import ru.meanmail.installPackage
 import ru.meanmail.psi.RequirementsPackageStmt
 
-class InstallPackageQuickFix(element: RequirementsPackageStmt) : LocalQuickFixOnPsiElement(element) {
+class InstallPackageQuickFix(element: RequirementsPackageStmt,
+                             private val description: String) : LocalQuickFixOnPsiElement(element) {
     override fun getText(): String {
-        return "Install package"
+        return description
     }
     
     override fun invoke(project: Project, file: PsiFile,

@@ -15,21 +15,35 @@ import java.io.File
 
 
 fun getPackage(project: Project, packageName: String): PyPackage? {
-    val packageManager = RequirementsPsiImplUtil.getPackageManager(project) ?: return null
+    val packageManager = RequirementsPsiImplUtil
+            .getPackageManager(project) ?: return null
     val packages = packageManager.refreshAndGetPackages(false)
     return PyPackageUtil.findPackage(packages, packageName)
 }
 
-fun isInstalled(project: Project, packageName: String?, version: String?): Boolean {
-    packageName ?: return false
+fun isInstalled(project: Project, packageName: String, version: String?): Boolean {
     val pyPackage = getPackage(project, packageName) ?: return false
     if (!pyPackage.isInstalled) {
         return false
     }
     version ?: return true
     val thisVersion = PyPackageVersionNormalizer.normalize(version) ?: return true
-    val installedVersion = PyPackageVersionNormalizer.normalize(pyPackage.version) ?: return false
+    val installedVersion = PyPackageVersionNormalizer
+            .normalize(pyPackage.version) ?: return false
     return PyPackageVersionComparator.compare(thisVersion, installedVersion) == 0
+}
+
+fun getCurrentVersion(project: Project, packageName: String): PyPackageVersion? {
+    val pyPackage = getPackage(project, packageName) ?: return null
+    return PyPackageVersionNormalizer
+            .normalize(pyPackage.version) ?: return null
+}
+
+fun getLatestVersion(project: Project, packageName: String): PyPackageVersion? {
+    val latestVersion = PyPIPackageUtil.INSTANCE
+            .fetchLatestPackageVersion(project, packageName) ?: return null
+    return PyPackageVersionNormalizer
+            .normalize(latestVersion) ?: return null
 }
 
 fun installPackage(project: Project, packageName: String,
