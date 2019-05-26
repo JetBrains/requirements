@@ -12,7 +12,7 @@ interface RequirementsPackageStmt : RequirementsNamedElement {
     
     val relation: String?
     
-    val version: String?
+    val versionStmt: RequirementsVersionStmt?
     
     val extraPackage: String?
     

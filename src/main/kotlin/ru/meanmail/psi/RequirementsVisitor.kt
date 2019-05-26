@@ -13,11 +13,15 @@ class RequirementsVisitor : PsiElementVisitor() {
         visitPsiElement(o)
     }
     
-    fun visitPackageStmt(o: RequirementsPackageStmt) {
+    fun visitFilenameStmt(o: RequirementsFilenameStmt) {
         visitNamedElement(o)
     }
     
     fun visitPackageNameStmt(o: RequirementsPackageNameStmt) {
+        visitNamedElement(o)
+    }
+    
+    fun visitPackageStmt(o: RequirementsPackageStmt) {
         visitNamedElement(o)
     }
     
@@ -29,16 +33,15 @@ class RequirementsVisitor : PsiElementVisitor() {
         visitNamedElement(o)
     }
     
-    fun visitFilenameStmt(o: RequirementsFilenameStmt) {
-        visitPsiElement(o)
-    }
-    
-    
     fun visitSimplePackageStmt(o: RequirementsSimplePackageStmt) {
         visitPsiElement(o)
     }
     
     fun visitUrlStmt(o: RequirementsUrlStmt) {
+        visitNamedElement(o)
+    }
+    
+    fun visitVersionStmt(o: RequirementsVersionStmt) {
         visitNamedElement(o)
     }
     

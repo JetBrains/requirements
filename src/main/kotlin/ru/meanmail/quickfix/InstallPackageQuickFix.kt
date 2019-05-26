@@ -21,12 +21,13 @@ class InstallPackageQuickFix(element: RequirementsPackageStmt,
                         endElement: PsiElement) {
         val element = (startElement as? RequirementsPackageStmt) ?: return
         val packageName = element.packageName ?: return
-        val relation = element.relation ?: ""
+        val relation = element.relation ?: "=="
         
         installPackage(project, packageName, version, relation) {
             val application = ApplicationManager.getApplication()
             application.invokeLater {
                 application.runWriteAction {
+                    element.versionStmt?.setVersion(version)
                     val virtualFile = element.containingFile.virtualFile
                     FileContentUtil.reparseFiles(virtualFile)
                 }

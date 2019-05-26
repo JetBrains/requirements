@@ -36,7 +36,7 @@ class InstalledPackageInspections : LocalInspectionTool() {
                 val packageName = element.packageName ?: return
                 
                 val task = getVersionAsync(element.project,
-                        packageName, element.version)
+                        packageName, element.versionStmt?.version)
                 val versions = task.get() ?: return
                 
                 val required = versions.first
@@ -55,8 +55,9 @@ class InstalledPackageInspections : LocalInspectionTool() {
                     holder.registerProblem(element,
                             message,
                             InstallPackageQuickFix(element,
-                                    "Install '${required.presentableText}' " +
-                                            "version ($versionsRepresentation)",
+                                    "Install '$packageName' " +
+                                            "version '${required.presentableText}' " +
+                                            "($versionsRepresentation)",
                                     required.presentableText))
                 }
                 
@@ -66,8 +67,9 @@ class InstalledPackageInspections : LocalInspectionTool() {
                     holder.registerProblem(element,
                             message,
                             InstallPackageQuickFix(element,
-                                    "Install '${latest.presentableText}' " +
-                                            "version ($versionsRepresentation)",
+                                    "Install '$packageName' " +
+                                            "version '${latest.presentableText}' " +
+                                            "($versionsRepresentation)",
                                     latest.presentableText))
                 }
             }

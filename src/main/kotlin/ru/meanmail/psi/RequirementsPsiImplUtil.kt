@@ -1,6 +1,7 @@
 package ru.meanmail.psi
 
 import com.intellij.lang.ASTNode
+import com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.psi.PsiElement
@@ -32,6 +33,13 @@ object RequirementsPsiImplUtil {
     }
     
     @JvmStatic
+    fun getPackageName(element: RequirementsVersionStmt): String? {
+        return getValue(element.parent, listOf(
+                RequirementsTypes.PACKAGE_NAME_STMT,
+                RequirementsTypes.PACKAGE))
+    }
+    
+    @JvmStatic
     fun getPackageName(element: RequirementsPackageNameStmt): String? {
         return getValue(element, listOf(RequirementsTypes.PACKAGE))
     }
@@ -48,14 +56,15 @@ object RequirementsPsiImplUtil {
     }
     
     @JvmStatic
-    fun getVersionNode(element: RequirementsPackageStmt): ASTNode? {
+    fun getVersionStmt(element: RequirementsPackageStmt): RequirementsVersionStmt? {
         return getNode(element, listOf(RequirementsTypes.SIMPLE_PACKAGE_STMT,
-                RequirementsTypes.VERSION))
+                RequirementsTypes.VERSION_STMT))
+                ?.psi as RequirementsVersionStmt?
     }
     
     @JvmStatic
-    fun getVersion(element: RequirementsPackageStmt): String? {
-        return getVersionNode(element)?.text
+    fun getVersion(element: RequirementsVersionStmt): String? {
+        return getNode(element, listOf(RequirementsTypes.VERSION))?.text
     }
     
     @JvmStatic
@@ -264,6 +273,37 @@ object RequirementsPsiImplUtil {
     fun getNameIdentifier(element: RequirementsPackageNameStmt): PsiElement? {
         val keyNode = getNode(element, listOf(RequirementsTypes.PACKAGE))
         return keyNode?.psi
+    }
+    
+    @JvmStatic
+    fun getName(element: RequirementsVersionStmt): String? {
+        return getValue(element, listOf(RequirementsTypes.VERSION))
+    }
+    
+    @JvmStatic
+    fun setName(element: RequirementsVersionStmt, newName: String): PsiElement {
+        val keyNode = getNode(element, listOf(RequirementsTypes.VERSION)) ?: return element
+        val requirementsStmt = RequirementsElementFactory.createRequirements(element.project, newName)
+        val newKeyNode = requirementsStmt.firstChild.node
+        element.node.replaceChild(keyNode, newKeyNode)
+        return element
+    }
+    
+    @JvmStatic
+    fun getNameIdentifier(element: RequirementsVersionStmt): PsiElement? {
+        val keyNode = getNode(element, listOf(RequirementsTypes.VERSION))
+        return keyNode?.psi
+    }
+    
+    @JvmStatic
+    fun setVersion(element: RequirementsVersionStmt, newVersion: String): PsiElement {
+        val version = RequirementsElementFactory.createVersion(newVersion)
+        runWriteCommandAction(element.project,
+                "Update package version",
+                "Requirements", Runnable {
+            element.node.replaceChild(element.node.firstChildNode, version)
+        })
+        return element
     }
     
     @JvmStatic

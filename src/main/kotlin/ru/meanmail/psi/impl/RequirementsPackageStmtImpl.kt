@@ -21,8 +21,8 @@ class RequirementsPackageStmtImpl(node: ASTNode) :
     override val relation: String?
         get() = RequirementsPsiImplUtil.getRelation(this)
     
-    override val version: String?
-        get() = RequirementsPsiImplUtil.getVersion(this)
+    override val versionStmt: RequirementsVersionStmt?
+        get() = RequirementsPsiImplUtil.getVersionStmt(this)
     
     override val extraPackage: String?
         get() = RequirementsPsiImplUtil.getExtraPackage(this)

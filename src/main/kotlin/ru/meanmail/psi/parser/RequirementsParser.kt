@@ -30,6 +30,7 @@ import ru.meanmail.psi.RequirementsTypes.Companion.SCHEMA
 import ru.meanmail.psi.RequirementsTypes.Companion.SIMPLE_PACKAGE_STMT
 import ru.meanmail.psi.RequirementsTypes.Companion.URL_STMT
 import ru.meanmail.psi.RequirementsTypes.Companion.VERSION
+import ru.meanmail.psi.RequirementsTypes.Companion.VERSION_STMT
 
 class RequirementsParser : PsiParser, LightPsiParser {
     
@@ -173,7 +174,7 @@ class RequirementsParser : PsiParser, LightPsiParser {
         }
         
         /* ********************************************************** */
-        // package_name_stmt (RELATION VERSION)?
+        // package_name_stmt (RELATION version_stmt)?
         private fun simple_package_stmt(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "simple_package_stmt")) return false
             if (!nextTokenIs(b, PACKAGE)) return false
@@ -184,18 +185,19 @@ class RequirementsParser : PsiParser, LightPsiParser {
             return r
         }
         
-        // (RELATION VERSION)?
+        // (RELATION version_stmt)?
         private fun simple_package_stmt_1(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "simple_package_stmt_1")) return false
             simple_package_stmt_1_0(b, l + 1)
             return true
         }
         
-        // RELATION VERSION
+        // RELATION version_stmt
         private fun simple_package_stmt_1_0(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "simple_package_stmt_1_0")) return false
             val m = enter_section_(b)
-            val r = consumeTokens(b, 0, RELATION, VERSION)
+            var r = consumeToken(b, RELATION)
+            r = r && version_stmt(b, l + 1)
             exit_section_(b, m, null, r)
             return r
         }
@@ -265,6 +267,17 @@ class RequirementsParser : PsiParser, LightPsiParser {
             var r = consumeToken(b, EGG)
             r = r && simple_package_stmt(b, l + 1)
             exit_section_(b, m, null, r)
+            return r
+        }
+        
+        /* ********************************************************** */
+        // VERSION
+        fun version_stmt(b: PsiBuilder, l: Int): Boolean {
+            if (!recursion_guard_(b, l, "version_stmt")) return false
+            if (!nextTokenIs(b, VERSION)) return false
+            val m = enter_section_(b)
+            val r = consumeToken(b, VERSION)
+            exit_section_(b, m, VERSION_STMT, r)
             return r
         }
     }

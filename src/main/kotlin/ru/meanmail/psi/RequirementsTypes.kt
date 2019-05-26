@@ -9,8 +9,7 @@ interface RequirementsTypes {
     
     object Factory {
         fun createElement(node: ASTNode): PsiElement {
-            val type = node.elementType
-            return when (type) {
+            return when (val type = node.elementType) {
                 EDITABLE_REQUIREMENT_STMT -> RequirementsEditableRequirementStmtImpl(node)
                 EXTRA -> RequirementsExtraImpl(node)
                 FILENAME_STMT -> RequirementsFilenameStmtImpl(node)
@@ -20,6 +19,7 @@ interface RequirementsTypes {
                 REQUIREMENT_STMT -> RequirementsRequirementStmtImpl(node)
                 SIMPLE_PACKAGE_STMT -> RequirementsSimplePackageStmtImpl(node)
                 URL_STMT -> RequirementsUrlStmtImpl(node)
+                VERSION_STMT -> RequirementsVersionStmtImpl(node)
                 else -> throw AssertionError("Unknown element type: $type")
             }
         }
@@ -36,6 +36,7 @@ interface RequirementsTypes {
         val REQUIREMENT_STMT: IElementType = RequirementsElementType("REQUIREMENT_STMT")
         val SIMPLE_PACKAGE_STMT: IElementType = RequirementsElementType("SIMPLE_PACKAGE_STMT")
         val URL_STMT: IElementType = RequirementsElementType("URL_STMT")
+        val VERSION_STMT: IElementType = RequirementsElementType("VERSION_STMT")
         
         val BRANCH: IElementType = RequirementsTokenType("BRANCH")
         val COMMENT: IElementType = RequirementsTokenType("COMMENT")
