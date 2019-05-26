@@ -1,3 +1,11 @@
+## 2019.4 (May, 26, 2019)
+
+* Fix: installing without required version is failed
++ Add Open in browser for package
++ Add Open in browser for version
++ Improve inspections
++ Checks the latest version for packages
+
 ## 2019.3 (Apr, 6, 2019)
 
 * Fix: after installing a package reloaded from disk

@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "ru.meanmail"
-version = "2019.3"
+version = "2019.4"
 
 repositories {
     mavenCentral()
