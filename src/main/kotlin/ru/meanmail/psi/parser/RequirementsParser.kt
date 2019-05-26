@@ -6,6 +6,7 @@ import com.intellij.lang.PsiBuilder
 import com.intellij.lang.PsiParser
 import com.intellij.lang.parser.GeneratedParserUtilBase.*
 import com.intellij.psi.tree.IElementType
+import com.intellij.psi.tree.IFileElementType
 import ru.meanmail.psi.RequirementsTypes.Companion.BRANCH
 import ru.meanmail.psi.RequirementsTypes.Companion.COMMENT
 import ru.meanmail.psi.RequirementsTypes.Companion.CRLF
@@ -16,15 +17,16 @@ import ru.meanmail.psi.RequirementsTypes.Companion.FILENAME
 import ru.meanmail.psi.RequirementsTypes.Companion.FILENAME_STMT
 import ru.meanmail.psi.RequirementsTypes.Companion.LSBRACE
 import ru.meanmail.psi.RequirementsTypes.Companion.PACKAGE
+import ru.meanmail.psi.RequirementsTypes.Companion.PACKAGE_NAME_STMT
 import ru.meanmail.psi.RequirementsTypes.Companion.PACKAGE_STMT
 import ru.meanmail.psi.RequirementsTypes.Companion.PATH
 import ru.meanmail.psi.RequirementsTypes.Companion.PATH_STMT
+import ru.meanmail.psi.RequirementsTypes.Companion.RELATION
 import ru.meanmail.psi.RequirementsTypes.Companion.REQUIREMENT
 import ru.meanmail.psi.RequirementsTypes.Companion.REQUIREMENT_EDITABLE
 import ru.meanmail.psi.RequirementsTypes.Companion.REQUIREMENT_STMT
 import ru.meanmail.psi.RequirementsTypes.Companion.RSBRACE
 import ru.meanmail.psi.RequirementsTypes.Companion.SCHEMA
-import ru.meanmail.psi.RequirementsTypes.Companion.RELATION
 import ru.meanmail.psi.RequirementsTypes.Companion.SIMPLE_PACKAGE_STMT
 import ru.meanmail.psi.RequirementsTypes.Companion.URL_STMT
 import ru.meanmail.psi.RequirementsTypes.Companion.VERSION
@@ -38,25 +40,19 @@ class RequirementsParser : PsiParser, LightPsiParser {
     
     override fun parseLight(type: IElementType, b: PsiBuilder) {
         val builder = adapt_builder_(type, b, this, null)
-        val m = enter_section_(builder, 0, _COLLAPSE_, null)
-        val r = when (type) {
-            EDITABLE_REQUIREMENT_STMT -> editable_requirement_stmt(builder, 0)
-            EXTRA -> extra(builder, 0)
-            FILENAME_STMT -> filename_stmt(builder, 0)
-            PACKAGE_STMT -> package_stmt(builder, 0)
-            PATH_STMT -> path_stmt(builder, 0)
-            REQUIREMENT_STMT -> requirement_stmt(builder, 0)
-            SIMPLE_PACKAGE_STMT -> simple_package_stmt(builder, 0)
-            URL_STMT -> url_stmt(builder, 0)
-            else -> parse_root_(builder, 0)
+        val marker = enter_section_(builder, 0, _COLLAPSE_, null)
+        val result = if (type is IFileElementType) {
+            parse_root_(type, builder, 0)
+        } else {
+            false
         }
-        exit_section_(builder, 0, m, type, r, true, TRUE_CONDITION)
+        exit_section_(builder, 0, marker, type, result, true, TRUE_CONDITION)
     }
     
     companion object {
         
-        private fun parse_root_(builder: PsiBuilder, l: Int): Boolean {
-            return requirementsFile(builder, l + 1)
+        private fun parse_root_(type: IElementType, builder: PsiBuilder, level: Int): Boolean {
+            return requirementsFile(builder, level + 1)
         }
         
         /* ********************************************************** */
@@ -100,6 +96,17 @@ class RequirementsParser : PsiParser, LightPsiParser {
             var r = stmt(b, l + 1)
             if (!r) r = consumeToken(b, COMMENT)
             if (!r) r = consumeToken(b, CRLF)
+            return r
+        }
+        
+        /* ********************************************************** */
+        // PACKAGE
+        fun package_name_stmt(b: PsiBuilder, l: Int): Boolean {
+            if (!recursion_guard_(b, l, "package_name_stmt")) return false
+            if (!nextTokenIs(b, PACKAGE)) return false
+            val m = enter_section_(b)
+            val r = consumeToken(b, PACKAGE)
+            exit_section_(b, m, PACKAGE_NAME_STMT, r)
             return r
         }
         
@@ -166,12 +173,12 @@ class RequirementsParser : PsiParser, LightPsiParser {
         }
         
         /* ********************************************************** */
-        // PACKAGE (RELATION VERSION)?
+        // package_name_stmt (RELATION VERSION)?
         private fun simple_package_stmt(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "simple_package_stmt")) return false
             if (!nextTokenIs(b, PACKAGE)) return false
             val m = enter_section_(b)
-            var r = consumeToken(b, PACKAGE)
+            var r = package_name_stmt(b, l + 1)
             r = r && simple_package_stmt_1(b, l + 1)
             exit_section_(b, m, SIMPLE_PACKAGE_STMT, r)
             return r

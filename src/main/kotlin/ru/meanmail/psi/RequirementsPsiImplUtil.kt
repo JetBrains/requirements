@@ -27,7 +27,13 @@ object RequirementsPsiImplUtil {
     @JvmStatic
     fun getPackageName(element: RequirementsPackageStmt): String? {
         return getValue(element, listOf(RequirementsTypes.SIMPLE_PACKAGE_STMT,
+                RequirementsTypes.PACKAGE_NAME_STMT,
                 RequirementsTypes.PACKAGE))
+    }
+    
+    @JvmStatic
+    fun getPackageName(element: RequirementsPackageNameStmt): String? {
+        return getValue(element, listOf(RequirementsTypes.PACKAGE))
     }
     
     @JvmStatic
@@ -181,6 +187,7 @@ object RequirementsPsiImplUtil {
     @JvmStatic
     fun setName(element: RequirementsPackageStmt, newName: String): PsiElement {
         val keyNode = getNode(element, listOf(RequirementsTypes.SIMPLE_PACKAGE_STMT,
+                RequirementsTypes.PACKAGE_NAME_STMT,
                 RequirementsTypes.PACKAGE)) ?: return element
         val simplePackageStmt = RequirementsElementFactory.createSimplePackage(element.project, newName)
         val newKeyNode = simplePackageStmt.firstChild.node
@@ -191,6 +198,7 @@ object RequirementsPsiImplUtil {
     @JvmStatic
     fun getNameIdentifier(element: RequirementsPackageStmt): PsiElement? {
         val keyNode = getNode(element, listOf(RequirementsTypes.SIMPLE_PACKAGE_STMT,
+                RequirementsTypes.PACKAGE_NAME_STMT,
                 RequirementsTypes.PACKAGE))
         return keyNode?.psi
     }
@@ -235,6 +243,26 @@ object RequirementsPsiImplUtil {
     @JvmStatic
     fun getNameIdentifier(element: RequirementsFilenameStmt): PsiElement? {
         val keyNode = getNode(element, listOf(RequirementsTypes.FILENAME))
+        return keyNode?.psi
+    }
+    
+    @JvmStatic
+    fun getName(element: RequirementsPackageNameStmt): String? {
+        return getValue(element, listOf(RequirementsTypes.PACKAGE))
+    }
+    
+    @JvmStatic
+    fun setName(element: RequirementsPackageNameStmt, newName: String): PsiElement {
+        val keyNode = getNode(element, listOf(RequirementsTypes.PACKAGE)) ?: return element
+        val requirementsStmt = RequirementsElementFactory.createRequirements(element.project, newName)
+        val newKeyNode = requirementsStmt.firstChild.node
+        element.node.replaceChild(keyNode, newKeyNode)
+        return element
+    }
+    
+    @JvmStatic
+    fun getNameIdentifier(element: RequirementsPackageNameStmt): PsiElement? {
+        val keyNode = getNode(element, listOf(RequirementsTypes.PACKAGE))
         return keyNode?.psi
     }
     
