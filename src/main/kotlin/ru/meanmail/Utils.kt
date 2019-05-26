@@ -12,6 +12,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.jetbrains.python.packaging.*
 import ru.meanmail.psi.RequirementsPsiImplUtil
 import java.io.File
+import java.time.LocalDateTime
 
 
 fun getPackage(project: Project, packageName: String): PyPackage? {
@@ -48,11 +49,23 @@ fun getVersions(project: Project,
     )
 }
 
+val cache = mutableMapOf<String, Pair<PyPackageVersion?, LocalDateTime>>()
+
 fun getLatestVersion(project: Project, packageName: String): PyPackageVersion? {
+    val key = packageName.toLowerCase()
+    val cached = cache.get(key)
+    if (cached != null) {
+        val actual = cached.second.plusDays(1).isAfter(LocalDateTime.now())
+        if (actual) {
+            return cached.first
+        }
+    }
     val latestVersion = PyPIPackageUtil.INSTANCE
             .fetchLatestPackageVersion(project, packageName) ?: return null
-    return PyPackageVersionNormalizer
+    val version = PyPackageVersionNormalizer
             .normalize(latestVersion) ?: return null
+    cache[key] = version to LocalDateTime.now()
+    return version
 }
 
 fun installPackage(project: Project, packageName: String,
