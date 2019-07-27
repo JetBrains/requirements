@@ -1,3 +1,7 @@
+## 2019.4.1 (July, 28, 2019)
+
+* Update IDE build
+
 ## 2019.4 (May, 26, 2019)
 
 * Fix: installing without required version is failed

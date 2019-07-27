@@ -141,3 +141,5 @@ $RECYCLE.BIN/
 
 /idea-flex.skeleton
 !/gradle/wrapper/gradle-wrapper.jar
+build
+.gradle

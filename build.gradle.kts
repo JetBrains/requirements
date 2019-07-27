@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "ru.meanmail"
-version = "2019.4"
+version = "2019.4.1"
 
 repositories {
     mavenCentral()
@@ -33,8 +33,8 @@ tasks.withType<Wrapper> {
 
 intellij {
     pluginName = "requirements"
-    version = "2019.1"
-    setPlugins("PythonCore:2019.1.191.6183.53")
+    version = "2019.2"
+    setPlugins("PythonCore:2019.2.192.5728.98")
 }
 
 fun readChangeNotes(pathname: String): String {

@@ -12,7 +12,10 @@
     <depends optional="true" config-file="python-config.xml">Pythonid</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <fileTypeFactory implementation="ru.meanmail.RequirementsFileTypeFactory"/>
+        <fileType implementationClass="ru.meanmail.RequirementsFileType"
+                  order="first" name="requirements.txt"
+                  fileNames="requirements.txt"
+                  patterns="*.txt"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij.lang">
