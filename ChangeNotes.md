@@ -1,3 +1,7 @@
+## 2019.4.2 (Sep, 1, 2019)
+
+* Support periods (.) in a package name
+
 ## 2019.4.1 (July, 28, 2019)
 
 * Update IDE build

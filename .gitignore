@@ -143,3 +143,4 @@ $RECYCLE.BIN/
 !/gradle/wrapper/gradle-wrapper.jar
 build
 .gradle
+src/main/gen

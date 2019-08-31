@@ -19,7 +19,8 @@ CRLF=\R
 WHITE_SPACE=[\ \t\f]
 END_OF_LINE_COMMENT="#"[^\r\n]*
 RELATION="~=" | "==" "="? | "!=" | "<=" | ">=" | "<" | ">"
-PACKAGE_CHARACTER=[a-zA-Z0-9_\-]
+ANSI_LETTER=[a-zA-Z0-9]
+PACKAGE_CHARACTER={ANSI_LETTER} | [_\-.]
 
 EPOCH=\d+ "!"
 RELEASE=\d+(\.\d+)*
@@ -65,34 +66,34 @@ BRANCH="@"[^\ \n\t\f\\@#]+
 %%
 
 <YYINITIAL> {
-    {END_OF_LINE_COMMENT}                { yybegin(YYINITIAL); return RequirementsTypes.COMMENT; }
-    "-r"                                 { yybegin(WAITING_FILENAME); return RequirementsTypes.REQUIREMENT; }
-    "-e"                                 { yybegin(WAITING_URL); return RequirementsTypes.REQUIREMENT_EDITABLE; }
-    {PACKAGE_CHARACTER}+                 { yybegin(YYINITIAL); return RequirementsTypes.PACKAGE; }
-    {RELATION}                           { yybegin(WAITING_VERSION); return RequirementsTypes.RELATION; }
-    "["                                  { yybegin(YYINITIAL); return RequirementsTypes.LSBRACE; }
-    "]"                                  { yybegin(YYINITIAL); return RequirementsTypes.RSBRACE; }
-    {SCHEMA}                             { yybegin(WAITING_PATH); return RequirementsTypes.SCHEMA; }
+    {END_OF_LINE_COMMENT}                             { yybegin(YYINITIAL); return RequirementsTypes.COMMENT; }
+    "-r"                                              { yybegin(WAITING_FILENAME); return RequirementsTypes.REQUIREMENT; }
+    "-e"                                              { yybegin(WAITING_URL); return RequirementsTypes.REQUIREMENT_EDITABLE; }
+    {ANSI_LETTER}({PACKAGE_CHARACTER}*{ANSI_LETTER})? { yybegin(YYINITIAL); return RequirementsTypes.PACKAGE; }
+    {RELATION}                                        { yybegin(WAITING_VERSION); return RequirementsTypes.RELATION; }
+    "["                                               { yybegin(YYINITIAL); return RequirementsTypes.LSBRACE; }
+    "]"                                               { yybegin(YYINITIAL); return RequirementsTypes.RSBRACE; }
+    {SCHEMA}                                          { yybegin(WAITING_PATH); return RequirementsTypes.SCHEMA; }
 }
 
-<WAITING_FILENAME> {FILENAME_CHARACTER}+ { yybegin(YYINITIAL); return RequirementsTypes.FILENAME; }
+<WAITING_FILENAME> {FILENAME_CHARACTER}+              { yybegin(YYINITIAL); return RequirementsTypes.FILENAME; }
 
-<WAITING_VERSION> {VERSION}              { yybegin(YYINITIAL); return RequirementsTypes.VERSION; }
+<WAITING_VERSION> {VERSION}                           { yybegin(YYINITIAL); return RequirementsTypes.VERSION; }
 
 <WAITING_URL> {
-    {SCHEMA}                             { yybegin(WAITING_PATH); return RequirementsTypes.SCHEMA; }
-    {DIRECTORY}                          { yybegin(WAITING_EGG); return RequirementsTypes.PATH; }
+    {SCHEMA}                                          { yybegin(WAITING_PATH); return RequirementsTypes.SCHEMA; }
+    {DIRECTORY}                                       { yybegin(WAITING_EGG); return RequirementsTypes.PATH; }
 }
 
-<WAITING_PATH> {PATH}                    { yybegin(WAITING_EGG); return RequirementsTypes.PATH; }
+<WAITING_PATH> {PATH}                                 { yybegin(WAITING_EGG); return RequirementsTypes.PATH; }
 
 <WAITING_EGG> {
-    {EGG}                                { yybegin(YYINITIAL); return RequirementsTypes.EGG; }
-    {BRANCH}                             { yybegin(WAITING_EGG); return RequirementsTypes.BRANCH; }
+    {EGG}                                             { yybegin(YYINITIAL); return RequirementsTypes.EGG; }
+    {BRANCH}                                          { yybegin(WAITING_EGG); return RequirementsTypes.BRANCH; }
 }
 
-{CRLF}+                                  { yybegin(YYINITIAL); return RequirementsTypes.CRLF; }
+{CRLF}+                                               { yybegin(YYINITIAL); return RequirementsTypes.CRLF; }
 
-{WHITE_SPACE}+                           {return TokenType.WHITE_SPACE;}
+{WHITE_SPACE}+                                        {return TokenType.WHITE_SPACE;}
 
-.                                        { return TokenType.BAD_CHARACTER; }
+.                                                     { return TokenType.BAD_CHARACTER; }

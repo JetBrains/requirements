@@ -3,12 +3,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    kotlin("jvm") version "1.3.21"
+    kotlin("jvm") version "1.3.50"
     id("org.jetbrains.intellij") version "0.4.5"
 }
 
 group = "ru.meanmail"
-version = "2019.4.1"
+version = "2019.4.2"
 
 repositories {
     mavenCentral()
