@@ -1,52 +1,105 @@
 {
   parserClass="ru.meanmail.psi.parser.RequirementsParser"
-  parserUtilClass="ru.meanmail.psi.parser.RequirementsParserUtil"
+  parserUtilClass="ru.meanmail.psi.parser.ParserUtil"
 
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
-  psiClassPrefix="Requirements"
+  psiClassPrefix=""
   psiImplClassSuffix="Impl"
   psiPackage="ru.meanmail.psi"
   psiImplPackage="ru.meanmail.psi.impl"
 
-  elementTypeHolderClass="ru.meanmail.psi.RequirementsTypes"
+  elementTypeHolderClass="ru.meanmail.psi.Types"
   elementTypeClass="ru.meanmail.psi.RequirementsElementType"
   tokenTypeClass="ru.meanmail.psi.RequirementsTokenType"
 
-  psiImplUtilClass="ru.meanmail.psi.RequirementsPsiImplUtil"
+  psiImplUtilClass="ru.meanmail.psi.PsiImplUtil"
 }
 
-requirementsFile ::= item_*
+requirementsFile ::= line_*
 
-private item_ ::= (stmt|COMMENT|CRLF)
+private line_ ::= (wsps specification wsps COMMENT? (EOL | <<eof>>)) | EOL
+private specification ::= name_req | url_req | refer_req | editable_req | path_req
+private wsps  ::= WHITE_SPACE*
 
-private stmt ::= (package_stmt|requirement_stmt|editable_requirement_stmt|url_stmt) (CRLF|<<eof>>)
+version_one   ::= VERSION_CMP VERSION
+version_many  ::= version_one (wsps COMMA wsps version_one)*
+versionspec   ::= LPARENTHESIS wsps version_many wsps RPARENTHESIS | version_many
 
-package_stmt ::= simple_package_stmt extra? {mixin="ru.meanmail.psi.impl.RequirementsNamedElementImpl"
-                                             implements="ru.meanmail.psi.RequirementsNamedElement"
-                                             methods=[getPackageName getVersionStmt getExtraPackage
-                                             getName setName getNameIdentifier]}
-simple_package_stmt ::= package_name_stmt (RELATION version_stmt)?
-package_name_stmt ::= PACKAGE {mixin="ru.meanmail.psi.impl.RequirementsNamedElementImpl"
-                               implements="ru.meanmail.psi.RequirementsNamedElement"
-                               methods=[getPackageName getName setName getNameIdentifier]}
-version_stmt ::= VERSION {mixin="ru.meanmail.psi.impl.RequirementsNamedElementImpl"
-                          implements="ru.meanmail.psi.RequirementsNamedElement"
-                          methods=[getVersion getName setName getNameIdentifier]}
+marker_op     ::= VERSION_CMP | IN | NOT WHITE_SPACE+ IN
+python_str    ::= (SQUOTE (PYTHON_STR_C | DQUOTE)* SQUOTE |
+                   DQUOTE (PYTHON_STR_C | SQUOTE)* DQUOTE)
+marker_var    ::= ENV_VAR | python_str
+marker_expr   ::= (marker_var wsps marker_op wsps marker_var
+                  | LPARENTHESIS wsps marker wsps RPARENTHESIS)
+marker_and    ::= marker_expr (wsps AND wsps marker_expr)?
+marker_or     ::= marker_and (wsps OR wsps marker_and)?
+marker        ::= marker_or
+quoted_marker ::= SEMICOLON wsps marker
 
-extra ::= LSBRACE PACKAGE RSBRACE
-requirement_stmt ::= REQUIREMENT filename_stmt {mixin="ru.meanmail.psi.impl.RequirementsNamedElementImpl"
-                                                  implements="ru.meanmail.psi.RequirementsNamedElement"
-                                                  methods=[getFilename getName setName getNameIdentifier]}
-filename_stmt ::= FILENAME {mixin="ru.meanmail.psi.impl.RequirementsNamedElementImpl"
-                            implements="ru.meanmail.psi.RequirementsNamedElement"
-                            methods=[getFilename getName setName getNameIdentifier]}
-path_stmt ::= SCHEMA? PATH
-url_stmt ::= path_stmt BRANCH? (EGG simple_package_stmt)? {mixin="ru.meanmail.psi.impl.RequirementsNamedElementImpl"
-                                                                  implements="ru.meanmail.psi.RequirementsNamedElement"
-                                                                  methods=[getURL getBranch getEgg
-                                                                  getName setName getNameIdentifier]}
-editable_requirement_stmt ::= REQUIREMENT_EDITABLE url_stmt {mixin="ru.meanmail.psi.impl.RequirementsNamedElementImpl"
-                                                            implements="ru.meanmail.psi.RequirementsNamedElement"
-                                                            methods=[getURL getBranch getEgg
-                                                            getName setName getNameIdentifier]}
+name          ::= IDENTIFIER
+extras_list   ::= IDENTIFIER (wsps COMMA wsps IDENTIFIER)*
+extras        ::= LSBRACE wsps extras_list? wsps RSBRACE
+name_req      ::= name wsps extras? wsps !AT wsps versionspec? wsps quoted_marker? {pin=5}
+
+refer_req     ::= REFER WHITE_SPACE+ uri_reference {pin=2}
+
+editable_req  ::= EDITABLE WHITE_SPACE+ uri_reference {pin=2}
+
+path_req      ::= uri_reference
+
+url_req       ::= name wsps extras? wsps urlspec wsps quoted_marker? {pin=5 }
+urlspec       ::= AT wsps uri_reference
+scheme        ::= LETTER (LETTER | DIGIT | PLUS | MINUS | DOT)*
+uri_reference ::= uri | relative_ref
+uri           ::= scheme (AT | COLON) hier_part (QUESTION_MARK query)? (SHARP fragment)? {pin=2}
+hier_part     ::= SLASH SLASH authority path_abempty | path_absolute | path_rootless | path_empty
+relative_ref  ::= relative_part (QUESTION_MARK query)? (SHARP fragment)?
+relative_part ::= SLASH SLASH authority path_abempty | path_absolute | path_noscheme | path_empty
+authority     ::= (userinfo AT)? host (COLON port)?
+userinfo      ::= (unreserved | pct_encoded | env_variable | SUB_DELIMS | DOLLAR_SIGN | COLON)*
+env_variable  ::= DOLLAR_SIGN LBRACE variable_name RBRACE
+variable_name ::= LETTER (LETTER | DIGIT | UNDERSCORE)*
+host          ::= IP_literal | IPv4address | reg_name
+port          ::= DIGIT*
+IP_literal    ::= LSBRACE (IPv6address | IPvFuture) RSBRACE
+IPvFuture     ::= 'v' hexdig+ DOT (unreserved | SUB_DELIMS | DOLLAR_SIGN | COLON)+
+h16_colon     ::= h16 COLON
+IPv6address   ::= (
+                  h16_colon h16_colon h16_colon h16_colon h16_colon h16_colon ls32
+                  | COLON COLON h16_colon h16_colon h16_colon h16_colon h16_colon ls32
+                  | h16?  COLON COLON h16_colon h16_colon h16_colon h16_colon ls32
+                  | (h16_colon? h16)? COLON COLON h16_colon h16_colon h16_colon ls32
+                  | (h16_colon? h16_colon? h16 )? COLON COLON h16_colon h16_colon ls32
+                  | (h16_colon? h16_colon? h16_colon? h16 )? COLON COLON h16_colon ls32
+                  | (h16_colon? h16_colon? h16_colon? h16_colon? h16 )? COLON COLON ls32
+                  | (h16_colon? h16_colon? h16_colon? h16_colon? h16_colon? h16 )? COLON COLON h16
+                  | (h16_colon? h16_colon? h16_colon? h16_colon? h16_colon? h16_colon? h16 )? COLON COLON
+                  )
+h16           ::= hexdig hexdig? hexdig? hexdig?
+ls32          ::= h16_colon h16 | IPv4address
+IPv4address   ::= dec_octet DOT dec_octet DOT dec_octet DOT dec_octet
+nz            ::= !"0" DIGIT
+dec_octet     ::= (
+                  DIGIT // 0-9
+                  | nz DIGIT // 10-99
+                  | "1" DIGIT DIGIT // 100-199
+                  | "2" ("0" | "1" | "2" | "3" | "4") DIGIT // 200-249
+                  | "2" "5" ("0" | "1" | "2" | "3" | "4" | "5") )// %250-255
+reg_name      ::= (unreserved | pct_encoded | SUB_DELIMS | DOLLAR_SIGN)*
+
+path_abempty  ::= (SLASH segment)*
+path_absolute ::= SLASH (segment_nz (SLASH segment)*)?
+path_noscheme ::= segment_nz_nc (SLASH segment)*
+path_rootless ::= segment_nz (SLASH segment)*
+path_empty    ::= pchar{0}
+segment       ::= pchar*
+segment_nz    ::= pchar+
+segment_nz_nc ::= (unreserved | pct_encoded | SUB_DELIMS | DOLLAR_SIGN | AT)+
+                // non-zero-length segment without any colon ':'
+pchar         ::= unreserved | pct_encoded | SUB_DELIMS | DOLLAR_SIGN | COLON | AT | PLUS
+query         ::= (pchar | SLASH | QUESTION_MARK)*
+fragment      ::= (pchar | SLASH | QUESTION_MARK)*
+pct_encoded   ::= PERCENT_SIGN hexdig
+unreserved    ::= LETTER | DIGIT | MINUS | DOT | UNDERSCORE | TILDA
+hexdig        ::= DIGIT | 'a' | 'A' | 'b' | 'B' | 'c' | 'C' | 'd' | 'D' | 'e' | 'E' | 'f' | 'F'

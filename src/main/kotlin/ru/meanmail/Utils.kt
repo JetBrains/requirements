@@ -41,7 +41,7 @@ fun getVersions(project: Project,
     } else {
         PyPackageVersionNormalizer.normalize(version)
     }
-    
+
     return Triple(
             first = required,
             second = installed,
@@ -69,24 +69,24 @@ fun getLatestVersion(project: Project, packageName: String): PyPackageVersion? {
 }
 
 fun installPackage(project: Project, packageName: String,
-                   version: String, relation: String,
+                   version: String, versionCmp: String,
                    onInstalled: (() -> Unit)?) {
-    val text = "$packageName$relation$version"
+    val text = "$packageName$versionCmp$version"
     val title = "Installing '$text'"
-    
-    // TODO Use relation
-    
+
+    // TODO Use versionCmp
+
     val task = object : Task.Backgroundable(project, title) {
         override fun run(indicator: ProgressIndicator) {
             indicator.text = this.title
             indicator.isIndeterminate = true
-            
+
             val application = ApplicationManager.getApplication()
-            
+
             application.runReadAction {
                 try {
                     val packageManager = RequirementsPsiImplUtil.getPackageManager(project)
-                    
+
                     if (packageManager != null) {
                         packageManager.install(text)
                     } else {
@@ -97,7 +97,7 @@ fun installPackage(project: Project, packageName: String,
                         return@runReadAction
                     }
                     val pyPackage = getPackage(project, packageName)
-                    
+
                     if (pyPackage == null) {
                         Notification("pip",
                                 title,
@@ -105,7 +105,7 @@ fun installPackage(project: Project, packageName: String,
                                 NotificationType.ERROR).notify(project)
                         return@runReadAction
                     }
-                    
+
                     Notification("pip",
                             "${pyPackage.name} (${pyPackage.version})",
                             "Successfully installed",
@@ -122,7 +122,7 @@ fun installPackage(project: Project, packageName: String,
             }
         }
     }
-    
+
     ProgressManager.getInstance().run(task)
 }
 

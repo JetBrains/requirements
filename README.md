@@ -4,7 +4,11 @@ https://plugins.jetbrains.com/plugin/10837
 
 ## Syntax
 
-Package version: https://www.python.org/dev/peps/pep-0440
+[PEP 440 -- Version Identification and Dependency Specification](https://www.python.org/dev/peps/pep-0440)
+
+[PEP 508 -- Dependency specification for Python Software Packages](https://www.python.org/dev/peps/pep-0508)
+
+[requirements-file-format](https://pip.pypa.io/en/stable/reference/pip_install/#requirements-file-format)
 
 ## Features
 
