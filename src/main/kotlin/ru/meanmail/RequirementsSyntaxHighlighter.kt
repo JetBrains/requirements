@@ -8,6 +8,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributes
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase
 import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IElementType
+import ru.meanmail.psi.Types
 
 class RequirementsSyntaxHighlighter : SyntaxHighlighterBase() {
 
