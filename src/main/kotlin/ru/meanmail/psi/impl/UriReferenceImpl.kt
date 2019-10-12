@@ -2,6 +2,8 @@ package ru.meanmail.psi.impl
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
+import com.intellij.openapi.paths.WebReference
+import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiReference
@@ -33,7 +35,13 @@ class UriReferenceImpl(node: ASTNode) :
     }
 
     override fun getReference(): PsiReference? {
-        return Reference(this)
+        if (relativeRef != null) {
+            return Reference(this)
+        }
+        val uri = uri ?: return null
+        val textRange = TextRange(0, textLength)
+        val url = uri.text.split(" ", limit = 2)[0]
+        return WebReference(this, textRange, url)
     }
 
 
@@ -42,7 +50,7 @@ class UriReferenceImpl(node: ASTNode) :
     }
 
     override fun getName(): String? {
-        return (uri ?: relativeRef)?.text
+        return nameIdentifier?.text
     }
 
     override fun getNameIdentifier(): PsiElement? {
