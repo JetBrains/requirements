@@ -16,6 +16,13 @@
                   order="first" name="requirements.txt"
                   fileNames="requirements.txt"
                   patterns="*.txt"/>
+        <localInspection language="requirements.txt"
+                         shortName="ReferenceExistsInspection"
+                         suppressId="Requirements"
+                         groupName="requirements.txt"
+                         enabledByDefault="true"
+                         level="ERROR"
+                         implementationClass="ru.meanmail.codeInspection.ReferenceExistsInspection"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij.lang">
