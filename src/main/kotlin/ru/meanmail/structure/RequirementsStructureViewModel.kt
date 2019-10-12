@@ -5,6 +5,7 @@ import com.intellij.ide.structureView.StructureViewModelBase
 import com.intellij.ide.structureView.StructureViewTreeElement
 import com.intellij.ide.util.treeView.smartTree.Sorter
 import com.intellij.psi.PsiFile
+import ru.meanmail.psi.*
 
 class RequirementsStructureViewModel(psiFile: PsiFile) :
         StructureViewModelBase(psiFile, RequirementsStructureViewElement(psiFile)),
@@ -20,7 +21,10 @@ class RequirementsStructureViewModel(psiFile: PsiFile) :
     }
 
     override fun isAlwaysLeaf(element: StructureViewTreeElement): Boolean {
-//        return element.value is RequirementsPackageStmt
-        return false
+        return element.value is NameReq ||
+                element.value is EditableReq ||
+                element.value is PathReq ||
+                element.value is ReferReq ||
+                element.value is UrlReq
     }
 }
