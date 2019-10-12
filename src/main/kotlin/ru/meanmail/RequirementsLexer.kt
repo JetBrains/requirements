@@ -160,8 +160,6 @@ class RequirementsLexer
      */
     override fun yybegin(newState: Int) {
         zzLexicalState = newState
-        println(yytext())
-        println(zzLexicalState)
     }
 
     /**
@@ -620,7 +618,7 @@ class RequirementsLexer
                         return NOT
                     }
                     // fall through
-                    88 -> {
+                    94 -> {
                     }
                     47 -> {
                         return AND
@@ -708,8 +706,7 @@ class RequirementsLexer
 
         private fun zzUnpackAction(): IntArray {
             val result = IntArray(169)
-            var offset = 0
-            offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result)
+            zzUnpackAction(ZZ_ACTION_PACKED_0, 0, result)
             return result
         }
 
@@ -756,8 +753,7 @@ class RequirementsLexer
 
         private fun zzUnpackRowMap(): IntArray {
             val result = IntArray(169)
-            var offset = 0
-            offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result)
+            zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, 0, result)
             return result
         }
 
@@ -838,8 +834,7 @@ class RequirementsLexer
 
         private fun zzUnpackTrans(): IntArray {
             val result = IntArray(6678)
-            var offset = 0
-            offset = zzUnpackTrans(ZZ_TRANS_PACKED_0, offset, result)
+            zzUnpackTrans(ZZ_TRANS_PACKED_0, 0, result)
             return result
         }
 
