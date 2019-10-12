@@ -1,8 +1,6 @@
 package ru.meanmail.psi
 
-import com.intellij.psi.PsiElement
-
-interface UrlReq : PsiElement {
+interface UrlReq : NamedElement {
 
     val extras: Extras?
 

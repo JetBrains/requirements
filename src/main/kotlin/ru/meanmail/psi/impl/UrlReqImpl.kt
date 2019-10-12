@@ -2,7 +2,9 @@ package ru.meanmail.psi.impl
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
+import com.intellij.util.IncorrectOperationException
 import ru.meanmail.psi.*
 
 class UrlReqImpl(node: ASTNode) : ASTWrapperPsiElement(node), UrlReq {
@@ -28,6 +30,18 @@ class UrlReqImpl(node: ASTNode) : ASTWrapperPsiElement(node), UrlReq {
             accept(visitor)
         else
             super.accept(visitor)
+    }
+
+    override fun setName(name: String): PsiElement {
+        throw IncorrectOperationException()
+    }
+
+    override fun getName(): String? {
+        return nameIdentifier.text
+    }
+
+    override fun getNameIdentifier(): PsiElement {
+        return name
     }
 
 }

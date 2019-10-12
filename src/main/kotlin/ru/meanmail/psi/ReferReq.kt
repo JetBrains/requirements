@@ -1,8 +1,6 @@
 package ru.meanmail.psi
 
-import com.intellij.psi.PsiElement
-
-interface ReferReq : PsiElement {
+interface ReferReq : NamedElement {
 
     val uriReference: UriReference?
 

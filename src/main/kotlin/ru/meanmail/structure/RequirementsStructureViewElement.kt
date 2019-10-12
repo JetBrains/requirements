@@ -41,12 +41,14 @@ class RequirementsStructureViewElement(private val element: NavigatablePsiElemen
 
     override fun getChildren(): Array<TreeElement> {
         if (element is RequirementsFile) {
-//            return PsiTreeUtil.getChildrenOfAnyType(element, RequirementsPackageStmt::class.java,
-//                    RequirementsEditableRequirementStmt::class.java,
-//                    RequirementsRequirementStmt::class.java,
-//                    RequirementsUrlStmt::class.java)
-//                    .map { RequirementsStructureViewElement(it as NavigatablePsiElement) }
-//                    .toTypedArray()
+            return PsiTreeUtil.getChildrenOfAnyType(element,
+                    NameReq::class.java,
+                    EditableReq::class.java,
+                    PathReq::class.java,
+                    ReferReq::class.java,
+                    UrlReq::class.java)
+                    .map { RequirementsStructureViewElement(it as NavigatablePsiElement) }
+                    .toTypedArray()
         }
         return emptyArray()
     }

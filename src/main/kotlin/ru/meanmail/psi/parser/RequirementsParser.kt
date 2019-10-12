@@ -6,6 +6,7 @@ import com.intellij.lang.PsiBuilder
 import com.intellij.lang.PsiParser
 import com.intellij.lang.parser.GeneratedParserUtilBase.*
 import com.intellij.psi.tree.IElementType
+import com.intellij.psi.tree.IFileElementType
 import ru.meanmail.psi.Types.Companion.AND
 import ru.meanmail.psi.Types.Companion.AT
 import ru.meanmail.psi.Types.Companion.AUTHORITY
@@ -109,23 +110,21 @@ class RequirementsParser : PsiParser, LightPsiParser {
         return b.treeBuilt
     }
 
-    override fun parseLight(t: IElementType, b: PsiBuilder) {
-        var b = b
-        val r: Boolean
-        b = adapt_builder_(t, b, this, null)
-        val m = enter_section_(b, 0, _COLLAPSE_, null)
-        r = parse_root_(t, b)
-        exit_section_(b, 0, m, t, r, true, TRUE_CONDITION)
-    }
-
-    protected fun parse_root_(t: IElementType, b: PsiBuilder): Boolean {
-        return parse_root_(t, b, 0)
+    override fun parseLight(type: IElementType, b: PsiBuilder) {
+        val builder = adapt_builder_(type, b, this, null)
+        val marker = enter_section_(builder, 0, _COLLAPSE_, null)
+        val result = if (type is IFileElementType) {
+            parse_root_(type, builder, 0)
+        } else {
+            false
+        }
+        exit_section_(builder, 0, marker, type, result, true, TRUE_CONDITION)
     }
 
     companion object {
 
-        internal fun parse_root_(t: IElementType, b: PsiBuilder, l: Int): Boolean {
-            return requirementsFile(b, l + 1)
+        private fun parse_root_(type: IElementType, builder: PsiBuilder, level: Int): Boolean {
+            return requirementsFile(builder, level + 1)
         }
 
         /* ********************************************************** */
