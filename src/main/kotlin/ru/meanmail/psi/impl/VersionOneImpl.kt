@@ -2,11 +2,12 @@ package ru.meanmail.psi.impl
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
+import com.intellij.openapi.paths.WebReference
+import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElementVisitor
-import ru.meanmail.psi.VersionCmpStmt
-import ru.meanmail.psi.VersionOne
-import ru.meanmail.psi.VersionStmt
-import ru.meanmail.psi.Visitor
+import com.intellij.psi.PsiReference
+import com.jetbrains.python.packaging.PyPIPackageUtil
+import ru.meanmail.psi.*
 
 class VersionOneImpl(node: ASTNode) :
         ASTWrapperPsiElement(node), VersionOne {
@@ -28,4 +29,17 @@ class VersionOneImpl(node: ASTNode) :
             super.accept(visitor)
     }
 
+    override fun getReference(): PsiReference? {
+        var parent = parent
+        while (parent != null) {
+            if (parent is NameReq) {
+                break
+            }
+            parent = parent.parent
+        }
+        val packageName = (parent as? NameReq)?.name ?: return null
+        val url = "${PyPIPackageUtil.PYPI_URL}/${packageName.text}/${version.text}"
+        val textRange = TextRange(0, textLength)
+        return WebReference(this, textRange, url)
+    }
 }
