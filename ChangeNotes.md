@@ -1,6 +1,7 @@
 ## 2019.5 (Oct, 13, 2019)
 
 * Improved lexer and parser
+* Fix: an underscored package name is not supported
 
 ## 2019.4.2 (Sep, 1, 2019)
 
