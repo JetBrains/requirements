@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "ru.meanmail"
-version = "2019.5"
+version = project.properties["version"].toString()
 
 repositories {
     mavenCentral()
@@ -33,9 +33,9 @@ tasks.withType<Wrapper> {
 }
 
 intellij {
-    pluginName = "requirements"
-    version = "2019.2"
-    setPlugins("PythonCore:2019.2.192.5728.98")
+    pluginName = project.properties["pluginName"].toString()
+    version = project.properties["IdeVersion"].toString()
+    setPlugins(project.properties["pythonPluginVersion"].toString())
 }
 
 fun readChangeNotes(pathname: String): String {
@@ -62,8 +62,10 @@ fun readChangeNotes(pathname: String): String {
     return notes.joinToString("</p><br><p>", prefix = "<p>",
             postfix = "</p><br>") {
         it.joinToString("<br>")
-    } + "See the full change notes on the " +
-            "<a href='https://github.com/meanmail/requirements'>github</a>"
+    } +
+            "See the full change notes on the <a href='" +
+            project.properties["repository"] +
+            "/blob/master/ChangeNotes.md'>github</a>"
 }
 
 tasks.withType<PatchPluginXmlTask> {
