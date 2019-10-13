@@ -1,5 +1,7 @@
-Right python requirements.txt
+Right Python requirements.txt
 
 Python package Manager!
+
+More info <a href="https://github.com/meanmail/requirements">https://github.com/meanmail/requirements</a>
 
 Please give me feedback

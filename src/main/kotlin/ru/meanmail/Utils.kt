@@ -2,7 +2,6 @@ package ru.meanmail
 
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationType
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
@@ -14,12 +13,15 @@ import ru.meanmail.psi.RequirementsPsiImplUtil
 import java.io.File
 import java.time.LocalDateTime
 
+fun formatPackageName(packageName: String): String {
+    return packageName.replace('_', '-').toLowerCase()
+}
 
 fun getPackage(project: Project, packageName: String): PyPackage? {
     val packageManager = RequirementsPsiImplUtil
             .getPackageManager(project) ?: return null
     val packages = packageManager.refreshAndGetPackages(false)
-    return PyPackageUtil.findPackage(packages, packageName)
+    return PyPackageUtil.findPackage(packages, formatPackageName(packageName))
 }
 
 fun getCurrentVersion(project: Project, packageName: String): PyPackageVersion? {
@@ -41,7 +43,7 @@ fun getVersions(project: Project,
     } else {
         PyPackageVersionNormalizer.normalize(version)
     }
-    
+
     return Triple(
             first = required,
             second = installed,
@@ -52,7 +54,7 @@ fun getVersions(project: Project,
 val cache = mutableMapOf<String, Pair<PyPackageVersion?, LocalDateTime>>()
 
 fun getLatestVersion(project: Project, packageName: String): PyPackageVersion? {
-    val key = packageName.toLowerCase()
+    val key = formatPackageName(packageName)
     val cached = cache[key]
     if (cached != null) {
         val actual = cached.second.plusDays(1).isAfter(LocalDateTime.now())
@@ -69,60 +71,56 @@ fun getLatestVersion(project: Project, packageName: String): PyPackageVersion? {
 }
 
 fun installPackage(project: Project, packageName: String,
-                   version: String, relation: String,
+                   version: String, versionCmp: String,
                    onInstalled: (() -> Unit)?) {
-    val text = "$packageName$relation$version"
+    val text = "$packageName$versionCmp$version"
     val title = "Installing '$text'"
-    
-    // TODO Use relation
-    
+
+    // TODO Use versionCmp
+
     val task = object : Task.Backgroundable(project, title) {
         override fun run(indicator: ProgressIndicator) {
             indicator.text = this.title
             indicator.isIndeterminate = true
-            
-            val application = ApplicationManager.getApplication()
-            
-            application.runReadAction {
-                try {
-                    val packageManager = RequirementsPsiImplUtil.getPackageManager(project)
-                    
-                    if (packageManager != null) {
-                        packageManager.install(text)
-                    } else {
-                        Notification("pip",
-                                title,
-                                "Package manager is not available",
-                                NotificationType.ERROR).notify(project)
-                        return@runReadAction
-                    }
-                    val pyPackage = getPackage(project, packageName)
-                    
-                    if (pyPackage == null) {
-                        Notification("pip",
-                                title,
-                                "Failed. Not installed",
-                                NotificationType.ERROR).notify(project)
-                        return@runReadAction
-                    }
-                    
+
+            try {
+                val packageManager = RequirementsPsiImplUtil.getPackageManager(project)
+
+                if (packageManager != null) {
+                    packageManager.install(text)
+                } else {
                     Notification("pip",
-                            "${pyPackage.name} (${pyPackage.version})",
-                            "Successfully installed",
-                            NotificationType.INFORMATION).notify(project)
-                    if (onInstalled != null) {
-                        onInstalled()
-                    }
-                } catch (e: PyExecutionException) {
-                    Notification(e.command,
-                            e.stdout,
-                            e.stderr,
+                            title,
+                            "Package manager is not available",
                             NotificationType.ERROR).notify(project)
+                    return
                 }
+                val pyPackage = getPackage(project, packageName)
+
+                if (pyPackage == null) {
+                    Notification("pip",
+                            title,
+                            "Failed. Not installed",
+                            NotificationType.ERROR).notify(project)
+                    return
+                }
+
+                Notification("pip",
+                        "${pyPackage.name} (${pyPackage.version})",
+                        "Successfully installed",
+                        NotificationType.INFORMATION).notify(project)
+                if (onInstalled != null) {
+                    onInstalled()
+                }
+            } catch (e: PyExecutionException) {
+                Notification(e.command,
+                        e.stdout,
+                        e.stderr,
+                        NotificationType.ERROR).notify(project)
             }
         }
     }
-    
+
     ProgressManager.getInstance().run(task)
 }
 

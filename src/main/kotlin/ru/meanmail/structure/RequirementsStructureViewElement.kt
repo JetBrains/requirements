@@ -10,27 +10,27 @@ import com.intellij.psi.util.PsiTreeUtil
 import ru.meanmail.psi.*
 
 class RequirementsStructureViewElement(private val element: NavigatablePsiElement) : StructureViewTreeElement, SortableTreeElement {
-    
+
     override fun getValue(): Any {
         return element
     }
-    
+
     override fun navigate(requestFocus: Boolean) {
         element.navigate(requestFocus)
     }
-    
+
     override fun canNavigate(): Boolean {
         return element.canNavigate()
     }
-    
+
     override fun canNavigateToSource(): Boolean {
         return element.canNavigateToSource()
     }
-    
+
     override fun getAlphaSortKey(): String {
         return element.name ?: ""
     }
-    
+
     override fun getPresentation(): ItemPresentation {
         return element.presentation ?: object : PresentationData() {
             override fun getPresentableText(): String? {
@@ -38,13 +38,15 @@ class RequirementsStructureViewElement(private val element: NavigatablePsiElemen
             }
         }
     }
-    
+
     override fun getChildren(): Array<TreeElement> {
         if (element is RequirementsFile) {
-            return PsiTreeUtil.getChildrenOfAnyType(element, RequirementsPackageStmt::class.java,
-                    RequirementsEditableRequirementStmt::class.java,
-                    RequirementsRequirementStmt::class.java,
-                    RequirementsUrlStmt::class.java)
+            return PsiTreeUtil.getChildrenOfAnyType(element,
+                    NameReq::class.java,
+                    EditableReq::class.java,
+                    PathReq::class.java,
+                    ReferReq::class.java,
+                    UrlReq::class.java)
                     .map { RequirementsStructureViewElement(it as NavigatablePsiElement) }
                     .toTypedArray()
         }

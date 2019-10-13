@@ -1,99 +1,234 @@
 package ru.meanmail;
 
-import com.intellij.lexer.FlexLexer;
-import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
-import ru.meanmail.psi.RequirementsTypes;
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+import static com.intellij.psi.TokenType.BAD_CHARACTER;
+import static com.intellij.psi.TokenType.WHITE_SPACE;
 
 %%
 
+%{
+  public RequirementsLexer() {
+      this((java.io.Reader)null);
+  }
+
+  Deque<Integer> stack = new ArrayDeque<Integer>();
+
+  public final void yypush(int newState) {
+      yybegin(newState);
+      stack.push(newState);
+  }
+
+  public final int yypop() {
+      if (stack.size() == 0) {
+          yyinitial();
+          return YYINITIAL;
+      }
+
+      int state = stack.pop();
+
+      if (stack.peek() == null) {
+          yyinitial();
+      } else {
+          yybegin(stack.peek());
+      }
+
+      return state;
+  }
+
+  public final void yyinitial() {
+      stack.clear();
+      yypush(YYINITIAL);
+  }
+%}
+
+%public
 %class RequirementsLexer
 %implements FlexLexer
-%unicode
 %function advance
 %type IElementType
+%unicode
 %eof{  return;
 %eof}
 
-CRLF=\R
-WHITE_SPACE=[\ \t\f]
-END_OF_LINE_COMMENT="#"[^\r\n]*
-RELATION="~=" | "==" "="? | "!=" | "<=" | ">=" | "<" | ">"
-ANSI_LETTER=[a-zA-Z0-9]
-PACKAGE_CHARACTER={ANSI_LETTER} | [_\-.]
+PLUS="+"
+MINUS="-"
+ASTERISK="*"
+COLON=":"
+SEMICOLON=";"
+COMMA=","
+QUESTION_MARK="?"
+LSBRACE="["
+RSBRACE="]"
+EXCLAMATION_MARK="!"
+AT="@"
+DOLLAR_SIGN="$"
+SHARP="#"
+PERCENT_SIGN="%"
+SLASH="/"
+DOT="."
+UNDERSCORE="_"
+LBRACE="{"
+RBRACE="}"
+EQUAL="="
+AMPERSAND="&"
+TILDA="~"
 
-EPOCH=\d+ "!"
-RELEASE=\d+(\.\d+)*
-a=[aA]
-b=[bB]
-c=[cC]
-rc=[rR][cC]
-alpha=[aA][lL][pP][hH][aA]
-beta=[bB][eE][tT][aA]
-pre=[pP][rR][eE]
-preview=[pP][rR][eE][vV][iI][eE][wW]
-post=[pP][oO][sS][tT]
-rev=[rR][eE][vV]
-r=[rR]
-dev=[dD][eE][vV]
-v=[vV]
-V_SEP=[-_\.]
-PRE={V_SEP}?({a}|{b}|{c}|{rc}|{alpha}|{beta}|{pre}|{preview}){V_SEP}?\d*
-POST=-\d+|{V_SEP}?({post}|{rev}|{r}){V_SEP}?\d*
-DEV={V_SEP}?{dev}{V_SEP}?\d*
-LOCAL=\+[a-zA-Z0-9]+({V_SEP}[a-zA-Z0-9]+)*
-VERSION={v}? {EPOCH}? {RELEASE} {PRE}? {POST}? {DEV}? {LOCAL}?
+COMMENT={SHARP}.*
+LETTER=[a-zA-Z]
+DIGIT=[0-9]
+EOL=\R+
+WHITE_SPACE=[^\S\r\n]+
+IDENTIFIER=(
+             ({LETTER} | {DIGIT})
+             (
+               ({LETTER} | {DIGIT} | {MINUS} | {UNDERSCORE} | {DOT})*
+               ({LETTER} | {DIGIT})
+             )*
+           )
+VERSION_CMP=("<"{EQUAL} | "<" | "!" {EQUAL}
+            | {EQUAL}{EQUAL}{EQUAL} | {EQUAL}{EQUAL}
+            | ">"{EQUAL} | ">" | {TILDA}{EQUAL})
 
-DIRECTORY=([a-zA-Z]:\\)?([a-zA-Z0-9._\-\\]+) | [a-zA-Z0-9._\-/]+
-FILENAME_CHARACTER={DIRECTORY}?[a-zA-Z0-9._-]+
-SVN="svn" | "svn+svn" | "svn+http" | "svn+https" | "svn+ssh"
-HTTP="http" | "https"
-GIT="git" | "git+http" | "git+https" | "git+ssh"
-MERCURIAL="hg+http" | "hg+https" | "hg+static-http" | "hg+ssh"
-BAZAAR="bzr+http" | "bzr+https" | "bzr+ssh" | "bzr+sftp" | "bzr+ftp" | "bzr+lp"
-FILE="file"
-SCHEMA=({SVN} | {HTTP} | {GIT} | {MERCURIAL} | {BAZAAR} | {FILE})":"
-PATH=\/\/([\w\.\-]+)\.([a-z]{2,6}\.?)(\/[\w\.\-]*)*\/?
-EGG="#egg="
-BRANCH="@"[^\ \n\t\f\\@#]+
+VERSION=(
+          ({LETTER} | {DIGIT} | {MINUS} | {UNDERSCORE}
+          | {DOT} | {ASTERISK} | {PLUS} | {EXCLAMATION_MARK}
+          )+
+        )
+
+LPARENTHESIS = "("
+RPARENTHESIS = ")"
+
+ENV_VAR=("python_version"
+        | "python_full_version"
+        | "os_name"
+        | "sys_platform"
+        | "platform_release"
+        | "platform_system"
+        | "platform_version"
+        | "platform_machine"
+        | "platform_python_implementation"
+        | "implementation_name"
+        | "implementation_version"
+        | "extra" // ONLY when defined by a containing layer
+        )
+
+PYTHON_STR_C=({WHITE_SPACE} | {LETTER} | {DIGIT} | {LPARENTHESIS}
+             | {RPARENTHESIS}
+             | {DOT} | {LBRACE} | {RBRACE} | {MINUS} | {UNDERSCORE}
+             | {ASTERISK} | {SHARP} | {COLON}
+             | {SEMICOLON} | {COMMA} | {SLASH} | {QUESTION_MARK}
+             | {LSBRACE}
+             | {RSBRACE} | {EXCLAMATION_MARK} | {TILDA} | "`" | {AT}
+             | {DOLLAR_SIGN} | {PERCENT_SIGN} | "^" | {AMPERSAND}
+             | {EQUAL} | {PLUS} | "|" | "<" | ">" )
+DQUOTE = "\""
+SQUOTE = "'"
+
+SUB_DELIMS=({EXCLAMATION_MARK}
+           | {AMPERSAND}
+           | {SQUOTE}
+           | {LPARENTHESIS}
+           | {RPARENTHESIS}
+           | {ASTERISK}
+           | {PLUS}
+           | {COMMA}
+           | {SEMICOLON}
+           | {EQUAL})
 
 %state WAITING_VERSION
-%state WAITING_FILENAME
-%state WAITING_URL
-%state WAITING_PATH
-%state WAITING_EGG
+%state DQUOTE_STR
+%state SQUOTE_STR
+%state QUOTED_MARK
+%state URI
+%state REQ
 
 %%
 
 <YYINITIAL> {
-    {END_OF_LINE_COMMENT}                             { yybegin(YYINITIAL); return RequirementsTypes.COMMENT; }
-    "-r"                                              { yybegin(WAITING_FILENAME); return RequirementsTypes.REQUIREMENT; }
-    "-e"                                              { yybegin(WAITING_URL); return RequirementsTypes.REQUIREMENT_EDITABLE; }
-    {ANSI_LETTER}({PACKAGE_CHARACTER}*{ANSI_LETTER})? { yybegin(YYINITIAL); return RequirementsTypes.PACKAGE; }
-    {RELATION}                                        { yybegin(WAITING_VERSION); return RequirementsTypes.RELATION; }
-    "["                                               { yybegin(YYINITIAL); return RequirementsTypes.LSBRACE; }
-    "]"                                               { yybegin(YYINITIAL); return RequirementsTypes.RSBRACE; }
-    {SCHEMA}                                          { yybegin(WAITING_PATH); return RequirementsTypes.SCHEMA; }
+    {COMMENT}          { return COMMENT; }
+    "-r"               { yypush(URI); return REFER; }
+    "-e"               { yypush(URI); return EDITABLE; }
+    {IDENTIFIER}       { yypush(REQ); yypushback(yylength()); }
+    {DOT}              { yypush(REQ); yypushback(yylength()); }
 }
 
-<WAITING_FILENAME> {FILENAME_CHARACTER}+              { yybegin(YYINITIAL); return RequirementsTypes.FILENAME; }
+<REQ> {
+    {IDENTIFIER}{PLUS} { yypush(URI); yypushback(yylength()); }
+    {IDENTIFIER}{COLON} { yypush(URI); yypushback(yylength()); }
+    {IDENTIFIER}       { return IDENTIFIER; }
+    {VERSION_CMP}      { yypush(WAITING_VERSION); return VERSION_CMP; }
+    {AT}               { yypush(URI); return AT; }
+    {COMMA}            { return COMMA; }
+    {LPARENTHESIS}     { return LPARENTHESIS; }
+    {RPARENTHESIS}     { return RPARENTHESIS; }
+    {LSBRACE}          { return LSBRACE; }
+    {RSBRACE}          { return RSBRACE; }
+    {SEMICOLON}        { yypush(QUOTED_MARK); return SEMICOLON; }
+    {DOT}              { yypush(URI); yypushback(yylength()); }
 
-<WAITING_VERSION> {VERSION}                           { yybegin(YYINITIAL); return RequirementsTypes.VERSION; }
-
-<WAITING_URL> {
-    {SCHEMA}                                          { yybegin(WAITING_PATH); return RequirementsTypes.SCHEMA; }
-    {DIRECTORY}                                       { yybegin(WAITING_EGG); return RequirementsTypes.PATH; }
+    {WHITE_SPACE}{COMMENT}   { yyinitial(); return COMMENT; }
 }
 
-<WAITING_PATH> {PATH}                                 { yybegin(WAITING_EGG); return RequirementsTypes.PATH; }
-
-<WAITING_EGG> {
-    {EGG}                                             { yybegin(YYINITIAL); return RequirementsTypes.EGG; }
-    {BRANCH}                                          { yybegin(WAITING_EGG); return RequirementsTypes.BRANCH; }
+<WAITING_VERSION> {
+    {VERSION}          { yypop(); return VERSION; }
+    {COMMENT}          { yypop(); return COMMENT; }
 }
 
-{CRLF}+                                               { yybegin(YYINITIAL); return RequirementsTypes.CRLF; }
+<QUOTED_MARK> {
+    {ENV_VAR}          { return ENV_VAR; }
 
-{WHITE_SPACE}+                                        {return TokenType.WHITE_SPACE;}
+    {DQUOTE}           { yypush(DQUOTE_STR); return DQUOTE; }
+    {SQUOTE}           { yypush(SQUOTE_STR); return SQUOTE; }
+    {VERSION_CMP}      { return VERSION_CMP; }
+    "in"               { return IN; }
+    "not"              { return NOT; }
+    "and"              { return AND; }
+    "or"               { return OR; }
+    {LPARENTHESIS}     { return LPARENTHESIS; }
+    {RPARENTHESIS}     { return RPARENTHESIS; }
 
-.                                                     { return TokenType.BAD_CHARACTER; }
+    {COMMENT}          { yyinitial(); return COMMENT; }
+}
+
+<URI> {
+    {AT}               { return AT; }
+    {COLON}            { return COLON; }
+    {DIGIT}            { return DIGIT; }
+    {DOT}              { return DOT; }
+    {LETTER}           { return LETTER; }
+    {LSBRACE}          { return LSBRACE; }
+    {RSBRACE}          { return RSBRACE; }
+    {MINUS}            { return MINUS; }
+    {PLUS}             { return PLUS; }
+    {PERCENT_SIGN}     { return PERCENT_SIGN; }
+    {QUESTION_MARK}    { return QUESTION_MARK; }
+    {SHARP}            { return SHARP; }
+    {SLASH}            { return SLASH; }
+    {SUB_DELIMS}       { return SUB_DELIMS; }
+    {TILDA}            { return TILDA; }
+    {UNDERSCORE}       { return UNDERSCORE; }
+    {LBRACE}           { return LBRACE; }
+    {RBRACE}           { return RBRACE; }
+    {DOLLAR_SIGN}      { return DOLLAR_SIGN; }
+
+    {WHITE_SPACE}{SEMICOLON} { yypush(QUOTED_MARK); return SEMICOLON; }
+    {WHITE_SPACE}{COMMENT}   { yyinitial(); return COMMENT; }
+}
+
+<DQUOTE_STR> {
+    {DQUOTE}           { yypop(); return DQUOTE; }
+    {PYTHON_STR_C}     { return PYTHON_STR_C; }
+}
+
+<SQUOTE_STR> {
+    {SQUOTE}           { yypop(); return SQUOTE; }
+    {PYTHON_STR_C}     { return PYTHON_STR_C; }
+}
+
+{WHITE_SPACE}          { return WHITE_SPACE; }
+{EOL}                  { yyinitial(); return EOL; }
+
+[^]                    { yyinitial(); return BAD_CHARACTER; }

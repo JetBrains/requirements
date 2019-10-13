@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "ru.meanmail"
-version = "2019.4.2"
+version = "2019.5"
 
 repositories {
     mavenCentral()
@@ -40,11 +40,11 @@ intellij {
 
 fun readChangeNotes(pathname: String): String {
     val lines = file(pathname).readLines()
-    
+
     val notes: MutableList<MutableList<String>> = mutableListOf()
-    
+
     var note: MutableList<String>? = null
-    
+
     for (line in lines) {
         if (line.startsWith('#')) {
             if (notes.size == 3) {
@@ -58,7 +58,7 @@ fun readChangeNotes(pathname: String): String {
             note?.add(line)
         }
     }
-    
+
     return notes.joinToString("</p><br><p>", prefix = "<p>",
             postfix = "</p><br>") {
         it.joinToString("<br>")

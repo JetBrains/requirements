@@ -10,7 +10,7 @@ import com.jetbrains.python.packaging.PyPackageVersion
 import org.jetbrains.annotations.Nls
 import ru.meanmail.compareTo
 import ru.meanmail.getVersions
-import ru.meanmail.psi.RequirementsPackageStmt
+import ru.meanmail.psi.NameReq
 import ru.meanmail.quickfix.InstallPackageQuickFix
 import java.util.concurrent.Future
 
@@ -19,36 +19,36 @@ class InstalledPackageInspections : LocalInspectionTool() {
     override fun getDisplayName(): String {
         return "Package is not installed"
     }
-    
+
     override fun buildVisitor(holder: ProblemsHolder,
                               isOnTheFly: Boolean,
                               session: LocalInspectionToolSession): PsiElementVisitor {
         return Visitor(holder, isOnTheFly, session)
     }
-    
+
     companion object {
         class Visitor(holder: ProblemsHolder,
                       onTheFly: Boolean,
                       session: LocalInspectionToolSession) :
                 BaseInspectionVisitor(holder, onTheFly, session) {
-            
-            override fun visitPackageStmt(element: RequirementsPackageStmt) {
-                val packageName = element.packageName ?: return
-                
-                val task = getVersionAsync(element.project,
-                        packageName, element.versionStmt?.version)
+
+            override fun visitNameReq(element: NameReq) {
+                val packageName = element.name.text ?: return
+                val versionOneList = element.versionspec?.versionMany?.versionOneList
+                val version = versionOneList?.get(0)?.version?.text
+                val task = getVersionAsync(element.project, packageName, version)
                 val versions = task.get() ?: return
-                
+
                 val required = versions.first
                 val installed = versions.second
                 val latest = versions.third
-                
+
                 val versionsRepresentation =
                         "required: ${required?.presentableText ?: "<unknown>"}, " +
                                 "installed: ${installed?.presentableText ?: "<nothing>"}, " +
                                 "latest: ${latest?.presentableText ?: "<unknown>"}"
-                
-                
+
+
                 if (required != null && required != installed) {
                     val message = "'$packageName' version '${required.presentableText}' " +
                             "is not installed ($versionsRepresentation)"
@@ -60,7 +60,7 @@ class InstalledPackageInspections : LocalInspectionTool() {
                                             "($versionsRepresentation)",
                                     required.presentableText))
                 }
-                
+
                 if (latest != null && required != null && required < latest) {
                     val message = "'$packageName' version '${required.presentableText}' " +
                             "is outdated ($versionsRepresentation)"
@@ -73,7 +73,7 @@ class InstalledPackageInspections : LocalInspectionTool() {
                                     latest.presentableText))
                 }
             }
-            
+
             private fun getVersionAsync(project: Project,
                                         packageName: String,
                                         version: String?): Future<Triple<PyPackageVersion?, PyPackageVersion?, PyPackageVersion?>> {
