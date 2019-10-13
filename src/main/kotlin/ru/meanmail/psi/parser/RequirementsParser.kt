@@ -99,8 +99,10 @@ import ru.meanmail.psi.Types.Companion.VARIABLE_NAME
 import ru.meanmail.psi.Types.Companion.VERSION
 import ru.meanmail.psi.Types.Companion.VERSIONSPEC
 import ru.meanmail.psi.Types.Companion.VERSION_CMP
+import ru.meanmail.psi.Types.Companion.VERSION_CMP_STMT
 import ru.meanmail.psi.Types.Companion.VERSION_MANY
 import ru.meanmail.psi.Types.Companion.VERSION_ONE
+import ru.meanmail.psi.Types.Companion.VERSION_STMT
 import ru.meanmail.psi.Types.Companion.WHITE_SPACE
 
 class RequirementsParser : PsiParser, LightPsiParser {
@@ -2145,6 +2147,18 @@ class RequirementsParser : PsiParser, LightPsiParser {
         }
 
         /* ********************************************************** */
+        // VERSION_CMP
+        fun version_cmp_stmt(b: PsiBuilder, l: Int): Boolean {
+            if (!recursion_guard_(b, l, "version_cmp_stmt")) return false
+            if (!nextTokenIs(b, VERSION_CMP)) return false
+            val r: Boolean
+            val m = enter_section_(b)
+            r = consumeToken(b, VERSION_CMP)
+            exit_section_(b, m, VERSION_CMP_STMT, r)
+            return r
+        }
+
+        /* ********************************************************** */
         // version_one (wsps COMMA wsps version_one)*
         fun version_many(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "version_many")) return false
@@ -2182,14 +2196,27 @@ class RequirementsParser : PsiParser, LightPsiParser {
         }
 
         /* ********************************************************** */
-        // VERSION_CMP VERSION
+        // version_cmp_stmt version_stmt
         fun version_one(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "version_one")) return false
             if (!nextTokenIs(b, VERSION_CMP)) return false
+            var r: Boolean
+            val m = enter_section_(b)
+            r = version_cmp_stmt(b, l + 1)
+            r = r && version_stmt(b, l + 1)
+            exit_section_(b, m, VERSION_ONE, r)
+            return r
+        }
+
+        /* ********************************************************** */
+        // VERSION
+        fun version_stmt(b: PsiBuilder, l: Int): Boolean {
+            if (!recursion_guard_(b, l, "version_stmt")) return false
+            if (!nextTokenIs(b, VERSION)) return false
             val r: Boolean
             val m = enter_section_(b)
-            r = consumeTokens(b, 0, VERSION_CMP, VERSION)
-            exit_section_(b, m, VERSION_ONE, r)
+            r = consumeToken(b, VERSION)
+            exit_section_(b, m, VERSION_STMT, r)
             return r
         }
 

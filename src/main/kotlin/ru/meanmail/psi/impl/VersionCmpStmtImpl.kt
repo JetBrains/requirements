@@ -4,21 +4,13 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElementVisitor
 import ru.meanmail.psi.VersionCmpStmt
-import ru.meanmail.psi.VersionOne
-import ru.meanmail.psi.VersionStmt
 import ru.meanmail.psi.Visitor
 
-class VersionOneImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), VersionOne {
-
-    override val version: VersionStmt
-        get() = findNotNullChildByClass(VersionStmt::class.java)
-
-    override val versionCmp: VersionCmpStmt
-        get() = findNotNullChildByClass(VersionCmpStmt::class.java)
+class VersionCmpStmtImpl(node: ASTNode) :
+        ASTWrapperPsiElement(node), VersionCmpStmt {
 
     fun accept(visitor: Visitor) {
-        visitor.visitVersionOne(this)
+        visitor.visitVersionCmpStmt(this)
     }
 
     override fun accept(visitor: PsiElementVisitor) {

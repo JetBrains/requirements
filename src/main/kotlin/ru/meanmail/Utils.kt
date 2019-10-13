@@ -2,7 +2,6 @@ package ru.meanmail
 
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationType
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
@@ -81,44 +80,40 @@ fun installPackage(project: Project, packageName: String,
             indicator.text = this.title
             indicator.isIndeterminate = true
 
-            val application = ApplicationManager.getApplication()
+            try {
+                val packageManager = RequirementsPsiImplUtil.getPackageManager(project)
 
-            application.runReadAction {
-                try {
-                    val packageManager = RequirementsPsiImplUtil.getPackageManager(project)
-
-                    if (packageManager != null) {
-                        packageManager.install(text)
-                    } else {
-                        Notification("pip",
-                                title,
-                                "Package manager is not available",
-                                NotificationType.ERROR).notify(project)
-                        return@runReadAction
-                    }
-                    val pyPackage = getPackage(project, packageName)
-
-                    if (pyPackage == null) {
-                        Notification("pip",
-                                title,
-                                "Failed. Not installed",
-                                NotificationType.ERROR).notify(project)
-                        return@runReadAction
-                    }
-
+                if (packageManager != null) {
+                    packageManager.install(text)
+                } else {
                     Notification("pip",
-                            "${pyPackage.name} (${pyPackage.version})",
-                            "Successfully installed",
-                            NotificationType.INFORMATION).notify(project)
-                    if (onInstalled != null) {
-                        onInstalled()
-                    }
-                } catch (e: PyExecutionException) {
-                    Notification(e.command,
-                            e.stdout,
-                            e.stderr,
+                            title,
+                            "Package manager is not available",
                             NotificationType.ERROR).notify(project)
+                    return
                 }
+                val pyPackage = getPackage(project, packageName)
+
+                if (pyPackage == null) {
+                    Notification("pip",
+                            title,
+                            "Failed. Not installed",
+                            NotificationType.ERROR).notify(project)
+                    return
+                }
+
+                Notification("pip",
+                        "${pyPackage.name} (${pyPackage.version})",
+                        "Successfully installed",
+                        NotificationType.INFORMATION).notify(project)
+                if (onInstalled != null) {
+                    onInstalled()
+                }
+            } catch (e: PyExecutionException) {
+                Notification(e.command,
+                        e.stdout,
+                        e.stderr,
+                        NotificationType.ERROR).notify(project)
             }
         }
     }

@@ -22,7 +22,9 @@ private line_ ::= (wsps specification wsps COMMENT? (EOL | <<eof>>)) | EOL
 private specification ::= name_req | url_req | refer_req | editable_req | path_req
 private wsps  ::= WHITE_SPACE*
 
-version_one   ::= VERSION_CMP VERSION
+version_one   ::= version_cmp_stmt version_stmt
+version_cmp_stmt ::= VERSION_CMP
+version_stmt  ::= VERSION
 version_many  ::= version_one (wsps COMMA wsps version_one)*
 versionspec   ::= LPARENTHESIS wsps version_many wsps RPARENTHESIS | version_many
 

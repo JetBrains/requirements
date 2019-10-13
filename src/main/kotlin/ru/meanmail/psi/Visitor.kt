@@ -217,6 +217,14 @@ class Visitor : PsiElementVisitor() {
         visitPsiElement(o)
     }
 
+    fun visitVersionStmt(o: VersionStmt) {
+        visitPsiElement(o)
+    }
+
+    fun visitVersionCmpStmt(o: VersionCmpStmt) {
+        visitPsiElement(o)
+    }
+
     fun visitVersionMany(o: VersionMany) {
         visitPsiElement(o)
     }
