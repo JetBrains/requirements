@@ -13,12 +13,15 @@ import ru.meanmail.psi.RequirementsPsiImplUtil
 import java.io.File
 import java.time.LocalDateTime
 
+fun formatPackageName(packageName: String): String {
+    return packageName.replace('_', '-').toLowerCase()
+}
 
 fun getPackage(project: Project, packageName: String): PyPackage? {
     val packageManager = RequirementsPsiImplUtil
             .getPackageManager(project) ?: return null
     val packages = packageManager.refreshAndGetPackages(false)
-    return PyPackageUtil.findPackage(packages, packageName)
+    return PyPackageUtil.findPackage(packages, formatPackageName(packageName))
 }
 
 fun getCurrentVersion(project: Project, packageName: String): PyPackageVersion? {
@@ -51,7 +54,7 @@ fun getVersions(project: Project,
 val cache = mutableMapOf<String, Pair<PyPackageVersion?, LocalDateTime>>()
 
 fun getLatestVersion(project: Project, packageName: String): PyPackageVersion? {
-    val key = packageName.toLowerCase()
+    val key = formatPackageName(packageName)
     val cached = cache[key]
     if (cached != null) {
         val actual = cached.second.plusDays(1).isAfter(LocalDateTime.now())
