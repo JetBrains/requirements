@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     java
     kotlin("jvm") version "1.3.50"
-    id("org.jetbrains.intellij") version "0.4.5"
+    id("org.jetbrains.intellij") version "0.4.10"
 }
 
 group = "ru.meanmail"
