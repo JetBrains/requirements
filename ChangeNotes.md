@@ -1,5 +1,9 @@
-## 2019.6 (In progress)
+## 2019.7 (In progress)
 
+## 2019.6 (Nov, 2, 2019)
+
++ Check for duplicate definitions
++ Simple reformat file
 
 ## 2019.5 (Oct, 13, 2019)
 
