@@ -12,21 +12,24 @@ https://plugins.jetbrains.com/plugin/10837
 
 ## Features
 
-* Highlighting and Syntax check for requirements.txt files in Intellij IDE
-* Highlighting not installed packages
-* Package installing
+* Highlighting and Syntax check for requirements.txt files in IDE
 * Reference to subrequirements files (Ctrl + click)
-* Opening packages in a browser
+* Opening packages in a browser (Ctrl + click)
+* Reformat file
 
 ## Code Inspections
 
+PyCharm, and other products if the Python plugin is installed:
 * Check if packages are installed
 * Checking package versions
+
+All IDEs:
 * Check if there are files to which there is a link
 * Check for duplicate definitions
 
 ## Quick fixes
 
+PyCharm, and other products if the Python plugin is installed:
 * Install package
 
 ## TODO
@@ -35,3 +38,4 @@ https://plugins.jetbrains.com/plugin/10837
 * Support all relations
 * Opening local source code
 * Add tests
+* Code completion

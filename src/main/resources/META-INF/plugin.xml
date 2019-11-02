@@ -8,8 +8,7 @@
     <change-notes></change-notes>
 
     <depends>com.intellij.modules.lang</depends>
-    <depends optional="true" config-file="python-config.xml">PythonCore</depends>
-    <depends optional="true" config-file="python-config.xml">Pythonid</depends>
+    <depends optional="true" config-file="python-config.xml">com.intellij.modules.python</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <fileType implementationClass="ru.meanmail.RequirementsFileType"
@@ -41,8 +40,8 @@
                                  implementationClass="ru.meanmail.structure.RequirementsStructureViewFactory"/>
         <commenter language="requirements.txt"
                    implementationClass="ru.meanmail.RequirementsCommenter"/>
+        <formatter language="requirements.txt"
+                   implementationClass="ru.meanmail.reformat.RequirementsFormattingModelBuilder"/>
     </extensions>
-    <actions>
 
-    </actions>
 </idea-plugin>
