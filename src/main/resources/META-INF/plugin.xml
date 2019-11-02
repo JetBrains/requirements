@@ -23,6 +23,13 @@
                          enabledByDefault="true"
                          level="ERROR"
                          implementationClass="ru.meanmail.codeInspection.ReferenceExistsInspection"/>
+        <localInspection language="requirements.txt"
+                         shortName="DuplicatedInspection"
+                         suppressId="DuplicatedInspection"
+                         groupName="requirements.txt"
+                         enabledByDefault="true"
+                         level="WARNING"
+                         implementationClass="ru.meanmail.codeInspection.DuplicatedInspection"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij.lang">

@@ -14,7 +14,7 @@ import ru.meanmail.psi.NameReq
 import ru.meanmail.quickfix.InstallPackageQuickFix
 import java.util.concurrent.Future
 
-class InstalledPackageInspections : LocalInspectionTool() {
+class InstalledPackageInspection : LocalInspectionTool() {
     @Nls
     override fun getDisplayName(): String {
         return "Package is not installed"

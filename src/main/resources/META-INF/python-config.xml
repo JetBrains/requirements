@@ -2,10 +2,10 @@
     <extensions defaultExtensionNs="com.intellij">
         <localInspection language="requirements.txt"
                          shortName="InstalledPackageInspection"
-                         suppressId="Requirements"
+                         suppressId="InstalledPackageInspection"
                          groupName="requirements.txt"
                          enabledByDefault="true"
                          level="WARNING"
-                         implementationClass="ru.meanmail.codeInspection.InstalledPackageInspections"/>
+                         implementationClass="ru.meanmail.codeInspection.InstalledPackageInspection"/>
     </extensions>
 </idea-plugin>

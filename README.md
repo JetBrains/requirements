@@ -16,27 +16,22 @@ https://plugins.jetbrains.com/plugin/10837
 * Highlighting not installed packages
 * Package installing
 * Reference to subrequirements files (Ctrl + click)
+* Opening packages in a browser
+
+## Code Inspections
+
+* Check if packages are installed
+* Checking package versions
+* Check if there are files to which there is a link
+* Check for duplicate definitions
+
+## Quick fixes
+
+* Install package
 
 ## TODO
 
-* Check not exists packages
-* Check duplicate packages
 * Distinguish a plain text file from file requirements.txt
-* Support relations:
-
-    * "<"
-    
-    * "<="
-    
-    * ">"
-    
-    * ">="
-    
-    * "==" (support *)
-    
-    * "!="
-    
-    * "~="
-    
-    * "==="
-* Reference to package files (Ctrl + click)
+* Support all relations
+* Opening local source code
+* Add tests
