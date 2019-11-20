@@ -25,7 +25,8 @@ If applicable, add screenshots to help explain your problem.
 
 **IDE (please complete the following information. See Main Menu -> Help -> About):**
  - OS: [e.g. Windows 10]
- - Version [e.g. IU-192.7142.36, IntelliJ IDEA 2019.2.4]
+ - Product: [e.g. Idea Ultimate, PyCharm Community]
+ - Version [e.g. IU-192.7142.36, 2019.2.4]
  - JRE Version: [e.g. OpenJDK 64-Bit Server VM by JetBrains s.r.o]
 
 **Plugin (please complete the following information. See Main Menu -> File -> Settings -> Plugins):**
