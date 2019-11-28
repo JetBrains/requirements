@@ -1,4 +1,12 @@
-## 2019.7 (In progress)
+## 2019.6.0.2 (December, 04, 2019)
+
+* Version for Intellij 2019.3.*
+* jvmTarget 11
+
+
+## 2019.6.0.1 (Nov, 21, 2019)
+
+* Version for Intellij 2019.1.*
 
 ## 2019.6 (Nov, 2, 2019)
 

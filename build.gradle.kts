@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    kotlin("jvm") version "1.3.50"
-    id("org.jetbrains.intellij") version "0.4.10"
+    kotlin("jvm") version "1.3.61"
+    id("org.jetbrains.intellij") version "0.4.14"
 }
 
 group = "ru.meanmail"
@@ -16,7 +16,7 @@ repositories {
 
 dependencies {
     compile(kotlin("stdlib-jdk8"))
-    testCompile("junit", "junit", "4.12")
+    testCompile("junit", "junit", "4.13")
 }
 
 configure<JavaPluginConvention> {
@@ -24,7 +24,7 @@ configure<JavaPluginConvention> {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "11"
 }
 
 tasks.withType<Wrapper> {

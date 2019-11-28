@@ -21,7 +21,8 @@ fun getPackage(project: Project, packageName: String): PyPackage? {
     val packageManager = RequirementsPsiImplUtil
             .getPackageManager(project) ?: return null
     val packages = packageManager.refreshAndGetPackages(false)
-    return PyPackageUtil.findPackage(packages, formatPackageName(packageName))
+    val formattedPackageName = formatPackageName(packageName)
+    return packages.first { it.name == formattedPackageName }
 }
 
 fun getCurrentVersion(project: Project, packageName: String): PyPackageVersion? {
