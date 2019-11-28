@@ -1,5 +1,9 @@
 ## 2019.7 (In progress)
 
+## 2019.6.0.1 (Nov, 21, 2019)
+
+* Version for Intellij 2019.1.*
+
 ## 2019.6 (Nov, 2, 2019)
 
 + Check for duplicate definitions

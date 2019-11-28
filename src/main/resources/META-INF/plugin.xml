@@ -11,10 +11,7 @@
     <depends optional="true" config-file="python-config.xml">com.intellij.modules.python</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <fileType implementationClass="ru.meanmail.RequirementsFileType"
-                  order="first" name="requirements.txt"
-                  fileNames="requirements.txt"
-                  patterns="*.txt"/>
+        <fileTypeFactory implementation="ru.meanmail.RequirementsFileTypeFactory"/>
         <localInspection language="requirements.txt"
                          shortName="ReferenceExistsInspection"
                          suppressId="Requirements"
