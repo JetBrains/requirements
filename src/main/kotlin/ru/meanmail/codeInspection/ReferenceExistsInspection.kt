@@ -6,6 +6,7 @@ import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiFileSystemItem
 import org.jetbrains.annotations.Nls
+import ru.meanmail.psi.EditableReq
 import ru.meanmail.psi.UriReference
 
 class ReferenceExistsInspection : LocalInspectionTool() {
@@ -32,11 +33,11 @@ class ReferenceExistsInspection : LocalInspectionTool() {
 
                 if (relativeRef != null) {
                     if (reference?.resolve() == null) {
-                        val description = "File '${relativeRef.text}' is not exists"
+                        val description = "'${relativeRef.text}' is not exists"
                         holder.registerProblem(element, description)
                     } else {
                         val file = reference.resolve() as? PsiFileSystemItem
-                        if (file?.isDirectory == true) {
+                        if (file?.isDirectory == true && element.parent !is EditableReq) {
                             val description = "'${relativeRef.text}' is a directory"
                             holder.registerProblem(element, description)
                         }
