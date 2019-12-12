@@ -8,11 +8,7 @@ Your ratings and feedback are very important. The feature will appear the faster
 
 ## Supported versions of Intellij:
 
-2019.3—2019.3.1(rc)
-
-2019.2—2019.2.4
-
-2019.1—2019.1.4
+PyCharm, IDEA 2019.1—2019.3.*
 
 ## Syntax
 
