@@ -69,6 +69,6 @@ fun readChangeNotes(pathname: String): String {
 }
 
 tasks.withType<PatchPluginXmlTask> {
-    setPluginDescription(file("Description.txt").readText())
+    setPluginDescription(file("Description.html").readText())
     setChangeNotes(readChangeNotes("ChangeNotes.md"))
 }
