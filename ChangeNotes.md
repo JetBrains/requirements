@@ -1,3 +1,8 @@
+## 2019.6.1 (Nov, 17, 2019)
+
+* Detects only 'requirements.txt'. Files with other names can be included manually.
+* Updated description
+
 ## 2019.6.0.2 (December, 04, 2019)
 
 * Version for Intellij 2019.3.*
