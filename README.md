@@ -6,7 +6,7 @@ https://meanmail.dev
 
 Your ratings and feedback are very important. The feature will appear the faster the more people request it.
 
-##Supported versions of Intellij:
+## Supported versions of Intellij:
 
 2019.3—2019.3.1(rc)
 
