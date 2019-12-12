@@ -6,6 +6,14 @@ https://meanmail.dev
 
 Your ratings and feedback are very important. The feature will appear the faster the more people request it.
 
+##Supported versions of Intellij:
+
+2019.3—2019.3.1(rc)
+
+2019.2—2019.2.4
+
+2019.1—2019.1.4
+
 ## Syntax
 
 [PEP 440 -- Version Identification and Dependency Specification](https://www.python.org/dev/peps/pep-0440)
