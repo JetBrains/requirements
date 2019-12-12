@@ -1,13 +1,7 @@
-## 2019.6.1 (December, 12, 2019)
+## 2019.6.1.1 (December, 12, 2019)
 
 * Fix bugs
 * Updated description
-
-## 2019.6.0.2 (December, 04, 2019)
-
-* Version for Intellij 2019.3.*
-* jvmTarget 11
-
 
 ## 2019.6.0.1 (Nov, 21, 2019)
 
