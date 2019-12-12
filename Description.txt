@@ -1,9 +1,0 @@
-Right Python requirements.txt
-
-Python package Manager!
-
-More info <a href="https://github.com/meanmail/requirements">
-  GitHub
-</a>
-
-Please give me feedback

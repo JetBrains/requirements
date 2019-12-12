@@ -2,6 +2,10 @@
 
 https://plugins.jetbrains.com/plugin/10837
 
+https://meanmail.dev
+
+Your ratings and feedback are very important. The feature will appear the faster the more people request it.
+
 ## Syntax
 
 [PEP 440 -- Version Identification and Dependency Specification](https://www.python.org/dev/peps/pep-0440)
