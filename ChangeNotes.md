@@ -1,4 +1,4 @@
-## 2019.6.1 (Nov, 17, 2019)
+## 2019.6.1 (December, 12, 2019)
 
 * Fix bugs
 * Updated description
