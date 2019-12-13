@@ -12,7 +12,9 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <fileType implementationClass="ru.meanmail.RequirementsFileType"
-                  order="first" name="requirements.txt"
+                  language="requirements.txt"
+                  order="first"
+                  name="requirements.txt"
                   fileNames="requirements.txt"
                   patterns="*.txt"/>
         <localInspection language="requirements.txt"
