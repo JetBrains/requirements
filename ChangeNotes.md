@@ -1,3 +1,7 @@
+## 2019.6.2 (December, 13, 2019)
+
+* Fix: Incorrect language specified in <fileType>
+
 ## 2019.6.1 (December, 12, 2019)
 
 * Fix bugs
