@@ -1,11 +1,17 @@
-## 2019.6.1.1 (December, 12, 2019)
+## 2019.6.2 (December, 13, 2019)
+
+* Fix: Incorrect language specified in <fileType>
+
+## 2019.6.1 (December, 12, 2019)
 
 * Fix bugs
 * Updated description
 
-## 2019.6.0.1 (Nov, 21, 2019)
+## 2019.6.0.2 (December, 04, 2019)
 
-* Version for Intellij 2019.1.*
+* Version for Intellij 2019.3.*
+* jvmTarget 11
+
 
 ## 2019.6.0.1 (Nov, 21, 2019)
 
