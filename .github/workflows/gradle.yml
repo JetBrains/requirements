@@ -15,5 +15,3 @@ jobs:
           java-version: 1.8
       - name: Build with Gradle
         run: ./gradlew buildPlugin
-      - name: gradle update checker
-        uses: MeilCli/gradle-update-check-action@v1
