@@ -22,7 +22,8 @@ fun getPackage(project: Project, packageName: String): PyPackage? {
             .getPackageManager(project) ?: return null
     val packages = packageManager.refreshAndGetPackages(false)
     val formattedPackageName = formatPackageName(packageName)
-    return packages.firstOrNull { it.name == formattedPackageName }
+
+    return packages.firstOrNull { formatPackageName(it.name) == formattedPackageName }
 }
 
 fun getCurrentVersion(project: Project, packageName: String): PyPackageVersion? {
