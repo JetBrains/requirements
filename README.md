@@ -2,7 +2,7 @@
 
 https://plugins.jetbrains.com/plugin/10837
 
-https://meanmail.dev
+https://meanmail.dev/plugin/1
 
 Your ratings and feedback are very important. The feature will appear the faster the more people request it.
 
