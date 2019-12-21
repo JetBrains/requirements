@@ -59,38 +59,29 @@ class RequirementsLexer
 (private val zzReader: Reader?) : FlexLexer {
 
     /** the current state of the DFA  */
-    private var zzState: Int = 0
-
+    private var zzState = 0
     /** the current lexical state  */
     private var zzLexicalState = YYINITIAL
-
     /** this buffer contains the current text to be matched and is
      * the source of the yytext() string  */
     private var zzBuffer: CharSequence = ""
-
     /** the textposition at the last accepting state  */
-    private var zzMarkedPos: Int = 0
-
+    private var zzMarkedPos = 0
     /** the current text position in the buffer  */
-    private var zzCurrentPos: Int = 0
-
+    private var zzCurrentPos = 0
     /** startRead marks the beginning of the yytext() string in the buffer  */
-    private var zzStartRead: Int = 0
-
+    private var zzStartRead = 0
     /** endRead marks the last character in the buffer, that has been read
      * from input  */
-    private var zzEndRead: Int = 0
-
+    private var zzEndRead = 0
     /**
      * zzAtBOL == true <=> the scanner is currently at the beginning of a line
      */
     private var zzAtBOL = true
-
     /** zzAtEOF == true <=> the scanner is at the EOF  */
-    private var zzAtEOF: Boolean = false
-
+    private var zzAtEOF = false
     /** denotes if the user-EOF-code has already been executed  */
-    private var zzEOFDone: Boolean = false
+    private var zzEOFDone = false
 
     override fun getTokenStart() = zzStartRead
     override fun getTokenEnd() = tokenStart + yylength()
@@ -108,7 +99,7 @@ class RequirementsLexer
             return YYINITIAL
         }
 
-        val state = stack.pop()
+        val state: Int = stack.pop()
 
         if (stack.peek() == null) {
             yyinitial()
@@ -307,7 +298,7 @@ class RequirementsLexer
                         zzCurrentPosL += Character.charCount(zzInput)
                     }
                 }
-                val zzNext = zzTransL[zzRowMapL[zzState] + ZZ_CMAP(zzInput)]
+                val zzNext = zzTransL[zzRowMapL[zzState] + zzCmap(zzInput)]
                 if (zzNext == -1) break
                 zzState = zzNext
 
@@ -325,312 +316,288 @@ class RequirementsLexer
             if (zzInput == YYEOF && tokenStart == zzCurrentPos) {
                 zzAtEOF = true
                 zzDoEOF()
-                return null
+                when (zzLexicalState) {
+                    ESCAPE_NEW_LINE -> {
+                        yypop()
+                        return EOL
+                    } // fall though
+                    172 -> {
+                    }
+                    else -> return null
+                }
             } else {
                 when (if (zzAction < 0) zzAction else ZZ_ACTION[zzAction]) {
                     1 -> {
                         return WHITE_SPACE
                     }
-                    // fall through
-                    49 -> {
+                    52 -> {
                     }
                     2 -> {
                         yyinitial()
                         return BAD_CHARACTER
                     }
-                    // fall through
-                    50 -> {
+                    53 -> {
                     }
                     3 -> {
                         return COMMENT
                     }
-                    // fall through
-                    51 -> {
+                    54 -> {
                     }
-                    4 -> run {
+                    4 -> {
                         yypush(REQ)
                         yypushback(yylength())
                     }
-                    // fall through
-                    52 -> {
+                    55 -> {
                     }
                     5 -> {
                         yyinitial()
                         return EOL
                     }
-                    // fall through
-                    53 -> {
+                    56 -> {
                     }
                     6 -> {
                         yypop()
                         return VERSION
                     }
-                    // fall through
-                    54 -> {
+                    57 -> {
                     }
                     7 -> {
                         yypop()
                         return COMMENT
                     }
-                    // fall through
-                    55 -> {
+                    58 -> {
                     }
                     8 -> {
                         return PYTHON_STR_C
                     }
-                    // fall through
-                    56 -> {
+                    59 -> {
                     }
                     9 -> {
                         yypop()
                         return DQUOTE
                     }
-                    // fall through
-                    57 -> {
+                    60 -> {
                     }
                     10 -> {
                         yypop()
                         return SQUOTE
                     }
-                    // fall through
-                    58 -> {
+                    61 -> {
                     }
                     11 -> {
                         yyinitial()
                         return COMMENT
                     }
-                    // fall through
-                    59 -> {
+                    62 -> {
                     }
                     12 -> {
                         return VERSION_CMP
                     }
-                    // fall through
-                    60 -> {
+                    63 -> {
                     }
                     13 -> {
                         return LPARENTHESIS
                     }
-                    // fall through
-                    61 -> {
+                    64 -> {
                     }
                     14 -> {
                         return RPARENTHESIS
                     }
-                    // fall through
-                    62 -> {
+                    65 -> {
                     }
                     15 -> {
                         yypush(DQUOTE_STR)
                         return DQUOTE
                     }
-                    // fall through
-                    63 -> {
+                    66 -> {
                     }
                     16 -> {
                         yypush(SQUOTE_STR)
                         return SQUOTE
                     }
-                    // fall through
-                    64 -> {
+                    67 -> {
                     }
                     17 -> {
                         return PLUS
                     }
-                    // fall through
-                    65 -> {
+                    68 -> {
                     }
                     18 -> {
                         return MINUS
                     }
-                    // fall through
-                    66 -> {
+                    69 -> {
                     }
                     19 -> {
                         return SUB_DELIMS
                     }
-                    // fall through
-                    67 -> {
+                    70 -> {
                     }
                     20 -> {
                         return COLON
                     }
-                    // fall through
-                    68 -> {
+                    71 -> {
                     }
                     21 -> {
                         return QUESTION_MARK
                     }
-                    // fall through
-                    69 -> {
+                    72 -> {
                     }
                     22 -> {
                         return LSBRACE
                     }
-                    // fall through
-                    70 -> {
+                    73 -> {
                     }
                     23 -> {
                         return RSBRACE
                     }
-                    // fall through
-                    71 -> {
+                    74 -> {
                     }
                     24 -> {
                         return AT
                     }
-                    // fall through
-                    72 -> {
+                    75 -> {
                     }
                     25 -> {
                         return DOLLAR_SIGN
                     }
-                    // fall through
-                    73 -> {
+                    76 -> {
                     }
                     26 -> {
                         return SHARP
                     }
-                    // fall through
-                    74 -> {
+                    77 -> {
                     }
                     27 -> {
                         return PERCENT_SIGN
                     }
-                    // fall through
-                    75 -> {
+                    78 -> {
                     }
                     28 -> {
                         return SLASH
                     }
-                    // fall through
-                    76 -> {
+                    79 -> {
                     }
                     29 -> {
                         return DOT
                     }
-                    // fall through
-                    77 -> {
+                    80 -> {
                     }
                     30 -> {
                         return UNDERSCORE
                     }
-                    // fall through
-                    78 -> {
+                    81 -> {
                     }
                     31 -> {
                         return LBRACE
                     }
-                    // fall through
-                    79 -> {
+                    82 -> {
                     }
                     32 -> {
                         return RBRACE
                     }
-                    // fall through
-                    80 -> {
+                    83 -> {
                     }
                     33 -> {
                         return TILDA
                     }
-                    // fall through
-                    81 -> {
+                    84 -> {
                     }
                     34 -> {
                         return LETTER
                     }
-                    // fall through
-                    82 -> {
+                    85 -> {
                     }
                     35 -> {
                         return DIGIT
                     }
-                    // fall through
-                    83 -> {
+                    86 -> {
                     }
                     36 -> {
                         yypush(QUOTED_MARK)
                         return SEMICOLON
                     }
-                    // fall through
-                    84 -> {
+                    87 -> {
                     }
                     37 -> {
                         return COMMA
                     }
-                    // fall through
-                    85 -> {
+                    88 -> {
                     }
                     38 -> {
                         yypush(URI)
                         return AT
                     }
-                    // fall through
-                    86 -> {
+                    89 -> {
                     }
-                    39 -> run {
+                    39 -> {
                         yypush(URI)
                         yypushback(yylength())
                     }
-                    // fall through
-                    87 -> {
+                    90 -> {
                     }
                     40 -> {
                         return IDENTIFIER
                     }
-                    // fall through
-                    88 -> {
+                    91 -> {
                     }
                     41 -> {
                         yypush(WAITING_VERSION)
                         return VERSION_CMP
                     }
-                    // fall through
-                    89 -> {
+                    92 -> {
                     }
                     42 -> {
-                        yypush(URI)
-                        return EDITABLE
+                        yypop()
+                        yypushback(yylength())
                     }
-                    // fall through
-                    90 -> {
+                    93 -> {
                     }
                     43 -> {
                         yypush(URI)
-                        return REFER
+                        return EDITABLE
                     }
-                    // fall through
-                    91 -> {
-                    }
-                    44 -> {
-                        return OR
-                    }
-                    // fall through
-                    92 -> {
-                    }
-                    45 -> {
-                        return IN
-                    }
-                    // fall through
-                    93 -> {
-                    }
-                    46 -> {
-                        return NOT
-                    }
-                    // fall through
                     94 -> {
                     }
-                    47 -> {
-                        return AND
+                    44 -> {
+                        yypush(URI)
+                        return REFER
                     }
-                    // fall through
                     95 -> {
                     }
+                    45 -> {
+                        return BAD_CHARACTER
+                    }
+                    96 -> {
+                    }
+                    46 -> {
+                        yypush(ESCAPE_NEW_LINE)
+                    }
+                    97 -> {
+                    }
+                    47 -> {
+                        return OR
+                    }
+                    98 -> {
+                    }
                     48 -> {
+                        return IN
+                    }
+                    99 -> {
+                    }
+                    49 -> {
+                        return NOT
+                    }
+                    100 -> {
+                    }
+                    50 -> {
+                        return AND
+                    }
+                    101 -> {
+                    }
+                    51 -> {
                         return ENV_VAR
                     }
-                    // fall through
-                    96 -> {
+                    102 -> {
                     }
                     else -> zzScanError(ZZ_NO_MATCH)
                 }
@@ -641,85 +608,87 @@ class RequirementsLexer
     companion object {
 
         /** This character denotes the end of file  */
-        val YYEOF = -1
+        const val YYEOF = -1
 
         /** initial size of the lookahead buffer  */
-        private val ZZ_BUFFERSIZE = 16384
+        private const val ZZ_BUFFERSIZE = 16384
 
         /** lexical states  */
-        val YYINITIAL = 0
-        val WAITING_VERSION = 2
-        val DQUOTE_STR = 4
-        val SQUOTE_STR = 6
-        val QUOTED_MARK = 8
-        val URI = 10
-        val REQ = 12
-
+        const val YYINITIAL = 0
+        const val WAITING_VERSION = 2
+        const val DQUOTE_STR = 4
+        const val SQUOTE_STR = 6
+        const val QUOTED_MARK = 8
+        const val URI = 10
+        const val REQ = 12
+        const val ESCAPE_NEW_LINE = 14
         /**
          * ZZ_LEXSTATE[l] is the state in the DFA for the lexical state l
          * ZZ_LEXSTATE[l+1] is the state in the DFA for the lexical state l
          * at the beginning of a line
          * l is of the form l = 2*k, k a non negative integer
          */
-        private val ZZ_LEXSTATE = intArrayOf(0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6)
+        private val ZZ_LEXSTATE = intArrayOf(
+                0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7
+        )
 
         /**
          * Translates characters to character classes
          * Chosen bits are [7, 7, 7]
          * Total runtime size is 1928 bytes
          */
-        fun ZZ_CMAP(ch: Int): Int {
-            return ZZ_CMAP_A[ZZ_CMAP_Y[ZZ_CMAP_Z[ch shr 14].toInt() or (ch shr 7 and 0x7f)].toInt() shl 7 or (ch and 0x7f)].toInt()
+        fun zzCmap(ch: Int): Int {
+            return ZZ_CMAP_A[ZZ_CMAP_Y[ZZ_CMAP_Z[ch shr 14].toInt() or
+                    (ch shr 7 and 0x7f)].toInt() shl 7 or
+                    (ch and 0x7f)].toInt()
         }
 
         /* The ZZ_CMAP_Z table has 68 entries */
-        internal val ZZ_CMAP_Z = zzUnpackCMap(
+        private val ZZ_CMAP_Z = zzUnpackCMap(
                 "\u0001\u0000\u0043\u0080")
 
         /* The ZZ_CMAP_Y table has 256 entries */
-        internal val ZZ_CMAP_Y = zzUnpackCMap(
+        private val ZZ_CMAP_Y = zzUnpackCMap(
                 "\u0001\u0000\u0001\u0001\u002b\u0002\u0001\u0003\u0012\u0002\u0001\u0004\u001f\u0002\u0001\u0003\u009f\u0002")
 
         /* The ZZ_CMAP_A table has 640 entries */
-        internal val ZZ_CMAP_A = zzUnpackCMap(
-                "\u0009\u001b\u0001\u0000\u0001\u0017\u0002\u0018\u0001\u0017\u0012\u001b\u0001\u0000\u0001\u000a\u0001\u0032\u0001\u000d\u0001\u000c\u0001\u000e\u0001\u0015\u0001\u0033\u0001\u001d" +
-                        "\u0001\u001e\u0001\u0003\u0001\u0001\u0001\u0006\u0001\u0002\u0001\u0010\u0001\u000f\u000a\u001a\u0001\u0004\u0001\u0005\u0001\u001c\u0001\u0014\u0001\u001c\u0001\u0007\u0001\u000b\u001a\u0019" +
-                        "\u0001\u0008\u0001\u001b\u0001\u0009\u0001\u0031\u0001\u0011\u0001\u0031\u0001\u002d\u0001\u0019\u0001\u002f\u0001\u0034\u0001\u0026\u0001\u002a\u0001\u0019\u0001\u0022\u0001\u0029" +
-                        "\u0002\u0019\u0001\u002c\u0001\u002e\u0001\u0024\u0001\u0023\u0001\u001f\u0001\u0019\u0001\u0027\u0001\u0028\u0001\u0021\u0001\u002b\u0001\u0025\u0001\u0019\u0001\u0030\u0001\u0020" +
-                        "\u0001\u0019\u0001\u0012\u0001\u0031\u0001\u0013\u0001\u0016\u0006\u001b\u0001\u0018\u001a\u001b\u0001\u0000\u00df\u001b\u0001\u0000\u007f\u001b\u000b\u0000\u001d\u001b" +
-                        "\u0002\u0018\u0005\u001b\u0001\u0000\u002f\u001b\u0001\u0000\u0020\u001b")
-
+        val ZZ_CMAP_A = zzUnpackCMap(
+                "\u0009\u001d\u0001\u0000\u0001\u0018\u0002\u0019\u0001\u0018\u0012\u001d\u0001\u0000\u0001\u000a\u0001\u0034\u0001\u000d\u0001\u000c\u0001\u000e\u0001\u0016\u0001\u0035\u0001\u001f" +
+                        "\u0001\u0020\u0001\u0003\u0001\u0001\u0001\u0006\u0001\u0002\u0001\u0011\u0001\u000f\u000a\u001b\u0001\u0004\u0001\u0005\u0001\u001e\u0001\u0015\u0001\u001e\u0001\u0007\u0001\u000b\u001a\u001a" +
+                        "\u0001\u0008\u0001\u0010\u0001\u0009\u0001\u0033\u0001\u0012\u0001\u0033\u0001\u002f\u0001\u001a\u0001\u0031\u0001\u0036\u0001\u0028\u0001\u002c\u0001\u001a\u0001\u0024\u0001\u002b" +
+                        "\u0002\u001a\u0001\u002e\u0001\u0030\u0001\u0026\u0001\u0025\u0001\u0021\u0001\u001a\u0001\u0029\u0001\u002a\u0001\u0023\u0001\u002d\u0001\u0027\u0001\u001a\u0001\u0032\u0001\u0022" +
+                        "\u0001\u001a\u0001\u0013\u0001\u001c\u0001\u0014\u0001\u0017\u0006\u001d\u0001\u0019\u001a\u001d\u0001\u0000\u00df\u001d\u0001\u0000\u007f\u001d\u000b\u0000\u001d\u001d" +
+                        "\u0002\u0019\u0005\u001d\u0001\u0000\u002f\u001d\u0001\u0000\u0020\u001d")
         /**
          * Translates DFA states to action switch labels.
          */
-        private val ZZ_ACTION = zzUnpackAction()
-
-        private val ZZ_ACTION_PACKED_0 = "\u0007\u0000\u0001\u0001\u0002\u0002\u0001\u0003\u0001\u0004\u0001\u0005\u0001\u0001\u0001\u0004" +
-                "\u0001\u0006\u0001\u0007\u0003\u0008\u0001\u0009\u0001\u000a\u0001\u0002\u0001\u000b\u0001\u0002" +
+        private val ZZ_ACTION = zzUnpack()
+        private const val ZZ_ACTION_PACKED_0 = "\u0008\u0000\u0001\u0001\u0002\u0002\u0001\u0003\u0001\u0002\u0001\u0004\u0001\u0005\u0001\u0004" +
+                "\u0001\u0006\u0001\u0007\u0002\u0008\u0001\u0009\u0001\u000a\u0001\u0002\u0001\u000b\u0001\u0002" +
                 "\u0001\u000c\u0001\u000d\u0001\u000e\u0007\u0002\u0001\u000f\u0001\u0010\u0001\u0001\u0001\u0011" +
                 "\u0001\u0012\u0001\u0013\u0001\u0014\u0001\u0015\u0001\u0016\u0001\u0017\u0001\u0018\u0001\u0019" +
                 "\u0001\u001a\u0001\u001b\u0001\u001c\u0001\u001d\u0001\u001e\u0001\u001f\u0001\u0020\u0001\u0021" +
-                "\u0001\u0001\u0001\u0022\u0001\u0023\u0001\u0001\u0001\u0024\u0001\u0025\u0001\u0002\u0001\u0026" +
-                "\u0001\u0027\u0001\u0002\u0001\u0001\u0001\u0028\u0001\u0029\u0001\u002a\u0001\u002b\u0001\u0000" +
-                "\u0001\u000c\u0002\u0000\u0001\u002c\u0004\u0000\u0001\u002d\u0002\u0000\u0001\u0029\u0004\u0000" +
-                "\u0001\u002e\u0003\u0000\u0001\u002f\u0009\u0000\u0001\u0030\u0043\u0000"
+                "\u0001\u0022\u0001\u0023\u0001\u0001\u0001\u0024\u0001\u0025\u0001\u0002\u0001\u0026\u0001\u0027" +
+                "\u0001\u0002\u0001\u0028\u0001\u0029\u0002\u002a\u0001\u002b\u0001\u002c\u0001\u002d\u0001\u002e" +
+                "\u0001\u0000\u0001\u000c\u0002\u0000\u0001\u002f\u0004\u0000\u0001\u0030\u0002\u0000\u0001\u0029" +
+                "\u0004\u0000\u0001\u0031\u0003\u0000\u0001\u0032\u0009\u0000\u0001\u0033\u0043\u0000"
 
-        private fun zzUnpackAction(): IntArray {
-            val result = IntArray(169)
-            zzUnpackAction(ZZ_ACTION_PACKED_0, 0, result)
+        private fun zzUnpack(): IntArray {
+            val result = IntArray(171)
+            zzUnpack(ZZ_ACTION_PACKED_0, 0, result)
             return result
         }
 
-        private fun zzUnpackAction(packed: String, offset: Int, result: IntArray): Int {
-            var i = 0       /* index in packed string  */
-            var j = offset  /* index in unpacked array */
-            val l = packed.length
-            while (i < l) {
-                var count = packed[i++].toInt()
-                val value = packed[i++].toInt()
-                do result[j++] = value while (--count > 0)
+        private fun zzUnpack(packed: String, offset: Int, result: IntArray): Int {
+            var index = 0       /* index in packed string  */
+            var unpackedIndex = offset  /* index in unpacked array */
+            val length = packed.length
+            while (index < length) {
+                var count = packed[index++].toInt()
+                val value = packed[index++].toInt()
+                do result[unpackedIndex++] = value while (--count > 0)
             }
-            return j
+            return unpackedIndex
         }
 
 
@@ -727,32 +696,31 @@ class RequirementsLexer
          * Translates a state to a row index in the transition table
          */
         private val ZZ_ROWMAP = zzUnpackRowMap()
-
-        private val ZZ_ROWMAP_PACKED_0 = "\u0000\u0000\u0000\u0035\u0000\u006a\u0000\u009f\u0000\u00d4\u0000\u0109\u0000\u013e\u0000\u0173" +
-                "\u0000\u01a8\u0000\u01dd\u0000\u0212\u0000\u01a8\u0000\u0247\u0000\u027c\u0000\u02b1\u0000\u02e6" +
-                "\u0000\u031b\u0000\u0350\u0000\u01a8\u0000\u0385\u0000\u01a8\u0000\u01a8\u0000\u03ba\u0000\u03ef" +
-                "\u0000\u0424\u0000\u03ba\u0000\u01a8\u0000\u01a8\u0000\u0459\u0000\u048e\u0000\u04c3\u0000\u04f8" +
-                "\u0000\u052d\u0000\u0562\u0000\u0597\u0000\u01a8\u0000\u01a8\u0000\u05cc\u0000\u01a8\u0000\u01a8" +
-                "\u0000\u01a8\u0000\u01a8\u0000\u01a8\u0000\u01a8\u0000\u01a8\u0000\u01a8\u0000\u01a8\u0000\u01a8" +
-                "\u0000\u01a8\u0000\u01a8\u0000\u01a8\u0000\u01a8\u0000\u01a8\u0000\u01a8\u0000\u01a8\u0000\u0601" +
-                "\u0000\u01a8\u0000\u01a8\u0000\u0636\u0000\u01a8\u0000\u01a8\u0000\u066b\u0000\u01a8\u0000\u01a8" +
-                "\u0000\u06a0\u0000\u06d5\u0000\u070a\u0000\u066b\u0000\u01a8\u0000\u01a8\u0000\u02b1\u0000\u01a8" +
-                "\u0000\u073f\u0000\u0774\u0000\u01a8\u0000\u07a9\u0000\u07de\u0000\u0813\u0000\u0848\u0000\u01a8" +
-                "\u0000\u087d\u0000\u08b2\u0000\u01a8\u0000\u08e7\u0000\u091c\u0000\u0951\u0000\u0986\u0000\u01a8" +
-                "\u0000\u09bb\u0000\u09f0\u0000\u0a25\u0000\u01a8\u0000\u0a5a\u0000\u0a8f\u0000\u0ac4\u0000\u0af9" +
-                "\u0000\u0b2e\u0000\u0b63\u0000\u0b98\u0000\u0bcd\u0000\u0c02\u0000\u01a8\u0000\u0c37\u0000\u0c6c" +
-                "\u0000\u0ca1\u0000\u0cd6\u0000\u0d0b\u0000\u0d40\u0000\u0d75\u0000\u0daa\u0000\u0ddf\u0000\u0e14" +
-                "\u0000\u0e49\u0000\u0e7e\u0000\u0eb3\u0000\u0ee8\u0000\u0f1d\u0000\u0f52\u0000\u0f87\u0000\u0fbc" +
-                "\u0000\u0ff1\u0000\u1026\u0000\u105b\u0000\u1090\u0000\u10c5\u0000\u10fa\u0000\u112f\u0000\u1164" +
-                "\u0000\u1199\u0000\u11ce\u0000\u1203\u0000\u1238\u0000\u126d\u0000\u12a2\u0000\u12d7\u0000\u130c" +
-                "\u0000\u1341\u0000\u1376\u0000\u13ab\u0000\u13e0\u0000\u1415\u0000\u144a\u0000\u147f\u0000\u14b4" +
-                "\u0000\u14e9\u0000\u151e\u0000\u1553\u0000\u1588\u0000\u15bd\u0000\u15f2\u0000\u1627\u0000\u165c" +
-                "\u0000\u1691\u0000\u16c6\u0000\u16fb\u0000\u1730\u0000\u1765\u0000\u179a\u0000\u17cf\u0000\u1804" +
-                "\u0000\u1839\u0000\u186e\u0000\u18a3\u0000\u18d8\u0000\u190d\u0000\u1942\u0000\u1977\u0000\u19ac" +
-                "\u0000\u19e1"
+        private const val ZZ_ROWMAP_PACKED_0 = "\u0000\u0000\u0000\u0037\u0000\u006e\u0000\u00a5\u0000\u00dc\u0000\u0113\u0000\u014a\u0000\u0181" +
+                "\u0000\u01b8\u0000\u01ef\u0000\u0226\u0000\u025d\u0000\u0294\u0000\u01ef\u0000\u01ef\u0000\u02cb" +
+                "\u0000\u0302\u0000\u0339\u0000\u0370\u0000\u01ef\u0000\u01ef\u0000\u01ef\u0000\u03a7\u0000\u03de" +
+                "\u0000\u0415\u0000\u03a7\u0000\u01ef\u0000\u01ef\u0000\u044c\u0000\u0483\u0000\u04ba\u0000\u04f1" +
+                "\u0000\u0528\u0000\u055f\u0000\u0596\u0000\u01ef\u0000\u01ef\u0000\u05cd\u0000\u01ef\u0000\u01ef" +
+                "\u0000\u01ef\u0000\u01ef\u0000\u01ef\u0000\u01ef\u0000\u01ef\u0000\u01ef\u0000\u01ef\u0000\u01ef" +
+                "\u0000\u01ef\u0000\u01ef\u0000\u01ef\u0000\u01ef\u0000\u01ef\u0000\u01ef\u0000\u01ef\u0000\u01ef" +
+                "\u0000\u01ef\u0000\u0604\u0000\u01ef\u0000\u01ef\u0000\u063b\u0000\u01ef\u0000\u01ef\u0000\u0672" +
+                "\u0000\u06a9\u0000\u063b\u0000\u01ef\u0000\u0294\u0000\u01ef\u0000\u01ef\u0000\u01ef\u0000\u01ef" +
+                "\u0000\u02cb\u0000\u01ef\u0000\u06e0\u0000\u0717\u0000\u01ef\u0000\u074e\u0000\u0785\u0000\u07bc" +
+                "\u0000\u07f3\u0000\u01ef\u0000\u082a\u0000\u0861\u0000\u01ef\u0000\u0898\u0000\u08cf\u0000\u0906" +
+                "\u0000\u093d\u0000\u01ef\u0000\u0974\u0000\u09ab\u0000\u09e2\u0000\u01ef\u0000\u0a19\u0000\u0a50" +
+                "\u0000\u0a87\u0000\u0abe\u0000\u0af5\u0000\u0b2c\u0000\u0b63\u0000\u0b9a\u0000\u0bd1\u0000\u01ef" +
+                "\u0000\u0c08\u0000\u0c3f\u0000\u0c76\u0000\u0cad\u0000\u0ce4\u0000\u0d1b\u0000\u0d52\u0000\u0d89" +
+                "\u0000\u0dc0\u0000\u0df7\u0000\u0e2e\u0000\u0e65\u0000\u0e9c\u0000\u0ed3\u0000\u0f0a\u0000\u0f41" +
+                "\u0000\u0f78\u0000\u0faf\u0000\u0fe6\u0000\u101d\u0000\u1054\u0000\u108b\u0000\u10c2\u0000\u10f9" +
+                "\u0000\u1130\u0000\u1167\u0000\u119e\u0000\u11d5\u0000\u120c\u0000\u1243\u0000\u127a\u0000\u12b1" +
+                "\u0000\u12e8\u0000\u131f\u0000\u1356\u0000\u138d\u0000\u13c4\u0000\u13fb\u0000\u1432\u0000\u1469" +
+                "\u0000\u14a0\u0000\u14d7\u0000\u150e\u0000\u1545\u0000\u157c\u0000\u15b3\u0000\u15ea\u0000\u1621" +
+                "\u0000\u1658\u0000\u168f\u0000\u16c6\u0000\u16fd\u0000\u1734\u0000\u176b\u0000\u17a2\u0000\u17d9" +
+                "\u0000\u1810\u0000\u1847\u0000\u187e\u0000\u18b5\u0000\u18ec\u0000\u1923\u0000\u195a\u0000\u1991" +
+                "\u0000\u19c8\u0000\u19ff\u0000\u1a36"
 
         private fun zzUnpackRowMap(): IntArray {
-            val result = IntArray(169)
+            val result = IntArray(171)
             zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, 0, result)
             return result
         }
@@ -772,68 +740,67 @@ class RequirementsLexer
          * The transition table of the DFA
          */
         private val ZZ_TRANS = zzUnpackTrans()
-
-        private val ZZ_TRANS_PACKED_0 = "\u0001\u0008\u0001\u0009\u0001\u000a\u000a\u0009\u0001\u000b\u0002\u0009\u0001\u000c\u0006\u0009" +
-                "\u0001\u000d\u0001\u000e\u0002\u000f\u0004\u0009\u0012\u000f\u0003\u0009\u0001\u000f\u0001\u0008" +
-                "\u0003\u0010\u0006\u0009\u0001\u0010\u0002\u0009\u0001\u0011\u0002\u0009\u0002\u0010\u0005\u0009" +
-                "\u0001\u000d\u0001\u000e\u0002\u0010\u0004\u0009\u0012\u0010\u0003\u0009\u0001\u0010\u0001\u0012" +
-                "\u0016\u0013\u0001\u000d\u0001\u0014\u0002\u0013\u0001\u0009\u0016\u0013\u0001\u0015\u0001\u0009" +
-                "\u0001\u0013\u0001\u0012\u0016\u0013\u0001\u000d\u0001\u0014\u0002\u0013\u0001\u0009\u0016\u0013" +
-                "\u0001\u0009\u0001\u0016\u0001\u0013\u0001\u0008\u0009\u0009\u0001\u0017\u0002\u0009\u0001\u0018" +
-                "\u0006\u0009\u0001\u0019\u0001\u0009\u0001\u0017\u0001\u000d\u0001\u000e\u0003\u0009\u0001\u001a" +
-                "\u0001\u001b\u0001\u001c\u0001\u001d\u0003\u0009\u0001\u001e\u0001\u001f\u0001\u0009\u0001\u0020" +
-                "\u0001\u0009\u0001\u0021\u0001\u0022\u0003\u0009\u0001\u0023\u0004\u0009\u0001\u0024\u0001\u0025" +
-                "\u0001\u0009\u0001\u0026\u0001\u0027\u0001\u0028\u0001\u0029\u0001\u002a\u0002\u0029\u0001\u002b" +
-                "\u0001\u002c\u0001\u002d\u0001\u0029\u0001\u002e\u0001\u002f\u0001\u0030\u0001\u0031\u0001\u0032" +
-                "\u0001\u0033\u0001\u0034\u0001\u0035\u0001\u0036\u0002\u0029\u0001\u0037\u0001\u000d\u0001\u0038" +
-                "\u0001\u0039\u0001\u003a\u0002\u0009\u0002\u0029\u0012\u0039\u0002\u0009\u0001\u0029\u0001\u0039" +
-                "\u0001\u003b\u0004\u0009\u0001\u003c\u0001\u003d\u0001\u0009\u0001\u002c\u0001\u002d\u0001\u003e" +
-                "\u0001\u003f\u0004\u0009\u0001\u0040\u0003\u0009\u0001\u0041\u0001\u0009\u0001\u003e\u0001\u000d" +
-                "\u0001\u0042\u0002\u0043\u0001\u0009\u0001\u0044\u0001\u001b\u0001\u001c\u0012\u0043\u0003\u0009" +
-                "\u0001\u0043\u0001\u0008\u0017\u0000\u0001\u0008\u0077\u0000\u0001\u0045\u0001\u0046\u000d\u0000" +
-                "\u0017\u000b\u0002\u0000\u001c\u000b\u0017\u0000\u0002\u000d\u001c\u0000\u0001\u0008\u0016\u0000" +
-                "\u0001\u000d\u0001\u000e\u001e\u0000\u0001\u0047\u000d\u0000\u0002\u0047\u0007\u0000\u0002\u000f" +
-                "\u0004\u0000\u0012\u000f\u0003\u0000\u0001\u000f\u0001\u0000\u0003\u0010\u0006\u0000\u0001\u0010" +
-                "\u0005\u0000\u0002\u0010\u0007\u0000\u0002\u0010\u0004\u0000\u0012\u0010\u0003\u0000\u0001\u0010" +
-                "\u0017\u0011\u0002\u0000\u001c\u0011\u0001\u0012\u0017\u0000\u0001\u0012\u001c\u0000\u0001\u0012" +
-                "\u0016\u0000\u0001\u000d\u0001\u0014\u0030\u0000\u0001\u0048\u0020\u0000\u0017\u0018\u0002\u0000" +
-                "\u001c\u0018\u0014\u0000\u0001\u001a\u0040\u0000\u0001\u0049\u000b\u0000\u0001\u004a\u002f\u0000" +
-                "\u0001\u004b\u0001\u004c\u002f\u0000\u0001\u004d\u0041\u0000\u0001\u004e\u0024\u0000\u0001\u004f" +
-                "\u0038\u0000\u0001\u0050\u0009\u0000\u0001\u0051\u002a\u0000\u0001\u0052\u0010\u0000\u0001\u0026" +
-                "\u0004\u0000\u0001\u003c\u0007\u0000\u0001\u0018\u000a\u0000\u0001\u0026\u001c\u0000\u0001\u0026" +
-                "\u0004\u0000\u0001\u003c\u0007\u0000\u0001\u0018\u0009\u0000\u0001\u000d\u0001\u0038\u001c\u0000" +
-                "\u0001\u003b\u000c\u0000\u0001\u0018\u000a\u0000\u0001\u003b\u0030\u0000\u0001\u0053\u0034\u0000" +
-                "\u0001\u0044\u0020\u0000\u0001\u003b\u000c\u0000\u0001\u0018\u0009\u0000\u0001\u000d\u0001\u0042" +
-                "\u001d\u0000\u0001\u0040\u0001\u0054\u0001\u0000\u0001\u0040\u000b\u0000\u0002\u0054\u0007\u0000" +
-                "\u0002\u0043\u0004\u0000\u0012\u0043\u0003\u0000\u0001\u0043\u0021\u0000\u0001\u0055\u0040\u0000" +
-                "\u0001\u0056\u0018\u0000\u0001\u0057\u0044\u0000\u0001\u0058\u0034\u0000\u0001\u0059\u003b\u0000" +
-                "\u0001\u005a\u002b\u0000\u0001\u005b\u0049\u0000\u0001\u005c\u0002\u0000\u0001\u0054\u000d\u0000" +
-                "\u0002\u0054\u0007\u0000\u0002\u0043\u0004\u0000\u0012\u0043\u0003\u0000\u0001\u0043\u0022\u0000" +
-                "\u0001\u005d\u0033\u0000\u0001\u005e\u0037\u0000\u0001\u005f\u0037\u0000\u0001\u0060\u001e\u0000" +
-                "\u0001\u0061\u004f\u0000\u0001\u0062\u002b\u0000\u0001\u0063\u003b\u0000\u0001\u0064\u0037\u0000" +
-                "\u0001\u0065\u0034\u0000\u0001\u0066\u0026\u0000\u0001\u0067\u003b\u0000\u0001\u0068\u0032\u0000" +
-                "\u0001\u0069\u0033\u0000\u0001\u006a\u003f\u0000\u0001\u006b\u0032\u0000\u0001\u006c\u0036\u0000" +
-                "\u0001\u006d\u0017\u0000\u0001\u006e\u004a\u0000\u0001\u006f\u0033\u0000\u0001\u0066\u003b\u0000" +
-                "\u0001\u0070\u002d\u0000\u0001\u0071\u0033\u0000\u0001\u0072\u0004\u0000\u0001\u0073\u0038\u0000" +
-                "\u0001\u0074\u0027\u0000\u0001\u0075\u0037\u0000\u0001\u0076\u0036\u0000\u0001\u0077\u0039\u0000" +
-                "\u0001\u0078\u001a\u0000\u0001\u0079\u004d\u0000\u0001\u007a\u002b\u0000\u0001\u007b\u003a\u0000" +
-                "\u0001\u007c\u0039\u0000\u0001\u007d\u0027\u0000\u0001\u007e\u0005\u0000\u0001\u0072\u0001\u0000" +
-                "\u0001\u007f\u0001\u0080\u0005\u0000\u0001\u0081\u0029\u0000\u0001\u0082\u003e\u0000\u0001\u0083" +
-                "\u002f\u0000\u0001\u0084\u0038\u0000\u0001\u0085\u0028\u0000\u0001\u0086\u003a\u0000\u0001\u0087" +
-                "\u002e\u0000\u0001\u0088\u0041\u0000\u0001\u0089\u002e\u0000\u0001\u008a\u002e\u0000\u0001\u008b" +
-                "\u003c\u0000\u0001\u008c\u001c\u0000\u0001\u008d\u0044\u0000\u0001\u008e\u003f\u0000\u0001\u008f" +
-                "\u0030\u0000\u0001\u0090\u003b\u0000\u0001\u0091\u0033\u0000\u0001\u0066\u002f\u0000\u0001\u0092" +
-                "\u002e\u0000\u0001\u0093\u0036\u0000\u0001\u0072\u0031\u0000\u0001\u0094\u0038\u0000\u0001\u0095" +
-                "\u002f\u0000\u0001\u0096\u0035\u0000\u0001\u0097\u0035\u0000\u0001\u0098\u0035\u0000\u0001\u0066" +
-                "\u0033\u0000\u0001\u0099\u003e\u0000\u0001\u009a\u002d\u0000\u0001\u008a\u0037\u0000\u0001\u009b" +
-                "\u002f\u0000\u0001\u009c\u0034\u0000\u0001\u009d\u0038\u0000\u0001\u006b\u0030\u0000\u0001\u006b" +
-                "\u0021\u0000\u0001\u009e\u0034\u0000\u0001\u009f\u0047\u0000\u0001\u005f\u0001\u0072\u0038\u0000" +
-                "\u0001\u00a0\u0039\u0000\u0001\u00a1\u0025\u0000\u0001\u00a2\u0041\u0000\u0001\u00a3\u002e\u0000" +
-                "\u0001\u00a4\u003c\u0000\u0001\u00a5\u002c\u0000\u0001\u00a6\u0032\u0000\u0001\u00a7\u0031\u0000" +
-                "\u0001\u00a8\u0040\u0000\u0001\u00a9\u0028\u0000\u0001\u0084\u0013\u0000"
+        private const val ZZ_TRANS_PACKED_0 = "\u0001\u0009\u0001\u000a\u0001\u000b\u000a\u000a\u0001\u000c\u0002\u000a\u0001\u000d\u0001\u000e" +
+                "\u0006\u000a\u0001\u000f\u0001\u0009\u0002\u0010\u0001\u000f\u0004\u000a\u0012\u0010\u0003\u000a" +
+                "\u0001\u0010\u0001\u0009\u0003\u0011\u0006\u000a\u0001\u0011\u0002\u000a\u0001\u0012\u0002\u000a" +
+                "\u0001\u000d\u0002\u0011\u0005\u000a\u0001\u000f\u0001\u0009\u0002\u0011\u0001\u000f\u0004\u000a" +
+                "\u0012\u0011\u0003\u000a\u0001\u0011\u0001\u0013\u000f\u0014\u0001\u000d\u0007\u0014\u0001\u000f" +
+                "\u0001\u0013\u0003\u0014\u0001\u000a\u0016\u0014\u0001\u0015\u0001\u000a\u0001\u0014\u0001\u0013" +
+                "\u000f\u0014\u0001\u000d\u0007\u0014\u0001\u000f\u0001\u0013\u0003\u0014\u0001\u000a\u0016\u0014" +
+                "\u0001\u000a\u0001\u0016\u0001\u0014\u0001\u0009\u0009\u000a\u0001\u0017\u0002\u000a\u0001\u0018" +
+                "\u0002\u000a\u0001\u000d\u0004\u000a\u0001\u0019\u0001\u000a\u0001\u0017\u0001\u000f\u0001\u0009" +
+                "\u0002\u000a\u0001\u000f\u0001\u000a\u0001\u001a\u0001\u001b\u0001\u001c\u0001\u001d\u0003\u000a" +
+                "\u0001\u001e\u0001\u001f\u0001\u000a\u0001\u0020\u0001\u000a\u0001\u0021\u0001\u0022\u0003\u000a" +
+                "\u0001\u0023\u0004\u000a\u0001\u0024\u0001\u0025\u0001\u000a\u0001\u0026\u0001\u0027\u0001\u0028" +
+                "\u0001\u0029\u0001\u002a\u0002\u0029\u0001\u002b\u0001\u002c\u0001\u002d\u0001\u0029\u0001\u002e" +
+                "\u0001\u002f\u0001\u0030\u0001\u0031\u0001\u0032\u0001\u000d\u0001\u0033\u0001\u0034\u0001\u0035" +
+                "\u0001\u0036\u0002\u0029\u0001\u0037\u0001\u000f\u0001\u0026\u0001\u0038\u0001\u0039\u0001\u000f" +
+                "\u0002\u000a\u0002\u0029\u0012\u0038\u0002\u000a\u0001\u0029\u0001\u0038\u0001\u003a\u0004\u000a" +
+                "\u0001\u003b\u0001\u003c\u0001\u000a\u0001\u002c\u0001\u002d\u0001\u003d\u0001\u003e\u0004\u000a" +
+                "\u0001\u000d\u0001\u003f\u0003\u000a\u0001\u0040\u0001\u000a\u0001\u003d\u0001\u000f\u0001\u003a" +
+                "\u0002\u0041\u0001\u000f\u0001\u000a\u0001\u0042\u0001\u001b\u0001\u001c\u0012\u0041\u0003\u000a" +
+                "\u0001\u0041\u0001\u0009\u000f\u0043\u0001\u0044\u0008\u0043\u0001\u0009\u001d\u0043\u0001\u0009" +
+                "\u0018\u0000\u0001\u0009\u007c\u0000\u0001\u0045\u0001\u0046\u000d\u0000\u0018\u000c\u0002\u0000" +
+                "\u001d\u000c\u0010\u0000\u0001\u0047\u0007\u0000\u0001\u0048\u0003\u0000\u0001\u0048\u001c\u0000" +
+                "\u0001\u0049\u000e\u0000\u0002\u0049\u0007\u0000\u0002\u0010\u0005\u0000\u0012\u0010\u0003\u0000" +
+                "\u0001\u0010\u0001\u0000\u0003\u0011\u0006\u0000\u0001\u0011\u0006\u0000\u0002\u0011\u0007\u0000" +
+                "\u0002\u0011\u0005\u0000\u0012\u0011\u0003\u0000\u0001\u0011\u0018\u0012\u0002\u0000\u001d\u0012" +
+                "\u0001\u0013\u0018\u0000\u0001\u0013\u0032\u0000\u0001\u004a\u0021\u0000\u0018\u0018\u0002\u0000" +
+                "\u001d\u0018\u0015\u0000\u0001\u001a\u0043\u0000\u0001\u004b\u000b\u0000\u0001\u004c\u0031\u0000" +
+                "\u0001\u004d\u0001\u004e\u0031\u0000\u0001\u004f\u0043\u0000\u0001\u0050\u0026\u0000\u0001\u0051" +
+                "\u003a\u0000\u0001\u0052\u0009\u0000\u0001\u0053\u002c\u0000\u0001\u0054\u0010\u0000\u0001\u0026" +
+                "\u0004\u0000\u0001\u003b\u0007\u0000\u0001\u0018\u000b\u0000\u0001\u0026\u001d\u0000\u0001\u003a" +
+                "\u000c\u0000\u0001\u0018\u000b\u0000\u0001\u003a\u0032\u0000\u0001\u0055\u0036\u0000\u0001\u0042" +
+                "\u0022\u0000\u0001\u003f\u0001\u0056\u0001\u0000\u0001\u003f\u000c\u0000\u0002\u0056\u0007\u0000" +
+                "\u0002\u0041\u0005\u0000\u0012\u0041\u0003\u0000\u0001\u0041\u0023\u0000\u0001\u0057\u0042\u0000" +
+                "\u0001\u0058\u0019\u0000\u0001\u0059\u0047\u0000\u0001\u005a\u0036\u0000\u0001\u005b\u003d\u0000" +
+                "\u0001\u005c\u002d\u0000\u0001\u005d\u004b\u0000\u0001\u005e\u0002\u0000\u0001\u0056\u000e\u0000" +
+                "\u0002\u0056\u0007\u0000\u0002\u0041\u0005\u0000\u0012\u0041\u0003\u0000\u0001\u0041\u0024\u0000" +
+                "\u0001\u005f\u0035\u0000\u0001\u0060\u0039\u0000\u0001\u0061\u0039\u0000\u0001\u0062\u001f\u0000" +
+                "\u0001\u0063\u0052\u0000\u0001\u0064\u002d\u0000\u0001\u0065\u003d\u0000\u0001\u0066\u0039\u0000" +
+                "\u0001\u0067\u0036\u0000\u0001\u0068\u0028\u0000\u0001\u0069\u003d\u0000\u0001\u006a\u0034\u0000" +
+                "\u0001\u006b\u0035\u0000\u0001\u006c\u0041\u0000\u0001\u006d\u0034\u0000\u0001\u006e\u0038\u0000" +
+                "\u0001\u006f\u0018\u0000\u0001\u0070\u004d\u0000\u0001\u0071\u0035\u0000\u0001\u0068\u003d\u0000" +
+                "\u0001\u0072\u002f\u0000\u0001\u0073\u0035\u0000\u0001\u0074\u0004\u0000\u0001\u0075\u003a\u0000" +
+                "\u0001\u0076\u0029\u0000\u0001\u0077\u0039\u0000\u0001\u0078\u0038\u0000\u0001\u0079\u003b\u0000" +
+                "\u0001\u007a\u001b\u0000\u0001\u007b\u0050\u0000\u0001\u007c\u002d\u0000\u0001\u007d\u003c\u0000" +
+                "\u0001\u007e\u003b\u0000\u0001\u007f\u0029\u0000\u0001\u0080\u0005\u0000\u0001\u0074\u0001\u0000" +
+                "\u0001\u0081\u0001\u0082\u0005\u0000\u0001\u0083\u002b\u0000\u0001\u0084\u0040\u0000\u0001\u0085" +
+                "\u0031\u0000\u0001\u0086\u003a\u0000\u0001\u0087\u002a\u0000\u0001\u0088\u003c\u0000\u0001\u0089" +
+                "\u0030\u0000\u0001\u008a\u0043\u0000\u0001\u008b\u0030\u0000\u0001\u008c\u0030\u0000\u0001\u008d" +
+                "\u003e\u0000\u0001\u008e\u001d\u0000\u0001\u008f\u0047\u0000\u0001\u0090\u0041\u0000\u0001\u0091" +
+                "\u0032\u0000\u0001\u0092\u003d\u0000\u0001\u0093\u0035\u0000\u0001\u0068\u0031\u0000\u0001\u0094" +
+                "\u0030\u0000\u0001\u0095\u0038\u0000\u0001\u0074\u0033\u0000\u0001\u0096\u003a\u0000\u0001\u0097" +
+                "\u0031\u0000\u0001\u0098\u0037\u0000\u0001\u0099\u0037\u0000\u0001\u009a\u0037\u0000\u0001\u0068" +
+                "\u0035\u0000\u0001\u009b\u0040\u0000\u0001\u009c\u002f\u0000\u0001\u008c\u0039\u0000\u0001\u009d" +
+                "\u0031\u0000\u0001\u009e\u0036\u0000\u0001\u009f\u003a\u0000\u0001\u006d\u0032\u0000\u0001\u006d" +
+                "\u0022\u0000\u0001\u00a0\u0036\u0000\u0001\u00a1\u004a\u0000\u0001\u0061\u0001\u0074\u003a\u0000" +
+                "\u0001\u00a2\u003b\u0000\u0001\u00a3\u0027\u0000\u0001\u00a4\u0043\u0000\u0001\u00a5\u0030\u0000" +
+                "\u0001\u00a6\u003e\u0000\u0001\u00a7\u002e\u0000\u0001\u00a8\u0034\u0000\u0001\u00a9\u0033\u0000" +
+                "\u0001\u00aa\u0042\u0000\u0001\u00ab\u002a\u0000\u0001\u0086\u0013\u0000"
 
         private fun zzUnpackTrans(): IntArray {
-            val result = IntArray(6678)
+            val result = IntArray(6765)
             zzUnpackTrans(ZZ_TRANS_PACKED_0, 0, result)
             return result
         }
@@ -868,32 +835,17 @@ class RequirementsLexer
          * ZZ_ATTRIBUTE[aState] contains the attributes of state `aState`
          */
         private val ZZ_ATTRIBUTE = zzUnpackAttribute()
-
-        private val ZZ_ATTRIBUTE_PACKED_0 = "\u0007\u0000\u0001\u0001\u0001\u0009\u0002\u0001\u0001\u0009\u0006\u0001\u0001\u0009\u0001\u0001" +
-                "\u0002\u0009\u0004\u0001\u0002\u0009\u0007\u0001\u0002\u0009\u0001\u0001\u0011\u0009\u0001\u0001" +
-                "\u0002\u0009\u0001\u0001\u0002\u0009\u0001\u0001\u0002\u0009\u0004\u0001\u0002\u0009\u0001\u0000" +
-                "\u0001\u0009\u0002\u0000\u0001\u0009\u0004\u0000\u0001\u0009\u0002\u0000\u0001\u0009\u0004\u0000" +
-                "\u0001\u0009\u0003\u0000\u0001\u0009\u0009\u0000\u0001\u0009\u0043\u0000"
+        private const val ZZ_ATTRIBUTE_PACKED_0 = "\u0008\u0000\u0001\u0001\u0001\u0009\u0003\u0001\u0002\u0009\u0004\u0001\u0003\u0009\u0004\u0001" +
+                "\u0002\u0009\u0007\u0001\u0002\u0009\u0001\u0001\u0013\u0009\u0001\u0001\u0002\u0009\u0001\u0001" +
+                "\u0002\u0009\u0003\u0001\u0001\u0009\u0001\u0001\u0004\u0009\u0001\u0000\u0001\u0009\u0002\u0000" +
+                "\u0001\u0009\u0004\u0000\u0001\u0009\u0002\u0000\u0001\u0009\u0004\u0000\u0001\u0009\u0003\u0000" +
+                "\u0001\u0009\u0009\u0000\u0001\u0009\u0043\u0000"
 
         private fun zzUnpackAttribute(): IntArray {
-            val result = IntArray(169)
-            var offset = 0
-            offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result)
+            val result = IntArray(171)
+            zzUnpack(ZZ_ATTRIBUTE_PACKED_0, 0, result)
             return result
         }
-
-        private fun zzUnpackAttribute(packed: String, offset: Int, result: IntArray): Int {
-            var i = 0       /* index in packed string  */
-            var j = offset  /* index in unpacked array */
-            val l = packed.length
-            while (i < l) {
-                var count = packed[i++].toInt()
-                val value = packed[i++].toInt()
-                do result[j++] = value while (--count > 0)
-            }
-            return j
-        }
-
 
         /**
          * Unpacks the compressed character translation table.
