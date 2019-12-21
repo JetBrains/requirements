@@ -10,6 +10,9 @@ import com.intellij.psi.tree.IFileElementType
 import ru.meanmail.psi.Types.Companion.AND
 import ru.meanmail.psi.Types.Companion.AT
 import ru.meanmail.psi.Types.Companion.AUTHORITY
+import ru.meanmail.psi.Types.Companion.BINARY_ALL
+import ru.meanmail.psi.Types.Companion.BINARY_LIST
+import ru.meanmail.psi.Types.Companion.BINARY_NONE
 import ru.meanmail.psi.Types.Companion.COLON
 import ru.meanmail.psi.Types.Companion.COMMA
 import ru.meanmail.psi.Types.Companion.COMMENT
@@ -723,6 +726,19 @@ class RequirementsParser : PsiParser, LightPsiParser {
         }
 
         /* ********************************************************** */
+        // extras_list | BINARY_ALL | BINARY_NONE
+        fun binary_list(b: PsiBuilder, l: Int): Boolean {
+            if (!recursion_guard_(b, l, "binary_list")) return false
+            var r: Boolean
+            val m = enter_section_(b, l, _NONE_, BINARY_LIST, "<binary list>")
+            r = extras_list(b, l + 1)
+            if (!r) r = consumeToken(b, BINARY_ALL)
+            if (!r) r = consumeToken(b, BINARY_NONE)
+            exit_section_(b, l, m, r, false, null)
+            return r
+        }
+
+        /* ********************************************************** */
         // CONSTRAINT WHITE_SPACE+ uri_reference
         private fun constraint_req(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "constraint_req")) return false
@@ -731,9 +747,9 @@ class RequirementsParser : PsiParser, LightPsiParser {
             val p: Boolean
             val m = enter_section_(b, l, _NONE_, CONSTRAINT_REQ, null)
             r = consumeToken(b, CONSTRAINT)
-            r = r && constraint_req_1(b, l + 1)
-            p = r // pin = 2
-            r = r && uri_reference(b, l + 1)
+            p = r // pin = 1
+            r = r && report_error_(b, constraint_req_1(b, l + 1))
+            r = p && uri_reference(b, l + 1) && r
             exit_section_(b, l, m, r, p, null)
             return r || p
         }
@@ -745,7 +761,7 @@ class RequirementsParser : PsiParser, LightPsiParser {
             val m = enter_section_(b)
             r = consumeToken(b, WHITE_SPACE)
             while (r) {
-                val c: Int = current_position_(b)
+                val c = current_position_(b)
                 if (!consumeToken(b, WHITE_SPACE)) break
                 if (!empty_element_parsed_guard_(b, "constraint_req_1", c)) break
             }
@@ -856,9 +872,9 @@ class RequirementsParser : PsiParser, LightPsiParser {
             val p: Boolean
             val m = enter_section_(b, l, _NONE_, EDITABLE_REQ, null)
             r = consumeToken(b, EDITABLE)
-            r = r && editable_req_1(b, l + 1)
-            p = r // pin = 2
-            r = r && uri_reference(b, l + 1)
+            p = r // pin = 1
+            r = r && report_error_(b, editable_req_1(b, l + 1))
+            r = p && uri_reference(b, l + 1) && r
             exit_section_(b, l, m, r, p, null)
             return r || p
         }
@@ -901,9 +917,9 @@ class RequirementsParser : PsiParser, LightPsiParser {
             val p: Boolean
             val m = enter_section_(b, l, _NONE_, EXTRA_INDEX_URL_REQ, null)
             r = consumeToken(b, EXTRA_INDEX_URL)
-            r = r && extra_index_url_req_1(b, l + 1)
-            p = r // pin = 2
-            r = r && uri_reference(b, l + 1)
+            p = r // pin = 1
+            r = r && report_error_(b, extra_index_url_req_1(b, l + 1))
+            r = p && uri_reference(b, l + 1) && r
             exit_section_(b, l, m, r, p, null)
             return r || p
         }
@@ -915,7 +931,7 @@ class RequirementsParser : PsiParser, LightPsiParser {
             val m = enter_section_(b)
             r = consumeToken(b, WHITE_SPACE)
             while (r) {
-                val c: Int = current_position_(b)
+                val c = current_position_(b)
                 if (!consumeToken(b, WHITE_SPACE)) break
                 if (!empty_element_parsed_guard_(b, "extra_index_url_req_1", c)) break
             }
@@ -992,9 +1008,9 @@ class RequirementsParser : PsiParser, LightPsiParser {
             val p: Boolean
             val m = enter_section_(b, l, _NONE_, FIND_LINKS_REQ, null)
             r = consumeToken(b, FIND_LINKS)
-            r = r && find_links_req_1(b, l + 1)
-            p = r // pin = 2
-            r = r && uri_reference(b, l + 1)
+            p = r // pin = 1
+            r = r && report_error_(b, find_links_req_1(b, l + 1))
+            r = p && uri_reference(b, l + 1) && r
             exit_section_(b, l, m, r, p, null)
             return r || p
         }
@@ -1006,7 +1022,7 @@ class RequirementsParser : PsiParser, LightPsiParser {
             val m = enter_section_(b)
             r = consumeToken(b, WHITE_SPACE)
             while (r) {
-                val c: Int = current_position_(b)
+                val c = current_position_(b)
                 if (!consumeToken(b, WHITE_SPACE)) break
                 if (!empty_element_parsed_guard_(b, "find_links_req_1", c)) break
             }
@@ -1110,7 +1126,7 @@ class RequirementsParser : PsiParser, LightPsiParser {
 
         /* ********************************************************** */
         // SLASH SLASH authority path_abempty | path_absolute | path_rootless | path_empty
-        private fun hier_part(b: PsiBuilder, l: Int): Boolean {
+        fun hier_part(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "hier_part")) return false
             var r: Boolean
             val m = enter_section_(b, l, _NONE_, HIER_PART, "<hier part>")
@@ -1156,9 +1172,9 @@ class RequirementsParser : PsiParser, LightPsiParser {
             val p: Boolean
             val m = enter_section_(b, l, _NONE_, INDEX_URL_REQ, null)
             r = consumeToken(b, INDEX_URL)
-            r = r && index_url_req_1(b, l + 1)
-            p = r // pin = 2
-            r = r && uri_reference(b, l + 1)
+            p = r // pin = 1
+            r = r && report_error_(b, index_url_req_1(b, l + 1))
+            r = p && uri_reference(b, l + 1) && r
             exit_section_(b, l, m, r, p, null)
             return r || p
         }
@@ -1170,7 +1186,7 @@ class RequirementsParser : PsiParser, LightPsiParser {
             val m = enter_section_(b)
             r = consumeToken(b, WHITE_SPACE)
             while (r) {
-                val c: Int = current_position_(b)
+                val c = current_position_(b)
                 if (!consumeToken(b, WHITE_SPACE)) break
                 if (!empty_element_parsed_guard_(b, "index_url_req_1", c)) break
             }
@@ -1479,18 +1495,36 @@ class RequirementsParser : PsiParser, LightPsiParser {
         }
 
         /* ********************************************************** */
-        // NO_BINARY
+        // NO_BINARY WHITE_SPACE+ binary_list
         private fun no_binary_req(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "no_binary_req")) return false
             if (!nextTokenIs(b, NO_BINARY)) return false
+            var r: Boolean
+            val p: Boolean
+            val m = enter_section_(b, l, _NONE_, NO_BINARY_REQ, null)
+            r = consumeToken(b, NO_BINARY)
+            p = r // pin = 1
+            r = r && report_error_(b, no_binary_req_1(b, l + 1))
+            r = p && binary_list(b, l + 1) && r
+            exit_section_(b, l, m, r, p, null)
+            return r || p
+        }
+
+        // WHITE_SPACE+
+        private fun no_binary_req_1(b: PsiBuilder, l: Int): Boolean {
+            if (!recursion_guard_(b, l, "no_binary_req_1")) return false
             val r: Boolean
             val m = enter_section_(b)
-            r = consumeToken(b, NO_BINARY)
-            exit_section_(b, m, NO_BINARY_REQ, r)
+            r = consumeToken(b, WHITE_SPACE)
+            while (r) {
+                val c = current_position_(b)
+                if (!consumeToken(b, WHITE_SPACE)) break
+                if (!empty_element_parsed_guard_(b, "no_binary_req_1", c)) break
+            }
+            exit_section_(b, m, null, r)
             return r
         }
 
-        /* ********************************************************** */
         // NO_INDEX
         private fun no_index_req(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "no_index_req")) return false
@@ -1526,14 +1560,33 @@ class RequirementsParser : PsiParser, LightPsiParser {
         }
 
         /* ********************************************************** */
-        // ONLY_BINARY
+        // ONLY_BINARY binary_list
         private fun only_binary_req(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "only_binary_req")) return false
             if (!nextTokenIs(b, ONLY_BINARY)) return false
+            var r: Boolean
+            val p: Boolean
+            val m = enter_section_(b, l, _NONE_, ONLY_BINARY_REQ, null)
+            r = consumeToken(b, ONLY_BINARY)
+            p = r // pin = 1
+            r = r && report_error_(b, only_binary_req_1(b, l + 1))
+            r = p && binary_list(b, l + 1) && r
+            exit_section_(b, l, m, r, p, null)
+            return r || p
+        }
+
+        // WHITE_SPACE+
+        private fun only_binary_req_1(b: PsiBuilder, l: Int): Boolean {
+            if (!recursion_guard_(b, l, "only_binary_req_1")) return false
             val r: Boolean
             val m = enter_section_(b)
-            r = consumeToken(b, ONLY_BINARY)
-            exit_section_(b, m, ONLY_BINARY_REQ, r)
+            r = consumeToken(b, WHITE_SPACE)
+            while (r) {
+                val c = current_position_(b)
+                if (!consumeToken(b, WHITE_SPACE)) break
+                if (!empty_element_parsed_guard_(b, "only_binary_req_1", c)) break
+            }
+            exit_section_(b, m, null, r)
             return r
         }
 
@@ -1599,6 +1652,7 @@ class RequirementsParser : PsiParser, LightPsiParser {
             return r
         }
 
+        /* ********************************************************** */
         // (SLASH segment)*
         private fun path_abempty(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "path_abempty")) return false
@@ -1946,9 +2000,9 @@ class RequirementsParser : PsiParser, LightPsiParser {
             val p: Boolean
             val m = enter_section_(b, l, _NONE_, REFER_REQ, null)
             r = consumeToken(b, REFER)
-            r = r && refer_req_1(b, l + 1)
-            p = r // pin = 2
-            r = r && uri_reference(b, l + 1)
+            p = r // pin = 1
+            r = r && report_error_(b, refer_req_1(b, l + 1))
+            r = p && uri_reference(b, l + 1) && r
             exit_section_(b, l, m, r, p, null)
             return r || p
         }
@@ -2202,14 +2256,52 @@ class RequirementsParser : PsiParser, LightPsiParser {
         }
 
         /* ********************************************************** */
-        // TRUSTED_HOST
+        // TRUSTED_HOST WHITE_SPACE+ host (COLON port)?
         private fun trusted_host_req(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "trusted_host_req")) return false
             if (!nextTokenIs(b, TRUSTED_HOST)) return false
+            var r: Boolean
+            val p: Boolean
+            val m = enter_section_(b, l, _NONE_, TRUSTED_HOST_REQ, null)
+            r = consumeToken(b, TRUSTED_HOST)
+            p = r // pin = 1
+            r = r && report_error_(b, trusted_host_req_1(b, l + 1))
+            r = p && report_error_(b, host(b, l + 1)) && r
+            r = p && trusted_host_req_3(b, l + 1) && r
+            exit_section_(b, l, m, r, p, null)
+            return r || p
+        }
+
+        // WHITE_SPACE+
+        private fun trusted_host_req_1(b: PsiBuilder, l: Int): Boolean {
+            if (!recursion_guard_(b, l, "trusted_host_req_1")) return false
             val r: Boolean
             val m = enter_section_(b)
-            r = consumeToken(b, TRUSTED_HOST)
-            exit_section_(b, m, TRUSTED_HOST_REQ, r)
+            r = consumeToken(b, WHITE_SPACE)
+            while (r) {
+                val c = current_position_(b)
+                if (!consumeToken(b, WHITE_SPACE)) break
+                if (!empty_element_parsed_guard_(b, "trusted_host_req_1", c)) break
+            }
+            exit_section_(b, m, null, r)
+            return r
+        }
+
+        // (COLON port)?
+        private fun trusted_host_req_3(b: PsiBuilder, l: Int): Boolean {
+            if (!recursion_guard_(b, l, "trusted_host_req_3")) return false
+            trusted_host_req_3_0(b, l + 1)
+            return true
+        }
+
+        // COLON port
+        private fun trusted_host_req_3_0(b: PsiBuilder, l: Int): Boolean {
+            if (!recursion_guard_(b, l, "trusted_host_req_3_0")) return false
+            var r: Boolean
+            val m = enter_section_(b)
+            r = consumeToken(b, COLON)
+            r = r && port(b, l + 1)
+            exit_section_(b, m, null, r)
             return r
         }
 
@@ -2526,5 +2618,4 @@ class RequirementsParser : PsiParser, LightPsiParser {
             return true
         }
     }
-
 }

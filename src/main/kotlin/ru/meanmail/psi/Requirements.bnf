@@ -61,17 +61,18 @@ option        ::= (SHORT_OPTION | LONG_OPTION) (
                    | only_binary_req
                    | trusted_host_req) {pin=1}
 
-refer_req     ::= REFER WHITE_SPACE+ uri_reference {pin=2}
-constraint_req::= CONSTRAINT WHITE_SPACE+ uri_reference {pin=2}
-editable_req  ::= EDITABLE WHITE_SPACE+ uri_reference {pin=2}
-index_url_req ::= INDEX_URL WHITE_SPACE+ uri_reference {pin=2}
-extra_index_url_req::= EXTRA_INDEX_URL WHITE_SPACE+ uri_reference {pin=2}
-find_links_req::= FIND_LINKS WHITE_SPACE+ uri_reference {pin=2}
+refer_req     ::= REFER WHITE_SPACE+ uri_reference {pin=1}
+constraint_req::= CONSTRAINT WHITE_SPACE+ uri_reference {pin=1}
+editable_req  ::= EDITABLE WHITE_SPACE+ uri_reference {pin=1}
+index_url_req ::= INDEX_URL WHITE_SPACE+ uri_reference {pin=1}
+extra_index_url_req::= EXTRA_INDEX_URL WHITE_SPACE+ uri_reference {pin=1}
+find_links_req::= FIND_LINKS WHITE_SPACE+ uri_reference {pin=1}
 no_index_req  ::= NO_INDEX
 require_hashes_req::= REQUIRE_HASHES
-no_binary_req ::= NO_BINARY
-only_binary_req::= ONLY_BINARY
-trusted_host_req::= TRUSTED_HOST
+binary_list       ::= extras_list | BINARY_ALL | BINARY_NONE
+no_binary_req     ::= NO_BINARY WHITE_SPACE+ binary_list {pin=1}
+only_binary_req   ::= ONLY_BINARY WHITE_SPACE+ binary_list {pin=1}
+trusted_host_req  ::= TRUSTED_HOST WHITE_SPACE+ host (COLON port)? {pin=1}
 
 path_req      ::= uri_reference
 url_req       ::= name wsps extras? wsps urlspec wsps quoted_marker? {pin=5 }

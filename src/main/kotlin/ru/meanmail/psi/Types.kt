@@ -10,6 +10,7 @@ interface Types {
         fun createElement(node: ASTNode): PsiElement {
             when (val type = node.elementType) {
                 AUTHORITY -> return AuthorityImpl(node)
+                BINARY_LIST -> return BinaryListImpl(node)
                 CONSTRAINT_REQ -> return ConstraintReqImpl(node)
                 DEC_OCTET -> return DecOctetImpl(node)
                 EDITABLE_REQ -> return EditableReqImpl(node)
@@ -84,6 +85,7 @@ interface Types {
 
     companion object {
         val AUTHORITY: IElementType = RequirementsElementType("AUTHORITY")
+        val BINARY_LIST: IElementType = RequirementsElementType("BINARY_LIST")
         val CONSTRAINT_REQ: IElementType = RequirementsElementType("CONSTRAINT_REQ")
         val DEC_OCTET: IElementType = RequirementsElementType("DEC_OCTET")
         val EDITABLE_REQ: IElementType = RequirementsElementType("EDITABLE_REQ")
@@ -153,6 +155,8 @@ interface Types {
         val VERSION_STMT: IElementType = RequirementsElementType("VERSION_STMT")
         val AND: IElementType = RequirementsTokenType("AND")
         val AT: IElementType = RequirementsTokenType("AT")
+        val BINARY_ALL: IElementType = RequirementsTokenType("BINARY_ALL")
+        val BINARY_NONE: IElementType = RequirementsTokenType("BINARY_NONE")
         val COLON: IElementType = RequirementsTokenType("COLON")
         val COMMA: IElementType = RequirementsTokenType("COMMA")
         val COMMENT: IElementType = RequirementsTokenType("COMMENT")

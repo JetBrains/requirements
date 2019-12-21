@@ -5,10 +5,12 @@ import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.util.IncorrectOperationException
+import ru.meanmail.psi.BinaryList
 import ru.meanmail.psi.NoBinaryReq
 import ru.meanmail.psi.Visitor
 
-class NoBinaryReqImpl(node: ASTNode) : ASTWrapperPsiElement(node), NoBinaryReq {
+class NoBinaryReqImpl(node: ASTNode) :
+        ASTWrapperPsiElement(node), NoBinaryReq {
     fun accept(visitor: Visitor) {
         visitor.visitNoBinaryReq(this)
     }
@@ -26,4 +28,7 @@ class NoBinaryReqImpl(node: ASTNode) : ASTWrapperPsiElement(node), NoBinaryReq {
             accept(visitor)
         } else super.accept(visitor)
     }
+
+    override val binaryList: BinaryList?
+        get() = findChildByClass(BinaryList::class.java)
 }

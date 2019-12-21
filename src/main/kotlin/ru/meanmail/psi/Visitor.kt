@@ -24,6 +24,10 @@ class Visitor : PsiElementVisitor() {
         visitPsiElement(o)
     }
 
+    fun visitBinaryList(o: BinaryList) {
+        visitPsiElement(o)
+    }
+
     fun visitConstraintReq(o: ConstraintReq) {
         visitPsiElement(o)
     }
