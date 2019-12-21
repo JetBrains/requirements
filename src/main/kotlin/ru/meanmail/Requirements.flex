@@ -146,15 +146,39 @@ SUB_DELIMS=({EXCLAMATION_MARK}
 %state URI
 %state REQ
 %state ESCAPE_NEW_LINE
+%state SHORT_OPTION_STATE
+%state LONG_OPTION_STATE
 
 %%
 
 <YYINITIAL> {
     {COMMENT}                { return COMMENT; }
-    "-r"                     { yypush(URI); return REFER; }
-    "-e"                     { yypush(URI); return EDITABLE; }
+    "-"                      { yypush(SHORT_OPTION); return SHORT_OPTION; }
+    "--"                     { yypush(LONG_OPTION); return LONG_OPTION; }
     {IDENTIFIER}             { yypush(REQ); yypushback(yylength()); }
     {DOT}                    { yypush(REQ); yypushback(yylength()); }
+}
+
+<SHORT_OPTION_STATE> {
+    "r"                      { yypush(URI); return REFER; }
+    "c"                      { yypush(URI); return CONSTRAINT; }
+    "e"                      { yypush(URI); return EDITABLE; }
+    "i"                      { yypush(URI); return INDEX_URL; }
+    "f"                      { yypush(URI); return FIND_LINKS; }
+}
+
+<LONG_OPTION_STATE> {
+    "requirement"            { yypush(URI); return REFER; }
+    "constraint"             { yypush(URI); return CONSTRAINT; }
+    "editable"               { yypush(URI); return EDITABLE; }
+    "index-url"              { yypush(URI); return INDEX_URL; }
+    "extra-index-url"        { yypush(URI); return EXTRA_INDEX_URL; }
+    "no-index"               { return NO_INDEX; }
+    "find-links"             { yypush(URI); return FIND_LINKS; }
+    "no-binary"              { return NO_BINARY; }
+    "only-binary"            { return ONLY_BINARY; }
+    "require-hashes"         { return REQUIRE_HASHES; }
+    "trusted-host"           { return TRUSTED_HOST; }
 }
 
 <REQ> {

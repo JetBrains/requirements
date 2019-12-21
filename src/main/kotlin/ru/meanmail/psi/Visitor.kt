@@ -4,7 +4,6 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 
 class Visitor : PsiElementVisitor() {
-
     fun visitIPLiteral(o: IPLiteral) {
         visitPsiElement(o)
     }
@@ -25,6 +24,10 @@ class Visitor : PsiElementVisitor() {
         visitPsiElement(o)
     }
 
+    fun visitConstraintReq(o: ConstraintReq) {
+        visitPsiElement(o)
+    }
+
     fun visitDecOctet(o: DecOctet) {
         visitPsiElement(o)
     }
@@ -37,11 +40,19 @@ class Visitor : PsiElementVisitor() {
         visitPsiElement(o)
     }
 
+    fun visitExtraIndexUrlReq(o: ExtraIndexUrlReq) {
+        visitPsiElement(o)
+    }
+
     fun visitExtras(o: Extras) {
         visitPsiElement(o)
     }
 
     fun visitExtrasList(o: ExtrasList) {
+        visitPsiElement(o)
+    }
+
+    fun visitFindLinksReq(o: FindLinksReq) {
         visitPsiElement(o)
     }
 
@@ -66,6 +77,10 @@ class Visitor : PsiElementVisitor() {
     }
 
     fun visitHost(o: Host) {
+        visitPsiElement(o)
+    }
+
+    fun visitIndexUrlReq(o: IndexUrlReq) {
         visitPsiElement(o)
     }
 
@@ -105,7 +120,23 @@ class Visitor : PsiElementVisitor() {
         visitPsiElement(o)
     }
 
+    fun visitNoBinaryReq(o: NoBinaryReq) {
+        visitPsiElement(o)
+    }
+
+    fun visitNoIndexReq(o: NoIndexReq) {
+        visitPsiElement(o)
+    }
+
     fun visitNz(o: Nz) {
+        visitPsiElement(o)
+    }
+
+    fun visitOnlyBinaryReq(o: OnlyBinaryReq) {
+        visitPsiElement(o)
+    }
+
+    fun visitOption(o: Option) {
         visitPsiElement(o)
     }
 
@@ -173,6 +204,10 @@ class Visitor : PsiElementVisitor() {
         visitPsiElement(o)
     }
 
+    fun visitRequireHashesReq(o: RequireHashesReq) {
+        visitPsiElement(o)
+    }
+
     fun visitScheme(o: Scheme) {
         visitPsiElement(o)
     }
@@ -186,6 +221,10 @@ class Visitor : PsiElementVisitor() {
     }
 
     fun visitSegmentNzNc(o: SegmentNzNc) {
+        visitPsiElement(o)
+    }
+
+    fun visitTrustedHostReq(o: TrustedHostReq) {
         visitPsiElement(o)
     }
 
@@ -217,10 +256,6 @@ class Visitor : PsiElementVisitor() {
         visitPsiElement(o)
     }
 
-    fun visitVersionStmt(o: VersionStmt) {
-        visitPsiElement(o)
-    }
-
     fun visitVersionCmpStmt(o: VersionCmpStmt) {
         visitPsiElement(o)
     }
@@ -233,12 +268,15 @@ class Visitor : PsiElementVisitor() {
         visitPsiElement(o)
     }
 
+    fun visitVersionStmt(o: VersionStmt) {
+        visitPsiElement(o)
+    }
+
     fun visitVersionspec(o: Versionspec) {
         visitPsiElement(o)
     }
 
-    fun visitPsiElement(o: PsiElement) {
+    private fun visitPsiElement(o: PsiElement) {
         visitElement(o)
     }
-
 }

@@ -19,7 +19,10 @@
 requirementsFile ::= line_*
 
 private line_ ::= (wsps specification wsps COMMENT? (EOL | <<eof>>)) | EOL
-private specification ::= name_req | url_req | refer_req | editable_req | path_req
+private specification ::= (name_req
+                          | option
+                          | path_req
+                          | url_req)
 private wsps  ::= WHITE_SPACE*
 
 version_one   ::= version_cmp_stmt version_stmt
@@ -42,15 +45,37 @@ quoted_marker ::= SEMICOLON wsps marker
 name          ::= IDENTIFIER
 extras_list   ::= IDENTIFIER (wsps COMMA wsps IDENTIFIER)*
 extras        ::= LSBRACE wsps extras_list? wsps RSBRACE
+
 name_req      ::= name wsps extras? wsps !AT wsps versionspec? wsps quoted_marker? {pin=5}
 
-refer_req     ::= REFER WHITE_SPACE+ uri_reference {pin=2}
+option        ::= (SHORT_OPTION | LONG_OPTION) (
+                   refer_req
+                   | constraint_req
+                   | editable_req
+                   | index_url_req
+                   | extra_index_url_req
+                   | find_links_req
+                   | no_index_req
+                   | require_hashes_req
+                   | no_binary_req
+                   | only_binary_req
+                   | trusted_host_req) {pin=1}
 
+refer_req     ::= REFER WHITE_SPACE+ uri_reference {pin=2}
+constraint_req::= CONSTRAINT WHITE_SPACE+ uri_reference {pin=2}
 editable_req  ::= EDITABLE WHITE_SPACE+ uri_reference {pin=2}
+index_url_req ::= INDEX_URL WHITE_SPACE+ uri_reference {pin=2}
+extra_index_url_req::= EXTRA_INDEX_URL WHITE_SPACE+ uri_reference {pin=2}
+find_links_req::= FIND_LINKS WHITE_SPACE+ uri_reference {pin=2}
+no_index_req  ::= NO_INDEX
+require_hashes_req::= REQUIRE_HASHES
+no_binary_req ::= NO_BINARY
+only_binary_req::= ONLY_BINARY
+trusted_host_req::= TRUSTED_HOST
 
 path_req      ::= uri_reference
-
 url_req       ::= name wsps extras? wsps urlspec wsps quoted_marker? {pin=5 }
+
 urlspec       ::= AT wsps uri_reference
 scheme        ::= LETTER (LETTER | DIGIT | PLUS | MINUS | DOT)*
 uri_reference ::= uri | relative_ref
