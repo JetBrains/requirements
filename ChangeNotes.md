@@ -1,3 +1,10 @@
+## 2019.7 (December, 22, 2019)
+
+* A line ending in an unescaped \ is treated as a line continuation and the newline following it is effectively ignored.
+* Options are supported
+
+Read more https://meanmail.dev/post/3
+
 ## 2019.6.3 (December, 18, 2019)
 
 * Fix bugs

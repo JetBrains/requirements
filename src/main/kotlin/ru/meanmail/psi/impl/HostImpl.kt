@@ -7,7 +7,7 @@ import ru.meanmail.psi.*
 
 class HostImpl(node: ASTNode) : ASTWrapperPsiElement(node), Host {
 
-    override val ipLiteral: IPLiteral?
+    override val iPLiteral: IPLiteral?
         get() = findChildByClass(IPLiteral::class.java)
 
     override val iPv4Address: IPv4Address?

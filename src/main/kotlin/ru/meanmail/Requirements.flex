@@ -68,6 +68,7 @@ DOLLAR_SIGN="$"
 SHARP="#"
 PERCENT_SIGN="%"
 SLASH="/"
+BACKSLASH="\\"
 DOT="."
 UNDERSCORE="_"
 LBRACE="{"
@@ -79,7 +80,7 @@ TILDA="~"
 COMMENT={SHARP}.*
 LETTER=[a-zA-Z]
 DIGIT=[0-9]
-EOL=\R+
+EOL=[\n|\r|\r\n]
 WHITE_SPACE=[^\S\r\n]+
 IDENTIFIER=(
              ({LETTER} | {DIGIT})
@@ -144,91 +145,132 @@ SUB_DELIMS=({EXCLAMATION_MARK}
 %state QUOTED_MARK
 %state URI
 %state REQ
+%state ESCAPE_NEW_LINE
+%state SHORT_OPTION_STATE
+%state LONG_OPTION_STATE
+%state BINARY
 
 %%
 
 <YYINITIAL> {
-    {COMMENT}          { return COMMENT; }
-    "-r"               { yypush(URI); return REFER; }
-    "-e"               { yypush(URI); return EDITABLE; }
-    {IDENTIFIER}       { yypush(REQ); yypushback(yylength()); }
-    {DOT}              { yypush(REQ); yypushback(yylength()); }
+    {COMMENT}                { return COMMENT; }
+    "-"                      { yypush(SHORT_OPTION_STATE); return SHORT_OPTION; }
+    "--"                     { yypush(LONG_OPTION_STATE); return LONG_OPTION; }
+    {IDENTIFIER}             { yypush(REQ); yypushback(yylength()); }
+    {DOT}                    { yypush(REQ); yypushback(yylength()); }
+}
+
+<SHORT_OPTION_STATE> {
+    "r"                      { yypush(URI); return REFER; }
+    "c"                      { yypush(URI); return CONSTRAINT; }
+    "e"                      { yypush(URI); return EDITABLE; }
+    "i"                      { yypush(URI); return INDEX_URL; }
+    "f"                      { yypush(URI); return FIND_LINKS; }
+}
+
+<LONG_OPTION_STATE> {
+    "requirement"            { yypush(URI); return REFER; }
+    "constraint"             { yypush(URI); return CONSTRAINT; }
+    "editable"               { yypush(URI); return EDITABLE; }
+    "index-url"              { yypush(URI); return INDEX_URL; }
+    "extra-index-url"        { yypush(URI); return EXTRA_INDEX_URL; }
+    "no-index"               { return NO_INDEX; }
+    "find-links"             { yypush(URI); return FIND_LINKS; }
+    "no-binary"              { yypush(BINARY); return NO_BINARY; }
+    "only-binary"            { yypush(BINARY); return ONLY_BINARY; }
+    "require-hashes"         { return REQUIRE_HASHES; }
+    "trusted-host"           { yypush(URI); return TRUSTED_HOST; }
+}
+
+<BINARY> {
+    ":all:"                  { return BINARY_ALL; }
+    ":none:"                 { return BINARY_NONE; }
+    {IDENTIFIER}             { return IDENTIFIER; }
+    {COMMA}                  { return COMMA; }
 }
 
 <REQ> {
-    {IDENTIFIER}{PLUS} { yypush(URI); yypushback(yylength()); }
-    {IDENTIFIER}{COLON} { yypush(URI); yypushback(yylength()); }
-    {IDENTIFIER}       { return IDENTIFIER; }
-    {VERSION_CMP}      { yypush(WAITING_VERSION); return VERSION_CMP; }
-    {AT}               { yypush(URI); return AT; }
-    {COMMA}            { return COMMA; }
-    {LPARENTHESIS}     { return LPARENTHESIS; }
-    {RPARENTHESIS}     { return RPARENTHESIS; }
-    {LSBRACE}          { return LSBRACE; }
-    {RSBRACE}          { return RSBRACE; }
-    {SEMICOLON}        { yypush(QUOTED_MARK); return SEMICOLON; }
-    {DOT}              { yypush(URI); yypushback(yylength()); }
+    {IDENTIFIER}{PLUS}       { yypush(URI); yypushback(yylength()); }
+    {IDENTIFIER}{COLON}      { yypush(URI); yypushback(yylength()); }
+    {IDENTIFIER}             { return IDENTIFIER; }
+    {VERSION_CMP}            { yypush(WAITING_VERSION); return VERSION_CMP; }
+    {AT}                     { yypush(URI); return AT; }
+    {COMMA}                  { return COMMA; }
+    {LPARENTHESIS}           { return LPARENTHESIS; }
+    {RPARENTHESIS}           { return RPARENTHESIS; }
+    {LSBRACE}                { return LSBRACE; }
+    {RSBRACE}                { return RSBRACE; }
+    {SEMICOLON}              { yypush(QUOTED_MARK); return SEMICOLON; }
+    {DOT}                    { yypush(URI); yypushback(yylength()); }
 
     {WHITE_SPACE}{COMMENT}   { yyinitial(); return COMMENT; }
 }
 
 <WAITING_VERSION> {
-    {VERSION}          { yypop(); return VERSION; }
-    {COMMENT}          { yypop(); return COMMENT; }
+    {VERSION}                { yypop(); return VERSION; }
+    {COMMENT}                { yypop(); return COMMENT; }
 }
 
 <QUOTED_MARK> {
-    {ENV_VAR}          { return ENV_VAR; }
+    {ENV_VAR}                { return ENV_VAR; }
 
-    {DQUOTE}           { yypush(DQUOTE_STR); return DQUOTE; }
-    {SQUOTE}           { yypush(SQUOTE_STR); return SQUOTE; }
-    {VERSION_CMP}      { return VERSION_CMP; }
-    "in"               { return IN; }
-    "not"              { return NOT; }
-    "and"              { return AND; }
-    "or"               { return OR; }
-    {LPARENTHESIS}     { return LPARENTHESIS; }
-    {RPARENTHESIS}     { return RPARENTHESIS; }
+    {DQUOTE}                 { yypush(DQUOTE_STR); return DQUOTE; }
+    {SQUOTE}                 { yypush(SQUOTE_STR); return SQUOTE; }
+    {VERSION_CMP}            { return VERSION_CMP; }
+    "in"                     { return IN; }
+    "not"                    { return NOT; }
+    "and"                    { return AND; }
+    "or"                     { return OR; }
+    {LPARENTHESIS}           { return LPARENTHESIS; }
+    {RPARENTHESIS}           { return RPARENTHESIS; }
 
-    {COMMENT}          { yyinitial(); return COMMENT; }
+    {COMMENT}                { yyinitial(); return COMMENT; }
 }
 
 <URI> {
-    {AT}               { return AT; }
-    {COLON}            { return COLON; }
-    {DIGIT}            { return DIGIT; }
-    {DOT}              { return DOT; }
-    {LETTER}           { return LETTER; }
-    {LSBRACE}          { return LSBRACE; }
-    {RSBRACE}          { return RSBRACE; }
-    {MINUS}            { return MINUS; }
-    {PLUS}             { return PLUS; }
-    {PERCENT_SIGN}     { return PERCENT_SIGN; }
-    {QUESTION_MARK}    { return QUESTION_MARK; }
-    {SHARP}            { return SHARP; }
-    {SLASH}            { return SLASH; }
-    {SUB_DELIMS}       { return SUB_DELIMS; }
-    {TILDA}            { return TILDA; }
-    {UNDERSCORE}       { return UNDERSCORE; }
-    {LBRACE}           { return LBRACE; }
-    {RBRACE}           { return RBRACE; }
-    {DOLLAR_SIGN}      { return DOLLAR_SIGN; }
+    {AT}                     { return AT; }
+    {COLON}                  { return COLON; }
+    {DIGIT}                  { return DIGIT; }
+    {DOT}                    { return DOT; }
+    {LETTER}                 { return LETTER; }
+    {LSBRACE}                { return LSBRACE; }
+    {RSBRACE}                { return RSBRACE; }
+    {MINUS}                  { return MINUS; }
+    {PLUS}                   { return PLUS; }
+    {PERCENT_SIGN}           { return PERCENT_SIGN; }
+    {QUESTION_MARK}          { return QUESTION_MARK; }
+    {SHARP}                  { return SHARP; }
+    {SLASH}                  { return SLASH; }
+    {SUB_DELIMS}             { return SUB_DELIMS; }
+    {TILDA}                  { return TILDA; }
+    {UNDERSCORE}             { return UNDERSCORE; }
+    {LBRACE}                 { return LBRACE; }
+    {RBRACE}                 { return RBRACE; }
+    {DOLLAR_SIGN}            { return DOLLAR_SIGN; }
 
     {WHITE_SPACE}{SEMICOLON} { yypush(QUOTED_MARK); return SEMICOLON; }
     {WHITE_SPACE}{COMMENT}   { yyinitial(); return COMMENT; }
 }
 
 <DQUOTE_STR> {
-    {DQUOTE}           { yypop(); return DQUOTE; }
-    {PYTHON_STR_C}     { return PYTHON_STR_C; }
+    {DQUOTE}                 { yypop(); return DQUOTE; }
+    {PYTHON_STR_C}           { return PYTHON_STR_C; }
 }
 
 <SQUOTE_STR> {
-    {SQUOTE}           { yypop(); return SQUOTE; }
-    {PYTHON_STR_C}     { return PYTHON_STR_C; }
+    {SQUOTE}                 { yypop(); return SQUOTE; }
+    {PYTHON_STR_C}           { return PYTHON_STR_C; }
 }
 
-{WHITE_SPACE}          { return WHITE_SPACE; }
-{EOL}                  { yyinitial(); return EOL; }
+{WHITE_SPACE}                { return WHITE_SPACE; }
+{BACKSLASH}{BACKSLASH}       { return BAD_CHARACTER; }
+{BACKSLASH}{EOL}             { yypush(ESCAPE_NEW_LINE); }
 
-[^]                    { yyinitial(); return BAD_CHARACTER; }
+<ESCAPE_NEW_LINE>{
+    <<EOF>>                  { yypop(); return EOL; }
+    [^]                      { yypop(); yypushback(yylength()); }
+}
+
+{EOL}                        { yyinitial(); return EOL; }
+
+[^]                          { yyinitial(); return BAD_CHARACTER; }

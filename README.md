@@ -8,7 +8,7 @@ Your ratings and feedback are very important. The feature will appear the faster
 
 ## Supported versions of Intellij:
 
-PyCharm, IDEA 2019.1—2019.3.*
+PyCharm, IDEA 2019.1—2019.3
 
 ## Syntax
 
@@ -45,5 +45,4 @@ PyCharm, and other products if the Python plugin is installed:
 * Distinguish a plain text file from file requirements.txt
 * Support all relations
 * Opening local source code
-* Add tests
 * Code completion

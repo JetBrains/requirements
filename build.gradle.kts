@@ -15,8 +15,9 @@ repositories {
 }
 
 dependencies {
-    compile(kotlin("stdlib-jdk8"))
-    testCompile("junit", "junit", "4.13")
+    implementation(kotlin("stdlib-jdk8"))
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")
 }
 
 configure<JavaPluginConvention> {
@@ -30,6 +31,12 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Wrapper> {
     distributionType = Wrapper.DistributionType.ALL
     gradleVersion = project.properties["gradleVersion"].toString()
+}
+
+tasks.test {
+    useJUnitPlatform()
+
+    maxHeapSize = "1G"
 }
 
 intellij {

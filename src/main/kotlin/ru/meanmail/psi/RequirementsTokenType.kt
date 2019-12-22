@@ -9,6 +9,6 @@ class RequirementsTokenType(@NonNls debugName: String) :
         IElementType(debugName, RequirementsLanguage) {
 
     override fun toString(): String {
-        return "RequirementsTokenType." + super.toString()
+        return "RequirementsTokenType.${super.toString()}"
     }
 }
