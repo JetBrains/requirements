@@ -31,7 +31,16 @@ class RequirementsSyntaxHighlighter : SyntaxHighlighterBase() {
             Types.SHARP -> SHARP_KEYS
             Types.SEMICOLON -> SEMICOLON_KEYS
             Types.REFER -> IDENTIFIER_KEYS
+            Types.CONSTRAINT -> IDENTIFIER_KEYS
             Types.EDITABLE -> IDENTIFIER_KEYS
+            Types.INDEX_URL -> IDENTIFIER_KEYS
+            Types.EXTRA_INDEX_URL -> IDENTIFIER_KEYS
+            Types.NO_INDEX -> IDENTIFIER_KEYS
+            Types.FIND_LINKS -> IDENTIFIER_KEYS
+            Types.NO_BINARY -> IDENTIFIER_KEYS
+            Types.ONLY_BINARY -> IDENTIFIER_KEYS
+            Types.REQUIRE_HASHES -> IDENTIFIER_KEYS
+            Types.TRUSTED_HOST -> IDENTIFIER_KEYS
             else -> EMPTY_KEYS
         }
     }

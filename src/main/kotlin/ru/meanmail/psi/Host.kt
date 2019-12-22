@@ -4,7 +4,7 @@ import com.intellij.psi.PsiElement
 
 interface Host : PsiElement {
 
-    val ipLiteral: IPLiteral?
+    val iPLiteral: IPLiteral?
 
     val iPv4Address: IPv4Address?
 
