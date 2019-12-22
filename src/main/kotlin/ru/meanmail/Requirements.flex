@@ -179,12 +179,14 @@ SUB_DELIMS=({EXCLAMATION_MARK}
     "no-binary"              { yypush(BINARY); return NO_BINARY; }
     "only-binary"            { yypush(BINARY); return ONLY_BINARY; }
     "require-hashes"         { return REQUIRE_HASHES; }
-    "trusted-host"           { return TRUSTED_HOST; }
+    "trusted-host"           { yypush(URI); return TRUSTED_HOST; }
 }
 
 <BINARY> {
     ":all:"                  { return BINARY_ALL; }
     ":none:"                 { return BINARY_NONE; }
+    {IDENTIFIER}             { return IDENTIFIER; }
+    {COMMA}                  { return COMMA; }
 }
 
 <REQ> {
