@@ -1560,7 +1560,7 @@ class RequirementsParser : PsiParser, LightPsiParser {
         }
 
         /* ********************************************************** */
-        // ONLY_BINARY binary_list
+        // ONLY_BINARY WHITE_SPACE+ binary_list
         private fun only_binary_req(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "only_binary_req")) return false
             if (!nextTokenIs(b, ONLY_BINARY)) return false
@@ -2555,13 +2555,14 @@ class RequirementsParser : PsiParser, LightPsiParser {
         }
 
         /* ********************************************************** */
-        // version_cmp_stmt version_stmt
+        // version_cmp_stmt wsps version_stmt
         private fun version_one(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "version_one")) return false
             if (!nextTokenIs(b, VERSION_CMP)) return false
             var r: Boolean
             val m = enter_section_(b)
             r = version_cmp_stmt(b, l + 1)
+            r = r && wsps(b, l + 1)
             r = r && version_stmt(b, l + 1)
             exit_section_(b, m, VERSION_ONE, r)
             return r
