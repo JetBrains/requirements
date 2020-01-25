@@ -1,3 +1,9 @@
+## 2019.7.1 (January, 25, 2020)
+
+* Fix: Spaces not recognized after version comparator
+
+Read more https://meanmail.dev/post/4
+
 ## 2019.7 (December, 22, 2019)
 
 * A line ending in an unescaped \ is treated as a line continuation and the newline following it is effectively ignored.

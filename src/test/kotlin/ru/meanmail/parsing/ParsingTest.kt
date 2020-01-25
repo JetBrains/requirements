@@ -33,6 +33,10 @@ class ParsingTest : ParsingTestCase("testData", "requirements.txt",
         doTest(true)
     }
 
+    fun testOnePackage() {
+        doTest(true)
+    }
+
     fun testNoIndex() {
         doTest(true)
     }
