@@ -25,7 +25,7 @@ private specification ::= (name_req
                           | url_req)
 private wsps  ::= WHITE_SPACE*
 
-version_one   ::= version_cmp_stmt version_stmt
+version_one   ::= version_cmp_stmt wsps version_stmt
 version_cmp_stmt ::= VERSION_CMP
 version_stmt  ::= VERSION
 version_many  ::= version_one (wsps COMMA wsps version_one)*
