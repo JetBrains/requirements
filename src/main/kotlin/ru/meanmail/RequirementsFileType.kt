@@ -12,7 +12,7 @@ object RequirementsFileType : LanguageFileType(RequirementsLanguage) {
     private val DEFAULT_EXTENSION = "txt"
 
     override fun getName(): String {
-        return "requirements.txt"
+        return RequirementsLanguage.id
     }
 
     override fun getDescription(): String {
