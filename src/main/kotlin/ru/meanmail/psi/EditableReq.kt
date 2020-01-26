@@ -13,7 +13,4 @@ interface EditableReq : NamedElement, Requirement {
             return uriReference?.text ?: ""
         }
 
-    override fun toRepresentation(): String {
-        return "true"
-    }
 }

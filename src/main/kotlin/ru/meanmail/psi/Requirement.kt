@@ -8,5 +8,4 @@ interface Requirement : PsiElement {
 
     fun enabled(values: Map<String, String?>): Boolean
 
-    fun toRepresentation(): String
 }

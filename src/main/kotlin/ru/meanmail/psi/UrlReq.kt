@@ -19,8 +19,4 @@ interface UrlReq : NamedElement, Requirement {
             return name.text
         }
 
-    override fun toRepresentation(): String {
-        return quotedMarker?.logical()?.toRepresentation() ?: "false"
-    }
-
 }
