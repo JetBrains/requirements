@@ -6,8 +6,8 @@ import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElementVisitor
 import org.jetbrains.annotations.Nls
-import ru.meanmail.formatPackageName
-import ru.meanmail.psi.*
+import ru.meanmail.psi.RequirementsFile
+import ru.meanmail.quickfix.RemoveUnusedQuickFix
 
 
 class DuplicatedInspection : LocalInspectionTool() {
@@ -35,30 +35,24 @@ class DuplicatedInspection : LocalInspectionTool() {
                 val psiDocumentManager = PsiDocumentManager.getInstance(element.project)
                 val document = psiDocumentManager.getDocument(element.containingFile)
 
-                for (req in element.children) {
-                    val (text, type) = when (req) {
-                        is NameReq -> formatPackageName(req.name.text) to "package"
-                        is UrlReq -> formatPackageName(req.name.text) to "package"
-                        is ReferReq -> req.uriReference?.text to "file"
-                        is EditableReq -> req.uriReference?.text to "url"
-                        is PathReq -> req.uriReference.text to "path"
-                        else -> null
-                    } ?: continue
-
+                for (req in element.enabledRequirements()) {
+                    val text = req.displayName
+                    val name = if (text.length <= MAX_LENGTH) {
+                        text
+                    } else {
+                        text.substring(0, MAX_LENGTH - 3) + "..."
+                    }
+                    val type = req.type.kind
                     val textOffset = req.textOffset
                     val lineNumber = document!!.getLineNumber(textOffset) + 1
 
                     if (text in names) {
                         val line = names[text]
-                        val name = if (text.length <= MAX_LENGTH) {
-                            text
-                        } else {
-                            text.substring(0, MAX_LENGTH - 3) + "..."
-                        }
 
                         val message = "The '$name' $type on line $lineNumber " +
                                 "is already defined on line $line"
-                        holder.registerProblem(element, message)
+                        holder.registerProblem(req, message,
+                                RemoveUnusedQuickFix(req, "Remove duplicate"))
                     } else {
                         names[text] = lineNumber
                     }

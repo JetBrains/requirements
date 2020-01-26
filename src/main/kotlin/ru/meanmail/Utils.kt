@@ -6,12 +6,15 @@ import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.projectRoots.Sdk
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.jetbrains.python.packaging.*
 import ru.meanmail.psi.RequirementsPsiImplUtil
 import java.io.File
+import java.io.IOException
 import java.time.LocalDateTime
+import java.util.concurrent.TimeUnit
 
 fun formatPackageName(packageName: String): String {
     return packageName.replace('_', '-').toLowerCase()
@@ -146,4 +149,56 @@ operator fun PyPackageVersion?.compareTo(b: PyPackageVersion?): Int {
         return 1
     }
     return PyPackageVersionComparator.compare(this, b)
+}
+
+val markersCache = mutableMapOf<String, Pair<Map<String, String?>, LocalDateTime>>()
+
+fun getMarkers(project: Project): Map<String, String?> {
+    val sdk = RequirementsPsiImplUtil.getSdk(project) ?: return emptyMap()
+
+    val cached = markersCache[sdk.name]
+    if (cached != null) {
+        val actual = cached.second.plusDays(1).isAfter(LocalDateTime.now())
+        if (actual) {
+            return cached.first
+        }
+    }
+    val scriptResource = RequirementsPsiImplUtil::class.java
+            .getResource("/info_python3.py")
+
+    val script = createTempFile()
+    script.writeText(scriptResource.readText())
+
+    val result = execPython(sdk, script.path) ?: return emptyMap()
+
+    val values = result.lines().map {
+        val items = it.split(": ".toRegex(), limit = 2)
+        return@map items[0] to items.getOrNull(1)
+    }.toTypedArray()
+
+    val markers = mapOf(*values)
+
+    markersCache[sdk.name] = markers to LocalDateTime.now()
+
+    return markers
+}
+
+fun execPython(sdk: Sdk, path: String): String? {
+    try {
+        val parts = listOf(sdk.homePath, path)
+        val proc = ProcessBuilder(*parts.toTypedArray())
+                .redirectOutput(ProcessBuilder.Redirect.PIPE)
+                .redirectError(ProcessBuilder.Redirect.PIPE)
+                .start()
+
+        proc.waitFor(5, TimeUnit.SECONDS)
+        val errors = proc.errorStream.bufferedReader().readText()
+        if (errors.isNotEmpty()) {
+            throw IOException(errors)
+        }
+        return proc.inputStream.bufferedReader().readText()
+    } catch (e: IOException) {
+        e.printStackTrace()
+        return null
+    }
 }

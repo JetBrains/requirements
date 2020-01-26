@@ -1,6 +1,8 @@
 package ru.meanmail.psi
 
-interface NameReq : NamedElement {
+import RequirementType
+
+interface NameReq : NamedElement, Requirement {
 
     val extras: Extras?
 
@@ -10,4 +12,19 @@ interface NameReq : NamedElement {
 
     val versionspec: Versionspec?
 
+    override fun enabled(values: Map<String, String?>): Boolean {
+        return quotedMarker?.logical()?.check(values) ?: true
+    }
+
+    override val displayName: String
+        get() {
+            return name.text
+        }
+
+    override val type: RequirementType
+        get() = RequirementType.NAME
+
+    override fun toRepresentation(): String {
+        return quotedMarker?.logical()?.toRepresentation() ?: "true"
+    }
 }
