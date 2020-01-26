@@ -1,5 +1,7 @@
 package ru.meanmail
 
+import com.jetbrains.python.packaging.PyPackageVersionNormalizer
+
 interface Logical {
 
     fun check(values: Map<String, String?>): Boolean
@@ -41,13 +43,26 @@ class And(private vararg val items: Logical) : Logical {
 }
 
 class Expression(val variable: String,
-                 val operation: String, val value: String) : Logical {
+                 val operation: String, var value: String) : Logical {
     override fun check(values: Map<String, String?>): Boolean {
-        val actual = values[variable]
+        val actual = values[variable] ?: return false
+
+        if (operation == "===") {
+            return actual == value
+        }
+
+        if (variable in VERSION_VARIABLES) {
+            return compareVersions(
+                    PyPackageVersionNormalizer.normalize(actual),
+                    operation,
+                    PyPackageVersionNormalizer.normalize(value)
+            )
+        }
 
         if (operation == "==") {
             return actual == value
         }
+
         return false
     }
 

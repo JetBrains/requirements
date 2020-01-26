@@ -30,7 +30,7 @@ class UnusedInspection : LocalInspectionTool() {
 
             override fun visitRequirementsFile(element: RequirementsFile) {
                 for (req in element.disabledRequirements()) {
-                    val message = "Unused ${req.toRepresentation()}"
+                    val message = "Unused ${req.displayName}"
                     holder.registerProblem(req, message,
                             ProblemHighlightType.LIKE_UNUSED_SYMBOL,
                             RemoveUnusedQuickFix(req, "Remove unused: ${req.displayName}"))
