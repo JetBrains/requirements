@@ -1,5 +1,7 @@
 package ru.meanmail.psi
 
+import RequirementType
+
 interface EditableReq : NamedElement, Requirement {
 
     val uriReference: UriReference?
@@ -12,5 +14,8 @@ interface EditableReq : NamedElement, Requirement {
         get() {
             return uriReference?.text ?: ""
         }
+
+    override val type: RequirementType
+        get() = RequirementType.EDITABLE
 
 }

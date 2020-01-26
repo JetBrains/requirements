@@ -1,5 +1,7 @@
 package ru.meanmail.psi
 
+import RequirementType
+
 interface ReferReq : NamedElement, Requirement {
 
     val uriReference: UriReference?
@@ -12,5 +14,8 @@ interface ReferReq : NamedElement, Requirement {
         get() {
             return uriReference?.text ?: ""
         }
+
+    override val type: RequirementType
+        get() = RequirementType.REFERENCE
 
 }

@@ -1,5 +1,7 @@
 package ru.meanmail.psi
 
+import RequirementType
+
 interface NameReq : NamedElement, Requirement {
 
     val extras: Extras?
@@ -18,5 +20,8 @@ interface NameReq : NamedElement, Requirement {
         get() {
             return name.text
         }
+
+    override val type: RequirementType
+        get() = RequirementType.NAME
 
 }
