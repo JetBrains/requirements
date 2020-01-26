@@ -1,7 +1,5 @@
 package ru.meanmail.psi
 
-import RequirementType
-
 interface PathReq : NamedElement, Requirement {
 
     val uriReference: UriReference
@@ -14,9 +12,6 @@ interface PathReq : NamedElement, Requirement {
         get() {
             return uriReference.text
         }
-
-    override val type: RequirementType
-        get() = RequirementType.PATH
 
     override fun toRepresentation(): String {
         return "true"

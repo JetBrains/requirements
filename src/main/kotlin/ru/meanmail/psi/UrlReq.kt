@@ -1,7 +1,5 @@
 package ru.meanmail.psi
 
-import RequirementType
-
 interface UrlReq : NamedElement, Requirement {
 
     val extras: Extras?
@@ -20,9 +18,6 @@ interface UrlReq : NamedElement, Requirement {
         get() {
             return name.text
         }
-
-    override val type: RequirementType
-        get() = RequirementType.URL
 
     override fun toRepresentation(): String {
         return quotedMarker?.logical()?.toRepresentation() ?: "false"

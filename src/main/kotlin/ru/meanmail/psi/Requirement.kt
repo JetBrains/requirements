@@ -1,11 +1,8 @@
 package ru.meanmail.psi
 
-import RequirementType
 import com.intellij.psi.PsiElement
 
 interface Requirement : PsiElement {
-
-    val type: RequirementType
 
     val displayName: String
 
