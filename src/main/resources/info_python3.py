@@ -21,6 +21,7 @@ def format_full_version(info):
         version += kind[0] + str(info.serial)
     return version
 
+
 if hasattr(sys, "implementation"):
     implementation_version = format_full_version(sys.implementation.version)
 else:
