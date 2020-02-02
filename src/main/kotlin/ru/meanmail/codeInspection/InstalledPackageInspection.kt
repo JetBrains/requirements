@@ -9,6 +9,7 @@ import com.intellij.psi.PsiElementVisitor
 import com.jetbrains.python.packaging.PyPackageVersion
 import org.jetbrains.annotations.Nls
 import ru.meanmail.compareTo
+import ru.meanmail.getMarkers
 import ru.meanmail.getVersions
 import ru.meanmail.psi.NameReq
 import ru.meanmail.quickfix.InstallPackageQuickFix
@@ -33,6 +34,10 @@ class InstalledPackageInspection : LocalInspectionTool() {
                 BaseInspectionVisitor(holder, onTheFly, session) {
 
             override fun visitNameReq(element: NameReq) {
+                if (!element.enabled(getMarkers(element.project))) {
+                    return
+                }
+
                 val packageName = element.name.text ?: return
                 val versionOneList = element.versionspec?.versionMany?.versionOneList
                 val version = versionOneList?.get(0)?.version?.text
