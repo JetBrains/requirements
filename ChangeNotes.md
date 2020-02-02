@@ -1,3 +1,7 @@
+## 2020.1 (February, 03, 2020)
+
++ Support environment markers
+
 ## 2019.7.1 (January, 25, 2020)
 
 * Fix: Spaces not recognized after version comparator
