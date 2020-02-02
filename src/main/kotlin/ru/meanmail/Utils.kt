@@ -147,3 +147,44 @@ operator fun PyPackageVersion?.compareTo(b: PyPackageVersion?): Int {
     }
     return PyPackageVersionComparator.compare(this, b)
 }
+
+
+fun compareVersions(actual: PyPackageVersion?,
+                    operation: String,
+                    required: PyPackageVersion?): Boolean {
+    if (operation == "===") {
+        return actual == required
+    }
+
+    actual ?: return false
+    required ?: return false
+
+    if (operation == "==") {
+        return actual == required
+    }
+
+    if (operation == "~=") {
+        return actual >= required
+    }
+
+    if (operation == "!=") {
+        return actual != required
+    }
+
+    if (operation == ">=") {
+        return actual >= required
+    }
+
+    if (operation == "<=") {
+        return actual <= required
+    }
+
+    if (operation == ">") {
+        return actual > required
+    }
+    if (operation == "<") {
+        return actual < required
+    }
+
+    return false
+}
