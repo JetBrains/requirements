@@ -28,9 +28,10 @@ If applicable, add screenshots to help explain your problem.
  - Product: [e.g. Idea Ultimate, PyCharm Community]
  - Version [e.g. IU-192.7142.36, 2019.2.4]
  - JRE Version: [e.g. OpenJDK 64-Bit Server VM by JetBrains s.r.o]
+ - Project SDK: [Python 3.7.1, Python 2.7.17]
 
 **Plugin (please complete the following information. See Main Menu -> File -> Settings -> Plugins):**
- - Version [e.g. 2019.6]
+ - Version [e.g. 2020.1-193]
 
 **Additional context**
 Add any other context about the problem here.

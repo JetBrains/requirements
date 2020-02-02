@@ -26,6 +26,13 @@
                          enabledByDefault="true"
                          level="WARNING"
                          implementationClass="ru.meanmail.codeInspection.DuplicatedInspection"/>
+        <localInspection language="requirements.txt"
+                         shortName="UnusedInspection"
+                         suppressId="UnusedInspection"
+                         groupName="requirements.txt"
+                         enabledByDefault="true"
+                         level="WARNING"
+                         implementationClass="ru.meanmail.codeInspection.UnusedInspection"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij.lang">
