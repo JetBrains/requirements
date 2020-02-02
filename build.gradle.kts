@@ -41,7 +41,11 @@ tasks.test {
 
 intellij {
     pluginName = project.properties["pluginName"].toString()
-    version = project.properties["IdeVersion"].toString()
+    if (project.properties["eap"].toString() == "true") {
+        version = "LATEST-EAP-SNAPSHOT"
+    } else {
+        version = project.properties["IdeVersion"].toString()
+    }
     setPlugins(project.properties["pythonPluginVersion"].toString())
 }
 
@@ -78,4 +82,5 @@ fun readChangeNotes(pathname: String): String {
 tasks.withType<PatchPluginXmlTask> {
     setPluginDescription(file("Description.html").readText())
     setChangeNotes(readChangeNotes("ChangeNotes.md"))
+    setSinceBuild(project.properties["IdeVersion"].toString())
 }
