@@ -40,7 +40,7 @@ fun getMarkers(project: Project): Map<String, String?> {
         }
     }
     val scriptResource = RequirementsPsiImplUtil::class.java
-            .getResource("/info_python3.py")
+            .getResource("/python_info.py")
 
     val script = createTempFile()
     script.writeText(scriptResource.readText())
