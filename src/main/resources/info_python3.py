@@ -11,7 +11,6 @@ print("platform_system: " + platform.system())
 print("platform_version: " + platform.version())
 print("python_version: " + ".".join(platform.python_version_tuple()[:2]))
 print("python_full_version: " + platform.python_version())
-print("implementation_name: " + sys.implementation.name)
 
 
 def format_full_version(info):
@@ -24,8 +23,10 @@ def format_full_version(info):
 
 if hasattr(sys, "implementation"):
     implementation_version = format_full_version(sys.implementation.version)
+    implementation_name = sys.implementation.name
 else:
     implementation_version = "0"
+    implementation_name = ''
 
+print("implementation_name: " + implementation_name)
 print("implementation_version: " + implementation_version)
-print("extra: ")
