@@ -11,7 +11,7 @@ import ru.meanmail.psi.UriReference
 open class BaseInspectionVisitor(val holder: ProblemsHolder,
                                  val onTheFly: Boolean,
                                  val session: LocalInspectionToolSession) : PsiElementVisitor() {
-    override fun visitElement(element: PsiElement?) {
+    override fun visitElement(element: PsiElement) {
         when (element) {
             is RequirementsFile -> visitRequirementsFile(element)
             is UriReference -> visitUriReference(element)

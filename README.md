@@ -8,7 +8,25 @@ Your ratings and feedback are very important. The feature will appear the faster
 
 ## Supported versions of Intellij:
 
-PyCharm, IDEA 2019.1—2019.3
+*Supported Products*
+- IntelliJ IDEA Education — 2019.1 — 2019.3.1
+- PyCharm Professional — 2019.1 — 2019.3.2
+- PyCharm Educational — 2019.1 — 2019.3.1
+- IntelliJ IDEA Community — 2019.1 — 2019.3.2
+- IntelliJ IDEA Ultimate — 2019.1 — 2019.3.2
+- PyCharm Community — 2019.1 — 2019.3.2
+
+*Unsupported Products*
+- PhpStorm
+- WebStorm
+- RubyMine
+- AppCode
+- CLion
+- GoLand
+- DataGrip
+- Rider
+- MPS
+- Android Studio
 
 ## Syntax
 
