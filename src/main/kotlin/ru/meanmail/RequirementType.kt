@@ -1,3 +1,5 @@
+package ru.meanmail
+
 enum class RequirementType(val kind: String) {
     NAME("package"),
     URL("package"),
