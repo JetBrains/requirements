@@ -41,10 +41,10 @@ tasks.test {
 
 intellij {
     pluginName = project.properties["pluginName"].toString()
-    if (project.properties["eap"].toString() == "true") {
-        version = "LATEST-EAP-SNAPSHOT"
+    version = if (project.properties["eap"].toString() == "true") {
+        "LATEST-EAP-SNAPSHOT"
     } else {
-        version = project.properties["IdeVersion"].toString()
+        project.properties["IdeVersion"].toString()
     }
     setPlugins(project.properties["pythonPluginVersion"].toString())
 }
