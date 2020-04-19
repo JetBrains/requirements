@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "ru.meanmail"
-version = project.properties["version"].toString()
+version = "${project.properties["version"].toString()}-${project.properties["postfix"].toString()}"
 
 repositories {
     mavenCentral()
