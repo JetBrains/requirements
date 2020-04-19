@@ -1,6 +1,6 @@
 package ru.meanmail.psi
 
-import RequirementType
+import ru.meanmail.RequirementType
 
 interface UrlReq : NamedElement, Requirement {
 

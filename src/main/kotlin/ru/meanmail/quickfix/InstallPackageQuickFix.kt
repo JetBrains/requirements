@@ -32,7 +32,8 @@ class InstallPackageQuickFix(element: NameReq,
                     versionOne ?: return@runWriteAction
                     RequirementsPsiImplUtil.setVersion(versionOne, version)
                     val virtualFile = element.containingFile.virtualFile
-                    FileContentUtil.reparseFiles(virtualFile)
+                    FileContentUtil.reparseFiles(project, listOf(virtualFile),
+                            true)
                 }
             }
         }
