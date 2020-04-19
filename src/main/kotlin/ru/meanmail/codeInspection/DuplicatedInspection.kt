@@ -11,11 +11,6 @@ import ru.meanmail.quickfix.RemoveUnusedQuickFix
 
 
 class DuplicatedInspection : LocalInspectionTool() {
-    @Nls
-    override fun getDisplayName(): String {
-        return "Duplicated package"
-    }
-
     override fun buildVisitor(holder: ProblemsHolder,
                               isOnTheFly: Boolean,
                               session: LocalInspectionToolSession): PsiElementVisitor {

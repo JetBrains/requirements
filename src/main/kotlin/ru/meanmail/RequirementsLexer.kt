@@ -73,33 +73,42 @@ class RequirementsLexer
 
     /** the current state of the DFA  */
     private var zzState = 0
+
     /** the current lexical state  */
     private var zzLexicalState = YYINITIAL
+
     /** this buffer contains the current text to be matched and is
      * the source of the yytext() string  */
     private var zzBuffer: CharSequence = ""
+
     /** the textposition at the last accepting state  */
     private var zzMarkedPos = 0
+
     /** the current text position in the buffer  */
     private var zzCurrentPos = 0
+
     /** startRead marks the beginning of the yytext() string in the buffer  */
     private var zzStartRead = 0
+
     /** endRead marks the last character in the buffer, that has been read
      * from input  */
     private var zzEndRead = 0
+
     /**
      * zzAtBOL == true <=> the scanner is currently at the beginning of a line
      */
     private var zzAtBOL = true
+
     /** zzAtEOF == true <=> the scanner is at the EOF  */
     private var zzAtEOF = false
+
     /** denotes if the user-EOF-code has already been executed  */
     private var zzEOFDone = false
 
     override fun getTokenStart() = zzStartRead
     override fun getTokenEnd() = tokenStart + yylength()
 
-    internal var stack: Deque<Int> = ArrayDeque<Int>()
+    internal var stack: Deque<Int> = ArrayDeque()
 
     fun yypush(newState: Int) {
         yybegin(newState)
@@ -111,15 +120,12 @@ class RequirementsLexer
             yyinitial()
             return YYINITIAL
         }
-
         val state: Int = stack.pop()
-
         if (stack.peek() == null) {
             yyinitial()
         } else {
             yybegin(stack.peek())
         }
-
         return state
     }
 
@@ -207,7 +213,7 @@ class RequirementsLexer
      * Usual syntax/scanner level error handling should be done
      * in error fallback rules.
      *
-     * @param   errorCode  the code of the error message to display
+     * @param   errorCode  the code of the errormessage to display
      */
     private fun zzScanError(errorCode: Int) {
         throw Error(
@@ -235,7 +241,6 @@ class RequirementsLexer
         zzMarkedPos -= number
     }
 
-
     /**
      * Contains user EOF-code, which will be executed exactly once,
      * when the end of file is reached
@@ -243,10 +248,8 @@ class RequirementsLexer
     private fun zzDoEOF() {
         if (!zzEOFDone) {
             zzEOFDone = true
-
         }
     }
-
 
     /**
      * Resumes scanning until the next regular expression is matched,
@@ -264,20 +267,15 @@ class RequirementsLexer
         var zzMarkedPosL: Int
         var zzEndReadL = zzEndRead
         var zzBufferL = zzBuffer
-
         val zzTransL = ZZ_TRANS
         val zzRowMapL = ZZ_ROWMAP
         val zzAttrL = ZZ_ATTRIBUTE
-
         while (true) {
             zzMarkedPosL = zzMarkedPos
-
             zzAction = -1
-
             zzStartRead = zzMarkedPosL
             zzCurrentPos = tokenStart
             zzCurrentPosL = zzCurrentPos
-
             zzState = ZZ_LEXSTATE[zzLexicalState]
 
             // set up zzAction for empty match case:
@@ -312,7 +310,9 @@ class RequirementsLexer
                     }
                 }
                 val zzNext = zzTransL[zzRowMapL[zzState] + zzCmap(zzInput)]
-                if (zzNext == -1) break
+                if (zzNext == -1) {
+                    break
+                }
                 zzState = zzNext
 
                 zzAttributes = zzAttrL[zzState]
@@ -325,7 +325,6 @@ class RequirementsLexer
 
             // store back cached position
             zzMarkedPos = zzMarkedPosL
-
             if (zzInput == YYEOF && tokenStart == zzCurrentPos) {
                 zzAtEOF = true
                 zzDoEOF()
@@ -693,7 +692,6 @@ class RequirementsLexer
     }
 
     companion object {
-
         /** This character denotes the end of file  */
         const val YYEOF = -1
 
@@ -712,6 +710,7 @@ class RequirementsLexer
         const val SHORT_OPTION_STATE = 16
         const val LONG_OPTION_STATE = 18
         const val BINARY = 20
+
         /**
          * ZZ_LEXSTATE[l] is the state in the DFA for the lexical state l
          * ZZ_LEXSTATE[l+1] is the state in the DFA for the lexical state l
@@ -750,6 +749,7 @@ class RequirementsLexer
                         "\u0001\u001a\u0001\u0039\u0001\u002e\u0001\u0030\u0001\u0026\u0001\u0025\u0001\u0021\u0001\u0036\u0001\u0029\u0001\u002a\u0001\u0023\u0001\u002d\u0001\u0027\u0001\u001a\u0001\u0032" +
                         "\u0001\u0022\u0001\u001a\u0001\u0013\u0001\u001c\u0001\u0014\u0001\u0017\u0006\u001d\u0001\u0019\u001a\u001d\u0001\u0000\u00df\u001d\u0001\u0000\u007f\u001d\u000b\u0000" +
                         "\u001d\u001d\u0002\u0019\u0005\u001d\u0001\u0000\u002f\u001d\u0001\u0000\u0020\u001d")
+
         /**
          * Translates DFA states to action switch labels.
          */
@@ -774,8 +774,8 @@ class RequirementsLexer
         }
 
         private fun zzUnpack(packed: String, offset: Int, result: IntArray): Int {
-            var index = 0       /* index in packed string  */
-            var unpackedIndex = offset  /* index in unpacked array */
+            var index = 0 /* index in packed string  */
+            var unpackedIndex = offset /* index in unpacked array */
             val length = packed.length
             while (index < length) {
                 var count = packed[index++].toInt()
@@ -834,8 +834,8 @@ class RequirementsLexer
         }
 
         private fun zzUnpackRowMap(packed: String, offset: Int, result: IntArray): Int {
-            var i = 0  /* index in packed string  */
-            var j = offset  /* index in unpacked array */
+            var i = 0 /* index in packed string  */
+            var j = offset /* index in unpacked array */
             val l = packed.length
             while (i < l) {
                 val high = packed[i++].toInt() shl 16
@@ -949,8 +949,8 @@ class RequirementsLexer
         }
 
         private fun zzUnpackTrans(packed: String, offset: Int, result: IntArray): Int {
-            var i = 0       /* index in packed string  */
-            var j = offset  /* index in unpacked array */
+            var i = 0 /* index in packed string  */
+            var j = offset /* index in unpacked array */
             val l = packed.length
             while (i < l) {
                 var count = packed[i++].toInt()
@@ -960,7 +960,6 @@ class RequirementsLexer
             }
             return j
         }
-
 
         /* error codes */
         private const val ZZ_UNKNOWN_ERROR = 0
@@ -1007,8 +1006,8 @@ class RequirementsLexer
                 k += 2
             }
             val map = CharArray(size)
-            var i = 0  /* index in packed string  */
-            var j = 0  /* index in unpacked array */
+            var i = 0 /* index in packed string  */
+            var j = 0 /* index in unpacked array */
             while (i < packed.length) {
                 var count = packed[i++].toInt()
                 val value = packed[i++]
