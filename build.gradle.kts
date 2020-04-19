@@ -3,12 +3,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    kotlin("jvm") version "1.3.61"
-    id("org.jetbrains.intellij") version "0.4.16"
+    kotlin("jvm") version "1.3.70"
+    id("org.jetbrains.intellij") version "0.4.18"
 }
 
 group = "ru.meanmail"
-version = project.properties["version"].toString()
+version = "${project.properties["version"].toString()}-${project.properties["postfix"].toString()}"
 
 repositories {
     mavenCentral()
@@ -41,7 +41,11 @@ tasks.test {
 
 intellij {
     pluginName = project.properties["pluginName"].toString()
-    version = project.properties["IdeVersion"].toString()
+    version = if (project.properties["eap"].toString() == "true") {
+        "LATEST-EAP-SNAPSHOT"
+    } else {
+        project.properties["IdeVersion"].toString()
+    }
     setPlugins(project.properties["pythonPluginVersion"].toString())
 }
 
