@@ -15,8 +15,8 @@
                   language="requirements.txt"
                   order="first"
                   name="requirements.txt"
-                  fileNames="requirements.txt"
-                  patterns=""/>
+                  fileNames="requirements.txt;constraints.txt"
+                  patterns="*requirements.txt;*constraints.txt"/>
         <localInspection language="requirements.txt"
                          shortName="ReferenceExistsInspection"
                          suppressId="Requirements"
