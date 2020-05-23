@@ -16,7 +16,7 @@
                   order="first"
                   name="requirements.txt"
                   fileNames="requirements.txt"
-                  patterns="*.txt"/>
+                  patterns=""/>
         <localInspection language="requirements.txt"
                          shortName="ReferenceExistsInspection"
                          suppressId="Requirements"
