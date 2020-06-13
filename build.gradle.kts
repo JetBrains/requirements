@@ -3,12 +3,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    kotlin("jvm") version "1.3.70"
-    id("org.jetbrains.intellij") version "0.4.18"
+    kotlin("jvm") version "1.3.72"
+    id("org.jetbrains.intellij") version "0.4.21"
 }
 
 group = "ru.meanmail"
-version = "${project.properties["version"].toString()}-${project.properties["postfix"].toString()}"
+version = "${project.properties["version"]}-${project.properties["postfix"]}"
 
 repositories {
     mavenCentral()
@@ -16,8 +16,8 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.2")
 }
 
 configure<JavaPluginConvention> {
@@ -35,7 +35,6 @@ tasks.withType<Wrapper> {
 
 tasks.test {
     useJUnitPlatform()
-
     maxHeapSize = "1G"
 }
 
@@ -44,16 +43,14 @@ intellij {
     version = if (project.properties["eap"].toString() == "true") {
         "LATEST-EAP-SNAPSHOT"
     } else {
-        project.properties["IdeVersion"].toString()
+        project.properties["ideaVersion"].toString()
     }
     setPlugins(project.properties["pythonPluginVersion"].toString())
 }
 
 fun readChangeNotes(pathname: String): String {
     val lines = file(pathname).readLines()
-
     val notes: MutableList<MutableList<String>> = mutableListOf()
-
     var note: MutableList<String>? = null
 
     for (line in lines) {
