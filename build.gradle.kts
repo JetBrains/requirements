@@ -43,7 +43,7 @@ intellij {
     version = if (project.properties["eap"].toString() == "true") {
         "LATEST-EAP-SNAPSHOT"
     } else {
-        project.properties["ideaVersion"].toString()
+        project.properties["IdeVersion"].toString()
     }
     setPlugins(project.properties["pythonPluginVersion"].toString())
 }
