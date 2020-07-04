@@ -93,6 +93,18 @@ fun getLatestVersion(project: Project, packageName: String): PyPackageVersion? {
 fun installPackage(project: Project, packageName: String,
                    version: String, versionCmp: String,
                    onInstalled: (() -> Unit)?) {
+    val currentVersion = getCurrentVersion(project, packageName)
+    if (currentVersion?.presentableText == version) {
+        Notification("pip",
+                "$packageName (${version})",
+                "Successfully installed",
+                NotificationType.INFORMATION).notify(project)
+        if (onInstalled != null) {
+            onInstalled()
+        }
+        return
+    }
+
     val text = "$packageName$versionCmp$version"
     val title = "Installing '$text'"
 
