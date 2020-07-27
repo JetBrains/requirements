@@ -2,11 +2,13 @@ package ru.meanmail.psi.impl
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
+import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.paths.WebReference
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiReference
 import com.jetbrains.python.packaging.PyPIPackageUtil
+import ru.meanmail.createNodeFromText
 import ru.meanmail.psi.*
 
 class VersionOneImpl(node: ASTNode) :
@@ -41,5 +43,14 @@ class VersionOneImpl(node: ASTNode) :
         val url = "${PyPIPackageUtil.PYPI_URL}/${packageName.text}/${version.text}"
         val textRange = TextRange(0, textLength)
         return WebReference(this, textRange, url)
+    }
+
+    override fun setVersion(newVersion: String) {
+        WriteCommandAction.runWriteCommandAction(project,
+                "Update package version",
+                "Requirements", Runnable {
+            val version = createNodeFromText(Types.VERSION, newVersion)
+            node.replaceChild(node.lastChildNode, version)
+        })
     }
 }

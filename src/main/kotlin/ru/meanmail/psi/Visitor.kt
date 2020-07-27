@@ -280,7 +280,7 @@ class Visitor : PsiElementVisitor() {
         visitPsiElement(o)
     }
 
-    private fun visitPsiElement(o: PsiElement) {
+    fun visitPsiElement(o: PsiElement) {
         visitElement(o)
     }
 }
