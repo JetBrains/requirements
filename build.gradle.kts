@@ -3,12 +3,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    kotlin("jvm") version "1.3.61"
-    id("org.jetbrains.intellij") version "0.4.16"
+    kotlin("jvm") version "1.3.72"
+    id("org.jetbrains.intellij") version "0.4.21"
 }
 
 group = "ru.meanmail"
-version = project.properties["version"].toString()
+version = "${project.properties["version"]}-${project.properties["postfix"]}"
 
 repositories {
     mavenCentral()
@@ -16,8 +16,8 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.2")
 }
 
 configure<JavaPluginConvention> {
@@ -41,7 +41,11 @@ tasks.test {
 
 intellij {
     pluginName = project.properties["pluginName"].toString()
-    version = project.properties["IdeVersion"].toString()
+    version = if (project.properties["eap"].toString() == "true") {
+        "LATEST-EAP-SNAPSHOT"
+    } else {
+        project.properties["IdeVersion"].toString()
+    }
     setPlugins(project.properties["pythonPluginVersion"].toString())
 }
 

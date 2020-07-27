@@ -3,9 +3,10 @@
         <localInspection language="requirements.txt"
                          shortName="InstalledPackageInspection"
                          suppressId="InstalledPackageInspection"
-                         groupName="requirements.txt"
+                         groupName="Requirements"
                          enabledByDefault="true"
                          level="WARNING"
+                         displayName="Package is not installed"
                          implementationClass="ru.meanmail.codeInspection.InstalledPackageInspection"/>
     </extensions>
 </idea-plugin>

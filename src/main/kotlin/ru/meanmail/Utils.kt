@@ -1,5 +1,8 @@
 package ru.meanmail
 
+import com.intellij.execution.ExecutionException
+import com.intellij.lang.ASTFactory
+import com.intellij.lang.ASTNode
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.progress.ProgressIndicator
@@ -8,9 +11,12 @@ import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.impl.source.codeStyle.CodeEditUtil
+import com.intellij.psi.tree.IElementType
 import com.jetbrains.python.packaging.*
 import ru.meanmail.psi.RequirementsPsiImplUtil
 import java.io.File
+import java.io.IOException
 import java.time.LocalDateTime
 
 fun formatPackageName(packageName: String): String {
@@ -20,7 +26,12 @@ fun formatPackageName(packageName: String): String {
 fun getPackage(project: Project, packageName: String): PyPackage? {
     val packageManager = RequirementsPsiImplUtil
             .getPackageManager(project) ?: return null
-    val packages = packageManager.refreshAndGetPackages(false)
+    val packages: List<PyPackage>
+    try {
+        packages = packageManager.refreshAndGetPackages(false)
+    } catch (e: ExecutionException) {
+        return null
+    }
     val formattedPackageName = formatPackageName(packageName)
 
     return packages.firstOrNull { formatPackageName(it.name) == formattedPackageName }
@@ -64,8 +75,15 @@ fun getLatestVersion(project: Project, packageName: String): PyPackageVersion? {
             return cached.first
         }
     }
-    val latestVersion = PyPIPackageUtil.INSTANCE
-            .fetchLatestPackageVersion(project, packageName) ?: return null
+
+    val latestVersion: String
+
+    try {
+        latestVersion = PyPIPackageUtil.INSTANCE
+                .fetchLatestPackageVersion(project, packageName) ?: return null
+    } catch (e: IOException) {
+        return null
+    }
     val version = PyPackageVersionNormalizer
             .normalize(latestVersion) ?: return null
     cache[key] = version to LocalDateTime.now()
@@ -75,6 +93,18 @@ fun getLatestVersion(project: Project, packageName: String): PyPackageVersion? {
 fun installPackage(project: Project, packageName: String,
                    version: String, versionCmp: String,
                    onInstalled: (() -> Unit)?) {
+    val currentVersion = getCurrentVersion(project, packageName)
+    if (currentVersion?.presentableText == version) {
+        Notification("pip",
+                "$packageName (${version})",
+                "Successfully installed",
+                NotificationType.INFORMATION).notify(project)
+        if (onInstalled != null) {
+            onInstalled()
+        }
+        return
+    }
+
     val text = "$packageName$versionCmp$version"
     val title = "Installing '$text'"
 
@@ -187,4 +217,10 @@ fun compareVersions(actual: PyPackageVersion?,
     }
 
     return false
+}
+
+fun createNodeFromText(type: IElementType, text: String): ASTNode {
+    val node = ASTFactory.leaf(type, text)
+    CodeEditUtil.setNodeGenerated(node, true)
+    return node
 }
