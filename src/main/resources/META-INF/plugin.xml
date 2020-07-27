@@ -20,23 +20,26 @@
         <localInspection language="requirements.txt"
                          shortName="ReferenceExistsInspection"
                          suppressId="Requirements"
-                         groupName="requirements.txt"
+                         groupName="Requirements"
                          enabledByDefault="true"
                          level="ERROR"
+                         displayName="File is not exists"
                          implementationClass="ru.meanmail.codeInspection.ReferenceExistsInspection"/>
         <localInspection language="requirements.txt"
                          shortName="DuplicatedInspection"
                          suppressId="DuplicatedInspection"
-                         groupName="requirements.txt"
+                         groupName="Requirements"
                          enabledByDefault="true"
                          level="WARNING"
+                         displayName="Duplicated package"
                          implementationClass="ru.meanmail.codeInspection.DuplicatedInspection"/>
         <localInspection language="requirements.txt"
                          shortName="UnusedInspection"
                          suppressId="UnusedInspection"
-                         groupName="requirements.txt"
+                         groupName="Requirements"
                          enabledByDefault="true"
                          level="WARNING"
+                         displayName="Unused package"
                          implementationClass="ru.meanmail.codeInspection.UnusedInspection"/>
     </extensions>
 

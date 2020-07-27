@@ -11,11 +11,6 @@ import ru.meanmail.quickfix.RemoveUnusedQuickFix
 
 
 class UnusedInspection : LocalInspectionTool() {
-    @Nls
-    override fun getDisplayName(): String {
-        return "Unused package"
-    }
-
     override fun buildVisitor(holder: ProblemsHolder,
                               isOnTheFly: Boolean,
                               session: LocalInspectionToolSession): PsiElementVisitor {

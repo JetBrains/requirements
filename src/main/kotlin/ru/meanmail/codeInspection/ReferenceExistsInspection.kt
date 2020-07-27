@@ -10,11 +10,6 @@ import ru.meanmail.psi.EditableReq
 import ru.meanmail.psi.UriReference
 
 class ReferenceExistsInspection : LocalInspectionTool() {
-    @Nls
-    override fun getDisplayName(): String {
-        return "File is not exists"
-    }
-
     override fun buildVisitor(holder: ProblemsHolder,
                               isOnTheFly: Boolean,
                               session: LocalInspectionToolSession): PsiElementVisitor {
