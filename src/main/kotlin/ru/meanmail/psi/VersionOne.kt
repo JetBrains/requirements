@@ -8,4 +8,5 @@ interface VersionOne : PsiElement {
 
     val versionCmp: VersionCmpStmt
 
+    fun setVersion(newVersion: String)
 }

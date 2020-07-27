@@ -16,11 +16,6 @@ import ru.meanmail.quickfix.InstallPackageQuickFix
 import java.util.concurrent.Future
 
 class InstalledPackageInspection : LocalInspectionTool() {
-    @Nls
-    override fun getDisplayName(): String {
-        return "Package is not installed"
-    }
-
     override fun buildVisitor(holder: ProblemsHolder,
                               isOnTheFly: Boolean,
                               session: LocalInspectionToolSession): PsiElementVisitor {

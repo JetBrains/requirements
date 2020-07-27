@@ -1,6 +1,8 @@
 package ru.meanmail.quickfix
 
 import com.intellij.codeInspection.LocalQuickFixOnPsiElement
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
@@ -15,7 +17,15 @@ class RemoveUnusedQuickFix(element: Requirement,
     override fun invoke(project: Project, file: PsiFile,
                         startElement: PsiElement,
                         endElement: PsiElement) {
-        startElement.delete()
+        val application = ApplicationManager.getApplication()
+        application.invokeLater {
+            application.runWriteAction {
+                WriteCommandAction.runWriteCommandAction(project,
+                        text, "Requirements", Runnable {
+                    startElement.delete()
+                })
+            }
+        }
     }
 
     override fun getFamilyName(): String {
