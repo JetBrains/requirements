@@ -6,8 +6,10 @@ import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElementVisitor
+import com.jetbrains.python.packaging.PyPackage
 import com.jetbrains.python.packaging.PyPackageVersion
-import org.jetbrains.annotations.Nls
+import com.jetbrains.python.packaging.PyPackageVersionNormalizer
+import com.jetbrains.python.packaging.PyRequirementParser
 import ru.meanmail.compareTo
 import ru.meanmail.getMarkers
 import ru.meanmail.getVersions
@@ -34,35 +36,33 @@ class InstalledPackageInspection : LocalInspectionTool() {
                 }
 
                 val packageName = element.name.text ?: return
-                val versionOneList = element.versionspec?.versionMany?.versionOneList
-                val version = versionOneList?.get(0)?.version?.text
-                val task = getVersionAsync(element.project, packageName, version)
-                val versions = task.get() ?: return
+                val versionSpec = element.versionspec
+                val requirement = PyRequirementParser.fromLine(element.text)
 
-                val required = versions.first
-                val installed = versions.second
-                val latest = versions.third
+                val task = getVersionAsync(element.project, packageName)
+                val versions = task.get() ?: return
+                val installed = versions.first
+                val latest = versions.second
 
                 val versionsRepresentation =
-                        "required: ${required?.presentableText ?: "<unknown>"}, " +
-                                "installed: ${installed?.presentableText ?: "<nothing>"}, " +
+                        "required: ${versionSpec?.text ?: "<unknown>"}, " +
+                                "installed: ${installed?.version ?: "<nothing>"}, " +
                                 "latest: ${latest?.presentableText ?: "<unknown>"}"
 
 
-                if (required != null && required != installed) {
-                    val message = "'$packageName' version '${required.presentableText}' " +
+                if (requirement != null && (installed == null || !installed.matches(requirement))) {
+                    val message = "'${requirement.presentableText}' " +
                             "is not installed ($versionsRepresentation)"
                     holder.registerProblem(element,
                             message,
                             InstallPackageQuickFix(element,
-                                    "Install '$packageName' " +
-                                            "version '${required.presentableText}' " +
+                                    "Install '${requirement.presentableText}' " +
                                             "($versionsRepresentation)",
-                                    required.presentableText))
+                                    requirement))
                 }
 
-                if (latest != null && required != null && required < latest) {
-                    val message = "'$packageName' version '${required.presentableText}' " +
+                if (latest != null && installed != null && PyPackageVersionNormalizer.normalize(installed.version) < latest) {
+                    val message = "'$packageName' version '${installed.version}' " +
                             "is outdated ($versionsRepresentation)"
                     holder.registerProblem(element,
                             message,
@@ -70,16 +70,15 @@ class InstalledPackageInspection : LocalInspectionTool() {
                                     "Install '$packageName' " +
                                             "version '${latest.presentableText}' " +
                                             "($versionsRepresentation)",
-                                    latest.presentableText))
+                                    PyRequirementParser.fromLine("$packageName==${latest.presentableText}")!!))
                 }
             }
 
             private fun getVersionAsync(project: Project,
-                                        packageName: String,
-                                        version: String?): Future<Triple<PyPackageVersion?, PyPackageVersion?, PyPackageVersion?>> {
+                                        packageName: String): Future<Pair<PyPackage?, PyPackageVersion?>> {
                 return ApplicationManager.getApplication()
-                        .executeOnPooledThread<Triple<PyPackageVersion?, PyPackageVersion?, PyPackageVersion?>> {
-                            return@executeOnPooledThread getVersions(project, packageName, version)
+                        .executeOnPooledThread<Pair<PyPackage?, PyPackageVersion?>> {
+                            return@executeOnPooledThread getVersions(project, packageName)
                         }
             }
         }

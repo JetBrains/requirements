@@ -6,12 +6,13 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.util.FileContentUtil
+import com.jetbrains.python.packaging.PyRequirement
 import ru.meanmail.installPackage
 import ru.meanmail.psi.NameReq
 
 class InstallPackageQuickFix(element: NameReq,
                              private val description: String,
-                             private val version: String) : LocalQuickFixOnPsiElement(element) {
+                             private val requirement: PyRequirement) : LocalQuickFixOnPsiElement(element) {
     override fun getText(): String {
         return description
     }
@@ -21,14 +22,11 @@ class InstallPackageQuickFix(element: NameReq,
                         endElement: PsiElement) {
         val element = (startElement as? NameReq) ?: return
         val packageName = element.name.text ?: return
-        val versionOne = element.versionspec?.versionMany?.versionOneList?.get(0) ?: return
-        val versionCmp = versionOne.versionCmp.text ?: "=="
 
-        installPackage(project, packageName, version, versionCmp) {
+        installPackage(project, packageName, requirement) {
             val application = ApplicationManager.getApplication()
             application.invokeLater {
                 application.runWriteAction {
-                    versionOne.setVersion(version)
                     val virtualFile = element.containingFile.virtualFile
                     FileContentUtil.reparseFiles(project, listOf(virtualFile),
                             true)

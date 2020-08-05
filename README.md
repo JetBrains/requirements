@@ -61,6 +61,5 @@ PyCharm, and other products if the Python plugin is installed:
 ## TODO
 
 * Distinguish a plain text file from file requirements.txt
-* Support all relations
 * Opening local source code
 * Code completion

@@ -37,30 +37,22 @@ fun getPackage(project: Project, packageName: String): PyPackage? {
     return packages.firstOrNull { formatPackageName(it.name) == formattedPackageName }
 }
 
-fun getCurrentVersion(project: Project, packageName: String): PyPackageVersion? {
+fun getInstalledPackage(project: Project, packageName: String): PyPackage? {
     val pyPackage = getPackage(project, packageName) ?: return null
     if (!pyPackage.isInstalled) {
         return null
     }
-    return PyPackageVersionNormalizer
-            .normalize(pyPackage.version) ?: return null
+    return pyPackage
 }
 
 fun getVersions(project: Project,
-                packageName: String,
-                version: String?): Triple<PyPackageVersion?, PyPackageVersion?, PyPackageVersion?> {
-    val installed = getCurrentVersion(project, packageName)
+                packageName: String): Pair<PyPackage?, PyPackageVersion?> {
+    val installed = getInstalledPackage(project, packageName)
     val latest = getLatestVersion(project, packageName)
-    val required = if (version == null) {
-        latest
-    } else {
-        PyPackageVersionNormalizer.normalize(version)
-    }
 
-    return Triple(
-            first = required,
-            second = installed,
-            third = latest
+    return Pair(
+            first = installed,
+            second = latest
     )
 }
 
@@ -91,24 +83,21 @@ fun getLatestVersion(project: Project, packageName: String): PyPackageVersion? {
 }
 
 fun installPackage(project: Project, packageName: String,
-                   version: String, versionCmp: String,
-                   onInstalled: (() -> Unit)?) {
-    val currentVersion = getCurrentVersion(project, packageName)
-    if (currentVersion?.presentableText == version) {
+                   requirement: PyRequirement,
+                   onInstalled: ((PyPackage) -> Unit)?) {
+    val installedPackage = getInstalledPackage(project, packageName)
+    if (installedPackage?.matches(requirement) == true) {
         Notification("pip",
-                "$packageName (${version})",
+                "$packageName (${installedPackage.version})",
                 "Successfully installed",
                 NotificationType.INFORMATION).notify(project)
         if (onInstalled != null) {
-            onInstalled()
+            onInstalled(installedPackage)
         }
         return
     }
 
-    val text = "$packageName$versionCmp$version"
-    val title = "Installing '$text'"
-
-    // TODO Use versionCmp
+    val title = "Installing '${requirement.presentableText}'"
 
     val task = object : Task.Backgroundable(project, title) {
         override fun run(indicator: ProgressIndicator) {
@@ -119,7 +108,7 @@ fun installPackage(project: Project, packageName: String,
                 val packageManager = RequirementsPsiImplUtil.getPackageManager(project)
 
                 if (packageManager != null) {
-                    packageManager.install(text)
+                    packageManager.install(requirement.presentableText)
                 } else {
                     Notification("pip",
                             title,
@@ -142,7 +131,7 @@ fun installPackage(project: Project, packageName: String,
                         "Successfully installed",
                         NotificationType.INFORMATION).notify(project)
                 if (onInstalled != null) {
-                    onInstalled()
+                    onInstalled(pyPackage)
                 }
             } catch (e: PyExecutionException) {
                 Notification(e.command,
