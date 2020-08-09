@@ -1,5 +1,7 @@
 # Requirements plugin
 
+![JetBrains IntelliJ Plugins](https://img.shields.io/jetbrains/plugin/r/stars/10837?label=JetBrans%20Marketplace)
+
 https://plugins.jetbrains.com/plugin/10837
 
 https://meanmail.dev/plugin/1
