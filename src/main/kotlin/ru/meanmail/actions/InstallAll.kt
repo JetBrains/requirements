@@ -28,7 +28,7 @@ class InstallAllAction : AnAction() {
         val project: Project = e.project ?: return
         val virtualFile = psiFile.virtualFile
 
-        val requirements = psiFile.requirements().map { it.text }
+        val requirements = psiFile.enabledRequirements().map { it.text }
         val title = "Installing ${virtualFile.name}"
         val task = InstallTask(project, requirements, title, virtualFile)
         ProgressManager.getInstance().run(task)
