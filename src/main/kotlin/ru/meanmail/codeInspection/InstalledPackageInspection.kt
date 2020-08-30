@@ -59,9 +59,8 @@ class InstalledPackageInspection : LocalInspectionTool() {
                                     "Install '${requirement.presentableText}' " +
                                             "($versionsRepresentation)",
                                     requirement))
-                }
 
-                if (latest != null && installed != null && PyPackageVersionNormalizer.normalize(installed.version) < latest) {
+                } else if (latest != null && installed != null && PyPackageVersionNormalizer.normalize(installed.version) < latest) {
                     val message = "'$packageName' version '${installed.version}' " +
                             "is outdated ($versionsRepresentation)"
                     holder.registerProblem(element,
