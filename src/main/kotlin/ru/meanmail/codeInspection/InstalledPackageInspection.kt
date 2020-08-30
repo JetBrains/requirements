@@ -50,7 +50,7 @@ class InstalledPackageInspection : LocalInspectionTool() {
                                 "latest: ${latest?.presentableText ?: "<unknown>"}"
 
 
-                if (requirement != null && (installed == null || !installed.matches(requirement))) {
+                if (requirement != null && installed?.matches(requirement) != true) {
                     val message = "'${requirement.presentableText}' " +
                             "is not installed ($versionsRepresentation)"
                     holder.registerProblem(element,
