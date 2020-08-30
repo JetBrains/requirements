@@ -1,7 +1,7 @@
 package ru.meanmail.psi
 
-import ru.meanmail.RequirementType
 import com.intellij.psi.PsiElement
+import ru.meanmail.RequirementType
 
 interface Requirement : PsiElement {
 

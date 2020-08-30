@@ -1,5 +1,6 @@
 package ru.meanmail.actions
 
+import com.intellij.execution.ExecutionException
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.AnAction
@@ -10,10 +11,8 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.jetbrains.python.packaging.PyExecutionException
 import ru.meanmail.RequirementsLanguage
-import ru.meanmail.psi.RequirementsFile
-import ru.meanmail.psi.RequirementsPsiImplUtil
+import ru.meanmail.psi.*
 import ru.meanmail.reparseFile
 
 
@@ -28,7 +27,15 @@ class InstallAllAction : AnAction() {
         val project: Project = e.project ?: return
         val virtualFile = psiFile.virtualFile
 
-        val requirements = psiFile.enabledRequirements().map { it.text }
+        val requirements = psiFile.enabledRequirements().mapNotNull {
+            return@mapNotNull when (it) {
+                is NameReq -> it.requirement
+                is PathReq -> it.text
+                is UrlReq -> it.text
+                else -> null
+            }
+        }
+
         val title = "Installing ${virtualFile.name}"
         val task = InstallTask(project, requirements, title, virtualFile)
         ProgressManager.getInstance().run(task)
@@ -53,19 +60,28 @@ class InstallAllAction : AnAction() {
             for (requirement in requirements) {
                 indicator.text = requirement
                 try {
-                    packageManager.install(requirement)
-                    Notification("pip",
-                            requirement,
-                            "Successfully installed",
-                            NotificationType.INFORMATION).notify(project)
-                } catch (e: PyExecutionException) {
-                    Notification(e.command,
-                            e.stdout,
-                            e.stderr,
-                            NotificationType.ERROR).notify(project)
+                    val requirementString = packageManager.parseRequirement(requirement)
+                    if (requirementString != null) {
+                        packageManager.install(listOf(requirementString), emptyList())
+                        Notification("pip",
+                                requirement,
+                                "Successfully installed",
+                                NotificationType.INFORMATION).notify(project)
+                    } else {
+                        showError(requirement, "Can not install")
+                    }
+                } catch (e: ExecutionException) {
+                    showError(requirement, e.localizedMessage)
                 }
             }
             reparseFile(project, virtualFile)
+        }
+
+        private fun showError(requirement: String, message: String) {
+            Notification("pip.failed",
+                    requirement,
+                    message,
+                    NotificationType.ERROR).notify(project)
         }
     }
 }
