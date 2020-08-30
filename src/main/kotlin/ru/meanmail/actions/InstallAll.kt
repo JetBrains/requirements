@@ -63,10 +63,7 @@ class InstallAllAction : AnAction() {
                     val requirementString = packageManager.parseRequirement(requirement)
                     if (requirementString != null) {
                         packageManager.install(listOf(requirementString), emptyList())
-                        Notification("pip",
-                                requirement,
-                                "Successfully installed",
-                                NotificationType.INFORMATION).notify(project)
+                        showSuccess(requirement)
                     } else {
                         showError(requirement, "Can not install")
                     }
@@ -77,11 +74,17 @@ class InstallAllAction : AnAction() {
             reparseFile(project, virtualFile)
         }
 
+        private fun showSuccess(requirement: String) {
+            val notification = Notification("pip",
+                    requirement, "Successfully installed",
+                    NotificationType.INFORMATION)
+            notification.notify(project)
+        }
+
         private fun showError(requirement: String, message: String) {
-            Notification("pip.failed",
-                    requirement,
-                    message,
-                    NotificationType.ERROR).notify(project)
+            val notification = Notification("pip.failed",
+                    requirement, message, NotificationType.ERROR)
+            notification.notify(project)
         }
     }
 }
