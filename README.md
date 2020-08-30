@@ -1,4 +1,6 @@
 # Requirements plugin
+![JetBrains IntelliJ Plugins](https://img.shields.io/jetbrains/plugin/r/stars/10837?label=JetBrans%20Marketplace)
+![JetBrains IntelliJ plugins](https://img.shields.io/jetbrains/plugin/d/10837)
 
 https://plugins.jetbrains.com/plugin/10837
 
