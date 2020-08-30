@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    kotlin("jvm") version "1.3.72"
+    kotlin("jvm") version "1.4.0"
     id("org.jetbrains.intellij") version "0.4.21"
 }
 
