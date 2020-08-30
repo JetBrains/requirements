@@ -1,3 +1,7 @@
+## 2020.2 (August, 30, 2020)
+
++ Add action `Install all packages` to a context menu
+
 ## 2020.1 (February, 03, 2020)
 
 + Support environment markers
