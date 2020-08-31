@@ -58,7 +58,8 @@ class InstalledPackageInspection : LocalInspectionTool() {
                             InstallPackageQuickFix(element,
                                     "Install '${requirement.presentableText}' " +
                                             "($versionsRepresentation)",
-                                    requirement))
+                                    requirement,
+                                    false))
 
                 } else if (latest != null && installed != null && PyPackageVersionNormalizer.normalize(installed.version) < latest) {
                     val message = "'$packageName' version '${installed.version}' " +
@@ -69,7 +70,8 @@ class InstalledPackageInspection : LocalInspectionTool() {
                                     "Install '$packageName' " +
                                             "version '${latest.presentableText}' " +
                                             "($versionsRepresentation)",
-                                    PyRequirementParser.fromLine("$packageName==${latest.presentableText}")!!))
+                                    PyRequirementParser.fromLine("$packageName==${latest.presentableText}")!!,
+                                    true))
                 }
             }
 
