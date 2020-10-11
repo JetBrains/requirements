@@ -5,7 +5,6 @@ import com.intellij.codeInspection.LocalInspectionToolSession
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElementVisitor
-import org.jetbrains.annotations.Nls
 import ru.meanmail.psi.RequirementsFile
 import ru.meanmail.quickfix.RemoveUnusedQuickFix
 

@@ -5,6 +5,7 @@ import com.intellij.lang.ASTFactory
 import com.intellij.lang.ASTNode
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationType
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
@@ -13,6 +14,7 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.impl.source.codeStyle.CodeEditUtil
 import com.intellij.psi.tree.IElementType
+import com.intellij.util.FileContentUtil
 import com.jetbrains.python.packaging.*
 import ru.meanmail.psi.RequirementsPsiImplUtil
 import java.io.File
@@ -223,4 +225,13 @@ fun createNodeFromText(type: IElementType, text: String): ASTNode {
     val node = ASTFactory.leaf(type, text)
     CodeEditUtil.setNodeGenerated(node, true)
     return node
+}
+
+fun reparseFile(project: Project, virtualFile: VirtualFile) {
+    val application = ApplicationManager.getApplication()
+    application.invokeLater {
+        application.runWriteAction {
+            FileContentUtil.reparseFiles(project, listOf(virtualFile), true)
+        }
+    }
 }

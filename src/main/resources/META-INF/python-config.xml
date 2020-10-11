@@ -9,4 +9,12 @@
                          displayName="Package is not installed"
                          implementationClass="ru.meanmail.codeInspection.InstalledPackageInspection"/>
     </extensions>
+    <actions>
+        <action id="requirements.InstallAllAction"
+                class="ru.meanmail.actions.InstallAllAction"
+                text="Install All Packages"
+                description="Install all packages for this requirements file.">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        </action>
+    </actions>
 </idea-plugin>

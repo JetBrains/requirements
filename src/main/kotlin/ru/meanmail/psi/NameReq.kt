@@ -21,6 +21,11 @@ interface NameReq : NamedElement, Requirement {
             return name.text
         }
 
+    val requirement: String
+        get() {
+            return "${name.text}${extras?.text ?: ""}${versionspec?.text ?: ""}"
+        }
+
     override val type: RequirementType
         get() = RequirementType.NAME
 
