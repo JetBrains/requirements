@@ -5,7 +5,6 @@ import com.intellij.codeInspection.LocalInspectionToolSession
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiFileSystemItem
-import org.jetbrains.annotations.Nls
 import ru.meanmail.psi.EditableReq
 import ru.meanmail.psi.UriReference
 

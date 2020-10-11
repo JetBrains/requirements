@@ -7,7 +7,6 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElementVisitor
 import com.jetbrains.python.packaging.PyPackageVersion
-import org.jetbrains.annotations.Nls
 import ru.meanmail.compareTo
 import ru.meanmail.getMarkers
 import ru.meanmail.getVersions
