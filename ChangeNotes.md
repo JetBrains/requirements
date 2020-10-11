@@ -1,3 +1,7 @@
+## 2020.3 (October, 12, 2020)
+
+* Fix exception: java.lang.Throwable
+
 ## 2020.2 (August, 30, 2020)
 
 + Add action `Install all packages` to a context menu
