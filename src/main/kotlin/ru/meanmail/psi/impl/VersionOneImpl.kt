@@ -49,8 +49,8 @@ class VersionOneImpl(node: ASTNode) :
         WriteCommandAction.runWriteCommandAction(project,
                 "Update package version",
                 "Requirements", Runnable {
-            val version = createNodeFromText(Types.VERSION, newVersion)
-            node.replaceChild(node.lastChildNode, version)
+            val newVersionNode = createNodeFromText(Types.VERSION, newVersion)
+            version.node.replaceChild(version.firstChild.node, newVersionNode)
         })
     }
 }
