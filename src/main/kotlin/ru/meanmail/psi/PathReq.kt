@@ -6,8 +6,10 @@ interface PathReq : NamedElement, Requirement {
 
     val uriReference: UriReference
 
+    val quotedMarker: QuotedMarker?
+
     override fun enabled(values: Map<String, String?>): Boolean {
-        return true
+        return quotedMarker?.logical()?.check(values) ?: true
     }
 
     override val displayName: String

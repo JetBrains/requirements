@@ -64,6 +64,10 @@ class Visitor : PsiElementVisitor() {
         visitPsiElement(o)
     }
 
+    fun visitHashOption(o: HashOption) {
+        visitPsiElement(o)
+    }
+
     fun visitH16(o: H16) {
         visitPsiElement(o)
     }
