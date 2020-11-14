@@ -53,6 +53,10 @@ class ParsingTest : ParsingTestCase("testData", "requirements.txt",
         doTest(true)
     }
 
+    fun testPathReqWithEnvVar() {
+        doTest(true)
+    }
+
     fun testRequireHashes() {
         doTest(true)
     }

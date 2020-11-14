@@ -6,7 +6,6 @@ import com.intellij.lang.PsiBuilder
 import com.intellij.lang.PsiParser
 import com.intellij.lang.parser.GeneratedParserUtilBase.*
 import com.intellij.psi.tree.IElementType
-import com.intellij.psi.tree.IFileElementType
 import ru.meanmail.psi.Types.Companion.AND
 import ru.meanmail.psi.Types.Companion.AT
 import ru.meanmail.psi.Types.Companion.AUTHORITY
@@ -139,16 +138,16 @@ class RequirementsParser : PsiParser, LightPsiParser {
     override fun parseLight(type: IElementType, b: PsiBuilder) {
         val builder = adapt_builder_(type, b, this, null)
         val marker = enter_section_(builder, 0, _COLLAPSE_, null)
-        val result = if (type is IFileElementType) {
-            parse_root_(builder, 0)
-        } else {
-            false
-        }
+        val result = parse_root_(type, builder)
         exit_section_(builder, 0, marker, type, result, true, TRUE_CONDITION)
     }
 
+    protected fun parse_root_(type: IElementType, builder: PsiBuilder): Boolean {
+        return parse_root_(type, builder, 0)
+    }
+
     companion object {
-        private fun parse_root_(builder: PsiBuilder, level: Int): Boolean {
+        private fun parse_root_(t: IElementType, builder: PsiBuilder, level: Int): Boolean {
             return requirementsFile(builder, level + 1)
         }
 
@@ -826,13 +825,11 @@ class RequirementsParser : PsiParser, LightPsiParser {
         private fun dec_octet_3_1(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "dec_octet_3_1")) return false
             var r: Boolean
-            val m = enter_section_(b)
             r = consumeToken(b, "0")
             if (!r) r = consumeToken(b, "1")
             if (!r) r = consumeToken(b, "2")
             if (!r) r = consumeToken(b, "3")
             if (!r) r = consumeToken(b, "4")
-            exit_section_(b, m, null, r)
             return r
         }
 
@@ -852,14 +849,12 @@ class RequirementsParser : PsiParser, LightPsiParser {
         private fun dec_octet_4_2(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "dec_octet_4_2")) return false
             var r: Boolean
-            val m = enter_section_(b)
             r = consumeToken(b, "0")
             if (!r) r = consumeToken(b, "1")
             if (!r) r = consumeToken(b, "2")
             if (!r) r = consumeToken(b, "3")
             if (!r) r = consumeToken(b, "4")
             if (!r) r = consumeToken(b, "5")
-            exit_section_(b, m, null, r)
             return r
         }
 
@@ -1525,6 +1520,7 @@ class RequirementsParser : PsiParser, LightPsiParser {
             return r
         }
 
+        /* ********************************************************** */
         // NO_INDEX
         private fun no_index_req(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "no_index_req")) return false
@@ -1590,7 +1586,8 @@ class RequirementsParser : PsiParser, LightPsiParser {
             return r
         }
 
-        /* ********************************************************** */ // (SHORT_OPTION | LONG_OPTION) (
+        /* ********************************************************** */
+        // (SHORT_OPTION | LONG_OPTION) (
         //                    refer_req
         //                    | constraint_req
         //                    | editable_req
@@ -1787,14 +1784,25 @@ class RequirementsParser : PsiParser, LightPsiParser {
         }
 
         /* ********************************************************** */
-        // uri_reference
+        // uri_reference wsps quoted_marker?
         private fun path_req(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "path_req")) return false
-            val r: Boolean
+            var r: Boolean
+            val p: Boolean
             val m = enter_section_(b, l, _NONE_, PATH_REQ, "<path req>")
             r = uri_reference(b, l + 1)
-            exit_section_(b, l, m, r, false, null)
-            return r
+            p = r // pin = 1
+            r = r && report_error_(b, wsps(b, l + 1))
+            r = p && path_req_2(b, l + 1) && r
+            exit_section_(b, l, m, r, p, null)
+            return r || p
+        }
+
+        // quoted_marker?
+        private fun path_req_2(b: PsiBuilder, l: Int): Boolean {
+            if (!recursion_guard_(b, l, "path_req_2")) return false
+            quoted_marker(b, l + 1)
+            return true
         }
 
         /* ********************************************************** */
