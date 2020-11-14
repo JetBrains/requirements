@@ -17,11 +17,15 @@ class ParsingTest : ParsingTestCase("testData", "requirements.txt",
         doTest(true)
     }
 
-    fun testFindLinks() {
+    fun testHash() {
         doTest(true)
     }
 
     fun testIndexUrl() {
+        doTest(true)
+    }
+
+    fun testLocalPathReq() {
         doTest(true)
     }
 
@@ -46,6 +50,10 @@ class ParsingTest : ParsingTestCase("testData", "requirements.txt",
     }
 
     fun testPathReq() {
+        doTest(true)
+    }
+
+    fun testPathReqWithEnvVar() {
         doTest(true)
     }
 

@@ -4,13 +4,15 @@ import ru.meanmail.RequirementType
 
 interface NameReq : NamedElement, Requirement {
 
-    val extras: Extras?
-
     val name: Name
 
-    val quotedMarker: QuotedMarker?
+    val extras: Extras?
 
     val versionspec: Versionspec?
+
+    val hashOptionList: List<HashOption?>
+
+    val quotedMarker: QuotedMarker?
 
     override fun enabled(values: Map<String, String?>): Boolean {
         return quotedMarker?.logical()?.check(values) ?: true
