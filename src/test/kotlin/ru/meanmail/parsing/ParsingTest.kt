@@ -17,7 +17,7 @@ class ParsingTest : ParsingTestCase("testData", "requirements.txt",
         doTest(true)
     }
 
-    fun testFindLinks() {
+    fun testHash() {
         doTest(true)
     }
 

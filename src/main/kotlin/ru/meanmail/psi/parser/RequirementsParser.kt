@@ -27,6 +27,7 @@ import ru.meanmail.psi.Types.Companion.EDITABLE_REQ
 import ru.meanmail.psi.Types.Companion.ENV_VAR
 import ru.meanmail.psi.Types.Companion.ENV_VARIABLE
 import ru.meanmail.psi.Types.Companion.EOL
+import ru.meanmail.psi.Types.Companion.EQUAL
 import ru.meanmail.psi.Types.Companion.EXTRAS
 import ru.meanmail.psi.Types.Companion.EXTRAS_LIST
 import ru.meanmail.psi.Types.Companion.EXTRA_INDEX_URL
@@ -34,6 +35,9 @@ import ru.meanmail.psi.Types.Companion.EXTRA_INDEX_URL_REQ
 import ru.meanmail.psi.Types.Companion.FIND_LINKS
 import ru.meanmail.psi.Types.Companion.FIND_LINKS_REQ
 import ru.meanmail.psi.Types.Companion.FRAGMENT
+import ru.meanmail.psi.Types.Companion.HASH
+import ru.meanmail.psi.Types.Companion.HASH_OPTION
+import ru.meanmail.psi.Types.Companion.HEX
 import ru.meanmail.psi.Types.Companion.HEXDIG
 import ru.meanmail.psi.Types.Companion.HIER_PART
 import ru.meanmail.psi.Types.Companion.HOST
@@ -147,7 +151,8 @@ class RequirementsParser : PsiParser, LightPsiParser {
     }
 
     companion object {
-        private fun parse_root_(t: IElementType, builder: PsiBuilder, level: Int): Boolean {
+        private fun parse_root_(type: IElementType,
+                                builder: PsiBuilder, level: Int): Boolean {
             return requirementsFile(builder, level + 1)
         }
 
@@ -1097,6 +1102,18 @@ class RequirementsParser : PsiParser, LightPsiParser {
         }
 
         /* ********************************************************** */
+        // HASH EQUAL IDENTIFIER COLON HEX
+        private fun hash_option(b: PsiBuilder, l: Int): Boolean {
+            if (!recursion_guard_(b, l, "hash_option")) return false
+            if (!nextTokenIs(b, HASH)) return false
+            val r: Boolean
+            val m = enter_section_(b)
+            r = consumeTokens(b, 0, HASH, EQUAL, IDENTIFIER, COLON, HEX)
+            exit_section_(b, m, HASH_OPTION, r)
+            return r
+        }
+
+        /* ********************************************************** */
         // DIGIT | 'a' | 'A' | 'b' | 'B' | 'c' | 'C' | 'd' | 'D' | 'e' | 'E' | 'f' | 'F'
         fun hexdig(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "hexdig")) return false
@@ -1437,8 +1454,9 @@ class RequirementsParser : PsiParser, LightPsiParser {
         }
 
         /* ********************************************************** */
-        // name wsps extras? wsps !AT wsps versionspec? wsps quoted_marker?
-        private fun name_req(b: PsiBuilder, l: Int): Boolean {
+        // name wsps extras? wsps !AT wsps versionspec? wsps
+        //                    (LONG_OPTION hash_option wsps)* quoted_marker?
+        fun name_req(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "name_req")) return false
             if (!nextTokenIs(b, IDENTIFIER)) return false
             var r: Boolean
@@ -1453,7 +1471,8 @@ class RequirementsParser : PsiParser, LightPsiParser {
             r = r && report_error_(b, wsps(b, l + 1))
             r = p && report_error_(b, name_req_6(b, l + 1)) && r
             r = p && report_error_(b, wsps(b, l + 1)) && r
-            r = p && name_req_8(b, l + 1) && r
+            r = p && report_error_(b, name_req_8(b, l + 1)) && r
+            r = p && name_req_9(b, l + 1) && r
             exit_section_(b, l, m, r, p, null)
             return r || p
         }
@@ -1482,9 +1501,32 @@ class RequirementsParser : PsiParser, LightPsiParser {
             return true
         }
 
-        // quoted_marker?
+        // (LONG_OPTION hash_option wsps)*
         private fun name_req_8(b: PsiBuilder, l: Int): Boolean {
             if (!recursion_guard_(b, l, "name_req_8")) return false
+            while (true) {
+                val c = current_position_(b)
+                if (!name_req_8_0(b, l + 1)) break
+                if (!empty_element_parsed_guard_(b, "name_req_8", c)) break
+            }
+            return true
+        }
+
+        // LONG_OPTION hash_option wsps
+        private fun name_req_8_0(b: PsiBuilder, l: Int): Boolean {
+            if (!recursion_guard_(b, l, "name_req_8_0")) return false
+            var r: Boolean
+            val m = enter_section_(b)
+            r = consumeToken(b, LONG_OPTION)
+            r = r && hash_option(b, l + 1)
+            r = r && wsps(b, l + 1)
+            exit_section_(b, m, null, r)
+            return r
+        }
+
+        // quoted_marker?
+        private fun name_req_9(b: PsiBuilder, l: Int): Boolean {
+            if (!recursion_guard_(b, l, "name_req_9")) return false
             quoted_marker(b, l + 1)
             return true
         }

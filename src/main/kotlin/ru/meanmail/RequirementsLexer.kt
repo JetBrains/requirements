@@ -18,8 +18,11 @@ import ru.meanmail.psi.Types.Companion.DQUOTE
 import ru.meanmail.psi.Types.Companion.EDITABLE
 import ru.meanmail.psi.Types.Companion.ENV_VAR
 import ru.meanmail.psi.Types.Companion.EOL
+import ru.meanmail.psi.Types.Companion.EQUAL
 import ru.meanmail.psi.Types.Companion.EXTRA_INDEX_URL
 import ru.meanmail.psi.Types.Companion.FIND_LINKS
+import ru.meanmail.psi.Types.Companion.HASH
+import ru.meanmail.psi.Types.Companion.HEX
 import ru.meanmail.psi.Types.Companion.IDENTIFIER
 import ru.meanmail.psi.Types.Companion.IN
 import ru.meanmail.psi.Types.Companion.INDEX_URL
@@ -328,362 +331,390 @@ class RequirementsLexer
             if (zzInput == YYEOF && tokenStart == zzCurrentPos) {
                 zzAtEOF = true
                 zzDoEOF()
-                when (zzLexicalState) {
-                    ESCAPE_NEW_LINE -> {
-                        yypop()
-                        return EOL
-                    } // fall though
-                    292 -> {
-                    }
-                    else -> return null
-                }
+                return null
             } else {
                 when (if (zzAction < 0) zzAction else ZZ_ACTION[zzAction]) {
                     1 -> {
                         return WHITE_SPACE
                     }
-                    65 -> {
+                    71 -> {
                     }
                     2 -> {
                         yyinitial()
                         return BAD_CHARACTER
                     }
-                    66 -> {
+                    72 -> {
                     }
                     3 -> {
                         yypush(SHORT_OPTION_STATE)
                         return SHORT_OPTION
                     }
-                    67 -> {
+                    73 -> {
                     }
                     4 -> {
                         return COMMENT
                     }
-                    68 -> {
+                    74 -> {
                     }
                     5 -> {
                         yypush(REQ)
                         yypushback(yylength())
                     }
-                    69 -> {
+                    75 -> {
                     }
                     6 -> {
                         yyinitial()
                         return EOL
                     }
-                    70 -> {
+                    76 -> {
                     }
                     7 -> {
                         yypop()
                         return VERSION
                     }
-                    71 -> {
+                    77 -> {
                     }
                     8 -> {
                         yypop()
                         return COMMENT
                     }
-                    72 -> {
+                    78 -> {
                     }
                     9 -> {
                         return PYTHON_STR_C
                     }
-                    73 -> {
+                    79 -> {
                     }
                     10 -> {
                         yypop()
                         return DQUOTE
                     }
-                    74 -> {
+                    80 -> {
                     }
                     11 -> {
                         yypop()
                         return SQUOTE
                     }
-                    75 -> {
+                    81 -> {
                     }
                     12 -> {
                         yyinitial()
                         return COMMENT
                     }
-                    76 -> {
+                    82 -> {
                     }
                     13 -> {
                         return VERSION_CMP
                     }
-                    77 -> {
+                    83 -> {
                     }
                     14 -> {
                         return LPARENTHESIS
                     }
-                    78 -> {
+                    84 -> {
                     }
                     15 -> {
                         return RPARENTHESIS
                     }
-                    79 -> {
+                    85 -> {
                     }
                     16 -> {
                         yypush(DQUOTE_STR)
                         return DQUOTE
                     }
-                    80 -> {
+                    86 -> {
                     }
                     17 -> {
                         yypush(SQUOTE_STR)
                         return SQUOTE
                     }
-                    81 -> {
+                    87 -> {
                     }
                     18 -> {
                         return PLUS
                     }
-                    82 -> {
+                    88 -> {
                     }
                     19 -> {
                         return MINUS
                     }
-                    83 -> {
+                    89 -> {
                     }
                     20 -> {
                         return SUB_DELIMS
                     }
-                    84 -> {
+                    90 -> {
                     }
                     21 -> {
                         return COLON
                     }
-                    85 -> {
+                    91 -> {
                     }
                     22 -> {
                         return QUESTION_MARK
                     }
-                    86 -> {
+                    92 -> {
                     }
                     23 -> {
                         return LSBRACE
                     }
-                    87 -> {
+                    93 -> {
                     }
                     24 -> {
                         return RSBRACE
                     }
-                    88 -> {
+                    94 -> {
                     }
                     25 -> {
                         return AT
                     }
-                    89 -> {
+                    95 -> {
                     }
                     26 -> {
                         return DOLLAR_SIGN
                     }
-                    90 -> {
+                    96 -> {
                     }
                     27 -> {
                         return SHARP
                     }
-                    91 -> {
+                    97 -> {
                     }
                     28 -> {
                         return PERCENT_SIGN
                     }
-                    92 -> {
+                    98 -> {
                     }
                     29 -> {
                         return SLASH
                     }
-                    93 -> {
+                    99 -> {
                     }
                     30 -> {
                         return DOT
                     }
-                    94 -> {
+                    100 -> {
                     }
                     31 -> {
                         return UNDERSCORE
                     }
-                    95 -> {
+                    101 -> {
                     }
                     32 -> {
                         return LBRACE
                     }
-                    96 -> {
+                    102 -> {
                     }
                     33 -> {
                         return RBRACE
                     }
-                    97 -> {
+                    103 -> {
                     }
                     34 -> {
                         return TILDA
                     }
-                    98 -> {
+                    104 -> {
                     }
                     35 -> {
                         return LETTER
                     }
-                    99 -> {
+                    105 -> {
                     }
                     36 -> {
                         return DIGIT
                     }
-                    100 -> {
+                    106 -> {
                     }
                     37 -> {
                         yypush(QUOTED_MARK)
                         return SEMICOLON
                     }
-                    101 -> {
+                    107 -> {
                     }
                     38 -> {
                         return COMMA
                     }
-                    102 -> {
+                    108 -> {
                     }
                     39 -> {
                         yypush(URI)
                         return AT
                     }
-                    103 -> {
+                    109 -> {
                     }
                     40 -> {
                         yypush(URI)
                         yypushback(yylength())
                     }
-                    104 -> {
+                    110 -> {
                     }
                     41 -> {
                         return IDENTIFIER
                     }
-                    105 -> {
+                    111 -> {
                     }
                     42 -> {
                         yypush(WAITING_VERSION)
                         return VERSION_CMP
                     }
-                    106 -> {
+                    112 -> {
                     }
                     43 -> {
-                        yypop()
-                        yypushback(yylength())
-                    }
-                    107 -> {
-                    }
-                    44 -> {
                         yypush(URI)
                         return EDITABLE
                     }
-                    108 -> {
+                    113 -> {
                     }
-                    45 -> {
+                    44 -> {
                         yypush(URI)
                         return REFER
                     }
-                    109 -> {
+                    114 -> {
                     }
-                    46 -> {
+                    45 -> {
                         yypush(URI)
                         return INDEX_URL
                     }
-                    110 -> {
+                    115 -> {
                     }
-                    47 -> {
+                    46 -> {
                         yypush(URI)
                         return FIND_LINKS
                     }
-                    111 -> {
+                    116 -> {
                     }
-                    48 -> {
+                    47 -> {
                         yypush(URI)
                         return CONSTRAINT
                     }
-                    112 -> {
-                    }
-                    49 -> {
-                        yypush(LONG_OPTION_STATE)
-                        return LONG_OPTION
-                    }
-                    113 -> {
-                    }
-                    50 -> {
-                        return BAD_CHARACTER
-                    }
-                    114 -> {
-                    }
-                    51 -> {
-                        yypush(ESCAPE_NEW_LINE)
-                    }
-                    115 -> {
-                    }
-                    52 -> {
-                        return OR
-                    }
-                    116 -> {
-                    }
-                    53 -> {
-                        return IN
-                    }
                     117 -> {
                     }
-                    54 -> {
-                        return NOT
+                    48 -> {
+                        yypush(WAITING_ALG)
+                        return EQUAL
                     }
                     118 -> {
                     }
-                    55 -> {
-                        return AND
+                    49 -> {
+                        yypush(WAITING_COLON)
+                        return IDENTIFIER
                     }
                     119 -> {
                     }
-                    56 -> {
-                        return ENV_VAR
+                    50 -> {
+                        yypush(WAITING_HASH_VALUE)
+                        return COLON
                     }
                     120 -> {
                     }
-                    57 -> {
-                        return BINARY_ALL
+                    51 -> {
+                        yypush(REQ)
+                        return WHITE_SPACE
                     }
                     121 -> {
                     }
-                    58 -> {
-                        return BINARY_NONE
+                    52 -> {
+                        yypush(REQ)
+                        return COMMENT
                     }
                     122 -> {
                     }
-                    59 -> {
-                        return NO_INDEX
+                    53 -> {
+                        yypush(REQ)
+                        return HEX
                     }
                     123 -> {
                     }
-                    60 -> {
-                        yypush(BINARY)
-                        return NO_BINARY
+                    54 -> {
+                        yypush(LONG_OPTION_STATE)
+                        return LONG_OPTION
                     }
                     124 -> {
                     }
-                    61 -> {
-                        yypush(BINARY)
-                        return ONLY_BINARY
+                    55 -> {
                     }
                     125 -> {
                     }
-                    62 -> {
-                        yypush(URI)
-                        return TRUSTED_HOST
+                    56 -> {
+                        return OR
                     }
                     126 -> {
                     }
-                    63 -> {
-                        return REQUIRE_HASHES
+                    57 -> {
+                        return IN
                     }
                     127 -> {
                     }
+                    58 -> {
+                        yypush(WAITING_HASH)
+                        return LONG_OPTION
+                    }
+                    128 -> {
+                    }
+                    59 -> {
+                        return NOT
+                    }
+                    129 -> {
+                    }
+                    60 -> {
+                        return AND
+                    }
+                    130 -> {
+                    }
+                    61 -> {
+                        yypush(WAITING_EQUAL)
+                        return HASH
+                    }
+                    131 -> {
+                    }
+                    62 -> {
+                        return ENV_VAR
+                    }
+                    132 -> {
+                    }
+                    63 -> {
+                        return BINARY_ALL
+                    }
+                    133 -> {
+                    }
                     64 -> {
+                        return BINARY_NONE
+                    }
+                    134 -> {
+                    }
+                    65 -> {
+                        return NO_INDEX
+                    }
+                    135 -> {
+                    }
+                    66 -> {
+                        yypush(BINARY)
+                        return NO_BINARY
+                    }
+                    136 -> {
+                    }
+                    67 -> {
+                        yypush(BINARY)
+                        return ONLY_BINARY
+                    }
+                    137 -> {
+                    }
+                    68 -> {
+                        yypush(URI)
+                        return TRUSTED_HOST
+                    }
+                    138 -> {
+                    }
+                    69 -> {
+                        return REQUIRE_HASHES
+                    }
+                    139 -> {
+                    }
+                    70 -> {
                         yypush(URI)
                         return EXTRA_INDEX_URL
                     }
-                    128 -> {
+                    140 -> {
                     }
                     else -> zzScanError(ZZ_NO_MATCH)
                 }
@@ -706,10 +737,14 @@ class RequirementsLexer
         const val QUOTED_MARK = 8
         const val URI = 10
         const val REQ = 12
-        const val ESCAPE_NEW_LINE = 14
-        const val SHORT_OPTION_STATE = 16
-        const val LONG_OPTION_STATE = 18
-        const val BINARY = 20
+        const val SHORT_OPTION_STATE = 14
+        const val LONG_OPTION_STATE = 16
+        const val BINARY = 18
+        const val WAITING_HASH = 20
+        const val WAITING_EQUAL = 22
+        const val WAITING_ALG = 24
+        const val WAITING_COLON = 26
+        const val WAITING_HASH_VALUE = 28
 
         /**
          * ZZ_LEXSTATE[l] is the state in the DFA for the lexical state l
@@ -719,7 +754,7 @@ class RequirementsLexer
          */
         private val ZZ_LEXSTATE = intArrayOf(
                 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7,
-                8, 8, 9, 9, 10, 10
+                8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14
         )
 
         /**
@@ -742,33 +777,33 @@ class RequirementsLexer
                 "\u0001\u0000\u0001\u0001\u002b\u0002\u0001\u0003\u0012\u0002\u0001\u0004\u001f\u0002\u0001\u0003\u009f\u0002")
 
         /* The ZZ_CMAP_A table has 640 entries */
-        private val ZZ_CMAP_A = zzUnpackCMap(
-                "\u0009\u001d\u0001\u0000\u0001\u0018\u0002\u0019\u0001\u0018\u0012\u001d\u0001\u0000\u0001\u000a\u0001\u0034\u0001\u000d\u0001\u000c\u0001\u000e\u0001\u0016\u0001\u0035\u0001\u001f" +
-                        "\u0001\u0020\u0001\u0003\u0001\u0001\u0001\u0006\u0001\u0002\u0001\u0011\u0001\u000f\u000a\u001b\u0001\u0004\u0001\u0005\u0001\u001e\u0001\u0015\u0001\u001e\u0001\u0007\u0001\u000b\u001a\u001a" +
-                        "\u0001\u0008\u0001\u0010\u0001\u0009\u0001\u0033\u0001\u0012\u0001\u0033\u0001\u002f\u0001\u0038\u0001\u0031\u0001\u0037\u0001\u0028\u0001\u002c\u0001\u001a\u0001\u0024\u0001\u002b" +
-                        "\u0001\u001a\u0001\u0039\u0001\u002e\u0001\u0030\u0001\u0026\u0001\u0025\u0001\u0021\u0001\u0036\u0001\u0029\u0001\u002a\u0001\u0023\u0001\u002d\u0001\u0027\u0001\u001a\u0001\u0032" +
-                        "\u0001\u0022\u0001\u001a\u0001\u0013\u0001\u001c\u0001\u0014\u0001\u0017\u0006\u001d\u0001\u0019\u001a\u001d\u0001\u0000\u00df\u001d\u0001\u0000\u007f\u001d\u000b\u0000" +
-                        "\u001d\u001d\u0002\u0019\u0005\u001d\u0001\u0000\u002f\u001d\u0001\u0000\u0020\u001d")
+        private val ZZ_CMAP_A = zzUnpackCMap("\u0009\u001d\u0001\u0000\u0001\u0018\u0002\u0019\u0001\u0018\u0012\u001d\u0001\u0000\u0001\u000a\u0001\u0034\u0001\u000d\u0001\u000c\u0001\u000e\u0001\u0016\u0001\u0035\u0001\u001f" +
+                "\u0001\u0020\u0001\u0003\u0001\u0001\u0001\u0006\u0001\u0002\u0001\u0011\u0001\u000f\u000a\u001b\u0001\u0004\u0001\u0005\u0001\u001e\u0001\u0015\u0001\u001e\u0001\u0007\u0001\u000b\u0006\u0036" +
+                "\u0014\u001a\u0001\u0008\u0001\u0010\u0001\u0009\u0001\u0033\u0001\u0012\u0001\u0033\u0001\u002f\u0001\u0039\u0001\u0031\u0001\u0038\u0001\u0028\u0001\u002c\u0001\u001a\u0001" +
+                "\u0024\u0001\u002b\u0001\u001a\u0001\u003a\u0001\u002e\u0001\u0030\u0001\u0026\u0001\u0025\u0001\u0021\u0001\u0037\u0001\u0029\u0001\u002a\u0001\u0023\u0001\u002d\u0001\u0027" +
+                "\u0001\u001a\u0001\u0032\u0001\u0022\u0001\u001a\u0001\u0013\u0001\u001c\u0001\u0014\u0001\u0017\u0006\u001d\u0001\u0019\u001a\u001d\u0001\u0000\u00df\u001d\u0001\u0000\u007f" +
+                "\u001d\u000b\u0000\u001d\u001d\u0002\u0019\u0005\u001d\u0001\u0000\u002f\u001d\u0001\u0000\u0020\u001d")
 
         /**
          * Translates DFA states to action switch labels.
          */
         private val ZZ_ACTION = zzUnpack()
-        private const val ZZ_ACTION_PACKED_0 = "\u000b\u0000\u0001\u0001\u0001\u0002\u0001\u0003\u0001\u0004\u0001\u0002\u0001\u0005\u0001\u0006" +
+        private const val ZZ_ACTION_PACKED_0 = "\u000f\u0000\u0001\u0001\u0001\u0002\u0001\u0003\u0001\u0004\u0001\u0002\u0001\u0005\u0001\u0006" +
                 "\u0001\u0005\u0001\u0007\u0001\u0008\u0002\u0009\u0001\u000a\u0001\u000b\u0001\u0002\u0001\u000c" +
                 "\u0001\u0002\u0001\u000d\u0001\u000e\u0001\u000f\u0007\u0002\u0001\u0010\u0001\u0011\u0001\u0001" +
                 "\u0001\u0012\u0001\u0013\u0001\u0014\u0001\u0015\u0001\u0016\u0001\u0017\u0001\u0018\u0001\u0019" +
                 "\u0001\u001a\u0001\u001b\u0001\u001c\u0001\u001d\u0001\u001e\u0001\u001f\u0001\u0020\u0001\u0021" +
-                "\u0001\u0022\u0001\u0023\u0001\u0024\u0001\u0001\u0001\u0025\u0001\u0026\u0001\u0002\u0001\u0027" +
-                "\u0001\u0028\u0001\u0002\u0001\u0029\u0001\u002a\u0002\u002b\u0001\u002c\u0001\u002d\u0001\u002e" +
-                "\u0001\u002f\u0001\u0030\u0009\u0002\u0001\u0029\u0001\u0031\u0001\u0032\u0001\u0033\u0001\u0000" +
-                "\u0001\u000d\u0002\u0000\u0001\u0034\u0004\u0000\u0001\u0035\u0002\u0000\u0001\u002a\u0010\u0000" +
-                "\u0001\u0036\u0003\u0000\u0001\u0037\u0020\u0000\u0001\u0038\u000d\u0000\u0001\u0039\u000f\u0000" +
-                "\u0001\u003a\u0015\u0000\u0001\u003b\u000e\u0000\u0001\u003c\u001b\u0000\u0001\u003d\u0009\u0000" +
-                "\u0001\u003e\u000f\u0000\u0001\u003f\u0002\u0000\u0001\u0040\u000b\u0000"
+                "\u0001\u0022\u0001\u0023\u0001\u0024\u0001\u0001\u0001\u0002\u0001\u0025\u0001\u0026\u0001\u0002" +
+                "\u0001\u0027\u0001\u0028\u0001\u0002\u0001\u0029\u0001\u002a\u0001\u002b\u0001\u002c\u0001\u002d" +
+                "\u0001\u002e\u0001\u002f\u0009\u0002\u0001\u0029\u0001\u0002\u0001\u0030\u0001\u0031\u0001\u0032" +
+                "\u0001\u0033\u0001\u0034\u0001\u0035\u0001\u0036\u0001\u0037\u0001\u0000\u0001\u000d\u0002\u0000" +
+                "\u0001\u0038\u0004\u0000\u0001\u0039\u0002\u0000\u0001\u003a\u0001\u002a\u0012\u0000\u0001\u003b" +
+                "\u0003\u0000\u0001\u003c\u001e\u0000\u0001\u003d\u0003\u0000\u0001\u003e\u000d\u0000\u0001\u003f" +
+                "\u000f\u0000\u0001\u0040\u0015\u0000\u0001\u0041\u000e\u0000\u0001\u0042\u001b\u0000\u0001\u0043" +
+                "\u0009\u0000\u0001\u0044\u000f\u0000\u0001\u0045\u0002\u0000\u0001\u0046\u000b\u0000"
 
         private fun zzUnpack(): IntArray {
-            val result = IntArray(291)
+            val result = IntArray(305)
             zzUnpack(ZZ_ACTION_PACKED_0, 0, result)
             return result
         }
@@ -789,46 +824,48 @@ class RequirementsLexer
          * Translates a state to a row index in the transition table
          */
         private val ZZ_ROWMAP = zzUnpackRowMap()
-        private const val ZZ_ROWMAP_PACKED_0 = "\u0000\u0000\u0000\u003a\u0000\u0074\u0000\u00ae\u0000\u00e8\u0000\u0122\u0000\u015c\u0000\u0196" +
-                "\u0000\u01d0\u0000\u020a\u0000\u0244\u0000\u027e\u0000\u02b8\u0000\u02f2\u0000\u032c\u0000\u0366" +
-                "\u0000\u02b8\u0000\u02b8\u0000\u03a0\u0000\u03da\u0000\u0414\u0000\u044e\u0000\u02b8\u0000\u02b8" +
-                "\u0000\u02b8\u0000\u0488\u0000\u04c2\u0000\u04fc\u0000\u0488\u0000\u02b8\u0000\u02b8\u0000\u0536" +
-                "\u0000\u0570\u0000\u05aa\u0000\u05e4\u0000\u061e\u0000\u0658\u0000\u0692\u0000\u02b8\u0000\u02b8" +
-                "\u0000\u06cc\u0000\u02b8\u0000\u02b8\u0000\u02b8\u0000\u02b8\u0000\u02b8\u0000\u02b8\u0000\u02b8" +
-                "\u0000\u02b8\u0000\u02b8\u0000\u02b8\u0000\u02b8\u0000\u02b8\u0000\u02b8\u0000\u02b8\u0000\u02b8" +
-                "\u0000\u02b8\u0000\u02b8\u0000\u02b8\u0000\u02b8\u0000\u0706\u0000\u02b8\u0000\u02b8\u0000\u0740" +
-                "\u0000\u02b8\u0000\u02b8\u0000\u077a\u0000\u07b4\u0000\u0740\u0000\u02b8\u0000\u0366\u0000\u02b8" +
-                "\u0000\u02b8\u0000\u02b8\u0000\u02b8\u0000\u02b8\u0000\u07ee\u0000\u0828\u0000\u0862\u0000\u089c" +
-                "\u0000\u08d6\u0000\u0910\u0000\u094a\u0000\u0984\u0000\u09be\u0000\u09f8\u0000\u02b8\u0000\u02b8" +
-                "\u0000\u02b8\u0000\u03a0\u0000\u02b8\u0000\u0a32\u0000\u0a6c\u0000\u02b8\u0000\u0aa6\u0000\u0ae0" +
-                "\u0000\u0b1a\u0000\u0b54\u0000\u02b8\u0000\u0b8e\u0000\u0bc8\u0000\u02b8\u0000\u0c02\u0000\u0c3c" +
-                "\u0000\u0c76\u0000\u0cb0\u0000\u0cea\u0000\u0d24\u0000\u0d5e\u0000\u0d98\u0000\u0dd2\u0000\u0e0c" +
-                "\u0000\u0e46\u0000\u0e80\u0000\u09f8\u0000\u0eba\u0000\u0ef4\u0000\u0f2e\u0000\u02b8\u0000\u0f68" +
-                "\u0000\u0fa2\u0000\u0fdc\u0000\u02b8\u0000\u1016\u0000\u1050\u0000\u108a\u0000\u10c4\u0000\u10fe" +
-                "\u0000\u1138\u0000\u1172\u0000\u11ac\u0000\u11e6\u0000\u1220\u0000\u125a\u0000\u1294\u0000\u12ce" +
-                "\u0000\u1308\u0000\u1342\u0000\u137c\u0000\u13b6\u0000\u13f0\u0000\u142a\u0000\u1464\u0000\u149e" +
-                "\u0000\u14d8\u0000\u1512\u0000\u154c\u0000\u1586\u0000\u15c0\u0000\u15fa\u0000\u1634\u0000\u166e" +
-                "\u0000\u16a8\u0000\u16e2\u0000\u171c\u0000\u02b8\u0000\u1756\u0000\u1790\u0000\u17ca\u0000\u1804" +
-                "\u0000\u183e\u0000\u1878\u0000\u18b2\u0000\u18ec\u0000\u1926\u0000\u1960\u0000\u199a\u0000\u19d4" +
-                "\u0000\u1a0e\u0000\u02b8\u0000\u1a48\u0000\u1a82\u0000\u1abc\u0000\u1af6\u0000\u1b30\u0000\u1b6a" +
-                "\u0000\u1ba4\u0000\u1bde\u0000\u1c18\u0000\u1c52\u0000\u1c8c\u0000\u1cc6\u0000\u1d00\u0000\u1d3a" +
-                "\u0000\u1d74\u0000\u02b8\u0000\u1dae\u0000\u1de8\u0000\u1e22\u0000\u1e5c\u0000\u1e96\u0000\u1ed0" +
-                "\u0000\u1f0a\u0000\u1f44\u0000\u1f7e\u0000\u1fb8\u0000\u1ff2\u0000\u202c\u0000\u2066\u0000\u20a0" +
-                "\u0000\u20da\u0000\u2114\u0000\u214e\u0000\u2188\u0000\u21c2\u0000\u21fc\u0000\u2236\u0000\u02b8" +
-                "\u0000\u2270\u0000\u22aa\u0000\u22e4\u0000\u231e\u0000\u2358\u0000\u2392\u0000\u23cc\u0000\u2406" +
-                "\u0000\u2440\u0000\u247a\u0000\u24b4\u0000\u24ee\u0000\u2528\u0000\u2562\u0000\u02b8\u0000\u259c" +
-                "\u0000\u25d6\u0000\u2610\u0000\u264a\u0000\u2684\u0000\u26be\u0000\u26f8\u0000\u2732\u0000\u276c" +
-                "\u0000\u27a6\u0000\u27e0\u0000\u281a\u0000\u2854\u0000\u288e\u0000\u28c8\u0000\u2902\u0000\u293c" +
-                "\u0000\u2976\u0000\u29b0\u0000\u29ea\u0000\u2a24\u0000\u2a5e\u0000\u2a98\u0000\u2ad2\u0000\u2b0c" +
-                "\u0000\u2b46\u0000\u2b80\u0000\u02b8\u0000\u2bba\u0000\u2bf4\u0000\u2c2e\u0000\u2c68\u0000\u2ca2" +
-                "\u0000\u2cdc\u0000\u2d16\u0000\u2d50\u0000\u2d8a\u0000\u02b8\u0000\u2dc4\u0000\u2dfe\u0000\u2e38" +
-                "\u0000\u2e72\u0000\u2eac\u0000\u2ee6\u0000\u2f20\u0000\u2f5a\u0000\u2f94\u0000\u2fce\u0000\u3008" +
-                "\u0000\u3042\u0000\u307c\u0000\u30b6\u0000\u30f0\u0000\u02b8\u0000\u312a\u0000\u3164\u0000\u02b8" +
-                "\u0000\u319e\u0000\u31d8\u0000\u3212\u0000\u324c\u0000\u3286\u0000\u32c0\u0000\u32fa\u0000\u3334" +
-                "\u0000\u336e\u0000\u33a8\u0000\u33e2"
+        private const val ZZ_ROWMAP_PACKED_0 = "\u0000\u0000\u0000\u003b\u0000\u0076\u0000\u00b1\u0000\u00ec\u0000\u0127\u0000\u0162\u0000\u019d" +
+                "\u0000\u01d8\u0000\u0213\u0000\u024e\u0000\u0289\u0000\u02c4\u0000\u02ff\u0000\u033a\u0000\u0375" +
+                "\u0000\u03b0\u0000\u03eb\u0000\u0426\u0000\u0461\u0000\u03b0\u0000\u03b0\u0000\u049c\u0000\u04d7" +
+                "\u0000\u0512\u0000\u054d\u0000\u03b0\u0000\u03b0\u0000\u03b0\u0000\u0588\u0000\u05c3\u0000\u05fe" +
+                "\u0000\u0588\u0000\u03b0\u0000\u03b0\u0000\u0639\u0000\u0674\u0000\u06af\u0000\u06ea\u0000\u0725" +
+                "\u0000\u0760\u0000\u079b\u0000\u03b0\u0000\u03b0\u0000\u07d6\u0000\u03b0\u0000\u03b0\u0000\u03b0" +
+                "\u0000\u03b0\u0000\u03b0\u0000\u03b0\u0000\u03b0\u0000\u03b0\u0000\u03b0\u0000\u03b0\u0000\u03b0" +
+                "\u0000\u03b0\u0000\u03b0\u0000\u03b0\u0000\u03b0\u0000\u03b0\u0000\u03b0\u0000\u03b0\u0000\u03b0" +
+                "\u0000\u0811\u0000\u084c\u0000\u03b0\u0000\u03b0\u0000\u0887\u0000\u03b0\u0000\u03b0\u0000\u08c2" +
+                "\u0000\u08fd\u0000\u0887\u0000\u03b0\u0000\u03b0\u0000\u03b0\u0000\u03b0\u0000\u03b0\u0000\u0938" +
+                "\u0000\u0973\u0000\u09ae\u0000\u09e9\u0000\u0a24\u0000\u0a5f\u0000\u0a9a\u0000\u0ad5\u0000\u0b10" +
+                "\u0000\u0b4b\u0000\u0b86\u0000\u03b0\u0000\u0bc1\u0000\u03b0\u0000\u0bfc\u0000\u0c37\u0000\u0c72" +
+                "\u0000\u03b0\u0000\u03b0\u0000\u049c\u0000\u03b0\u0000\u0cad\u0000\u0ce8\u0000\u03b0\u0000\u0d23" +
+                "\u0000\u0d5e\u0000\u0d99\u0000\u0dd4\u0000\u03b0\u0000\u0e0f\u0000\u0e4a\u0000\u03b0\u0000\u03b0" +
+                "\u0000\u0e85\u0000\u0ec0\u0000\u0efb\u0000\u0f36\u0000\u0f71\u0000\u0fac\u0000\u0fe7\u0000\u1022" +
+                "\u0000\u105d\u0000\u1098\u0000\u10d3\u0000\u110e\u0000\u0b4b\u0000\u1149\u0000\u0bc1\u0000\u1184" +
+                "\u0000\u11bf\u0000\u11fa\u0000\u03b0\u0000\u1235\u0000\u1270\u0000\u12ab\u0000\u03b0\u0000\u12e6" +
+                "\u0000\u1321\u0000\u135c\u0000\u1397\u0000\u13d2\u0000\u140d\u0000\u1448\u0000\u1483\u0000\u14be" +
+                "\u0000\u14f9\u0000\u1534\u0000\u156f\u0000\u15aa\u0000\u15e5\u0000\u1620\u0000\u165b\u0000\u1696" +
+                "\u0000\u16d1\u0000\u170c\u0000\u1747\u0000\u1782\u0000\u17bd\u0000\u17f8\u0000\u1833\u0000\u186e" +
+                "\u0000\u18a9\u0000\u18e4\u0000\u191f\u0000\u195a\u0000\u1995\u0000\u03b0\u0000\u19d0\u0000\u1a0b" +
+                "\u0000\u1a46\u0000\u03b0\u0000\u1a81\u0000\u1abc\u0000\u1af7\u0000\u1b32\u0000\u1b6d\u0000\u1ba8" +
+                "\u0000\u1be3\u0000\u1c1e\u0000\u1c59\u0000\u1c94\u0000\u1ccf\u0000\u1d0a\u0000\u1d45\u0000\u03b0" +
+                "\u0000\u1d80\u0000\u1dbb\u0000\u1df6\u0000\u1e31\u0000\u1e6c\u0000\u1ea7\u0000\u1ee2\u0000\u1f1d" +
+                "\u0000\u1f58\u0000\u1f93\u0000\u1fce\u0000\u2009\u0000\u2044\u0000\u207f\u0000\u20ba\u0000\u03b0" +
+                "\u0000\u20f5\u0000\u2130\u0000\u216b\u0000\u21a6\u0000\u21e1\u0000\u221c\u0000\u2257\u0000\u2292" +
+                "\u0000\u22cd\u0000\u2308\u0000\u2343\u0000\u237e\u0000\u23b9\u0000\u23f4\u0000\u242f\u0000\u246a" +
+                "\u0000\u24a5\u0000\u24e0\u0000\u251b\u0000\u2556\u0000\u2591\u0000\u03b0\u0000\u25cc\u0000\u2607" +
+                "\u0000\u2642\u0000\u267d\u0000\u26b8\u0000\u26f3\u0000\u272e\u0000\u2769\u0000\u27a4\u0000\u27df" +
+                "\u0000\u281a\u0000\u2855\u0000\u2890\u0000\u28cb\u0000\u03b0\u0000\u2906\u0000\u2941\u0000\u297c" +
+                "\u0000\u29b7\u0000\u29f2\u0000\u2a2d\u0000\u2a68\u0000\u2aa3\u0000\u2ade\u0000\u2b19\u0000\u2b54" +
+                "\u0000\u2b8f\u0000\u2bca\u0000\u2c05\u0000\u2c40\u0000\u2c7b\u0000\u2cb6\u0000\u2cf1\u0000\u2d2c" +
+                "\u0000\u2d67\u0000\u2da2\u0000\u2ddd\u0000\u2e18\u0000\u2e53\u0000\u2e8e\u0000\u2ec9\u0000\u2f04" +
+                "\u0000\u03b0\u0000\u2f3f\u0000\u2f7a\u0000\u2fb5\u0000\u2ff0\u0000\u302b\u0000\u3066\u0000\u30a1" +
+                "\u0000\u30dc\u0000\u3117\u0000\u03b0\u0000\u3152\u0000\u318d\u0000\u31c8\u0000\u3203\u0000\u323e" +
+                "\u0000\u3279\u0000\u32b4\u0000\u32ef\u0000\u332a\u0000\u3365\u0000\u33a0\u0000\u33db\u0000\u3416" +
+                "\u0000\u3451\u0000\u348c\u0000\u03b0\u0000\u34c7\u0000\u3502\u0000\u03b0\u0000\u353d\u0000\u3578" +
+                "\u0000\u35b3\u0000\u35ee\u0000\u3629\u0000\u3664\u0000\u369f\u0000\u36da\u0000\u3715\u0000\u3750" +
+                "\u0000\u378b"
 
         private fun zzUnpackRowMap(): IntArray {
-            val result = IntArray(291)
+            val result = IntArray(305)
             zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, 0, result)
             return result
         }
@@ -848,102 +885,115 @@ class RequirementsLexer
          * The transition table of the DFA
          */
         private val ZZ_TRANS = zzUnpackTrans()
-        private const val ZZ_TRANS_PACKED_0 = "\u0001\u000c\u0001\u000d\u0001\u000e\u000a\u000d\u0001\u000f\u0002\u000d\u0001\u0010\u0001\u0011" +
-                "\u0006\u000d\u0001\u0012\u0001\u000c\u0002\u0013\u0001\u0012\u0004\u000d\u0012\u0013\u0003\u000d" +
-                "\u0004\u0013\u0001\u000c\u0003\u0014\u0006\u000d\u0001\u0014\u0002\u000d\u0001\u0015\u0002\u000d" +
-                "\u0001\u0010\u0002\u0014\u0005\u000d\u0001\u0012\u0001\u000c\u0002\u0014\u0001\u0012\u0004\u000d" +
-                "\u0012\u0014\u0003\u000d\u0004\u0014\u0001\u0016\u000f\u0017\u0001\u0010\u0007\u0017\u0001\u0012" +
-                "\u0001\u0016\u0003\u0017\u0001\u000d\u0016\u0017\u0001\u0018\u0001\u000d\u0004\u0017\u0001\u0016" +
-                "\u000f\u0017\u0001\u0010\u0007\u0017\u0001\u0012\u0001\u0016\u0003\u0017\u0001\u000d\u0016\u0017" +
-                "\u0001\u000d\u0001\u0019\u0004\u0017\u0001\u000c\u0009\u000d\u0001\u001a\u0002\u000d\u0001\u001b" +
-                "\u0002\u000d\u0001\u0010\u0004\u000d\u0001\u001c\u0001\u000d\u0001\u001a\u0001\u0012\u0001\u000c" +
-                "\u0002\u000d\u0001\u0012\u0001\u000d\u0001\u001d\u0001\u001e\u0001\u001f\u0001\u0020\u0003\u000d" +
-                "\u0001\u0021\u0001\u0022\u0001\u000d\u0001\u0023\u0001\u000d\u0001\u0024\u0001\u0025\u0003\u000d" +
-                "\u0001\u0026\u0004\u000d\u0001\u0027\u0001\u0028\u0004\u000d\u0001\u0029\u0001\u002a\u0001\u002b" +
-                "\u0001\u002c\u0001\u002d\u0002\u002c\u0001\u002e\u0001\u002f\u0001\u0030\u0001\u002c\u0001\u0031" +
-                "\u0001\u0032\u0001\u0033\u0001\u0034\u0001\u0035\u0001\u0010\u0001\u0036\u0001\u0037\u0001\u0038" +
-                "\u0001\u0039\u0002\u002c\u0001\u003a\u0001\u0012\u0001\u0029\u0001\u003b\u0001\u003c\u0001\u0012" +
-                "\u0002\u000d\u0002\u002c\u0012\u003b\u0002\u000d\u0001\u002c\u0004\u003b\u0001\u003d\u0004\u000d" +
-                "\u0001\u003e\u0001\u003f\u0001\u000d\u0001\u002f\u0001\u0030\u0001\u0040\u0001\u0041\u0004\u000d" +
-                "\u0001\u0010\u0001\u0042\u0003\u000d\u0001\u0043\u0001\u000d\u0001\u0040\u0001\u0012\u0001\u003d" +
-                "\u0002\u0044\u0001\u0012\u0001\u000d\u0001\u0045\u0001\u001e\u0001\u001f\u0012\u0044\u0003\u000d" +
-                "\u0004\u0044\u0001\u000c\u000f\u0046\u0001\u0047\u0008\u0046\u0001\u000c\u0020\u0046\u0001\u000c" +
-                "\u000f\u000d\u0001\u0010\u0007\u000d\u0001\u0012\u0001\u000c\u0002\u000d\u0001\u0012\u000b\u000d" +
-                "\u0001\u0048\u0001\u0049\u0001\u000d\u0001\u004a\u0001\u004b\u0004\u000d\u0001\u004c\u0008\u000d" +
-                "\u0001\u000c\u000f\u000d\u0001\u0010\u0007\u000d\u0001\u0012\u0001\u000c\u0002\u000d\u0001\u0012" +
-                "\u0006\u000d\u0001\u004d\u0001\u000d\u0001\u004e\u0001\u004f\u0001\u000d\u0001\u0050\u0001\u0051" +
-                "\u0001\u000d\u0001\u0052\u0001\u0053\u0004\u000d\u0001\u0054\u0008\u000d\u0001\u000c\u0003\u000d" +
-                "\u0001\u0055\u0001\u000d\u0001\u003f\u0009\u000d\u0001\u0010\u0007\u000d\u0001\u0012\u0001\u000c" +
-                "\u0002\u0056\u0001\u0012\u0004\u000d\u0012\u0056\u0003\u000d\u0004\u0056\u0001\u000c\u0018\u0000" +
-                "\u0001\u000c\u005c\u0000\u0001\u0057\u0037\u0000\u0018\u000f\u0002\u0000\u0020\u000f\u0010\u0000" +
-                "\u0001\u0058\u0007\u0000\u0001\u0059\u0003\u0000\u0001\u0059\u001f\u0000\u0001\u005a\u000e\u0000" +
-                "\u0002\u005a\u0007\u0000\u0002\u0013\u0005\u0000\u0012\u0013\u0003\u0000\u0004\u0013\u0001\u0000" +
-                "\u0003\u0014\u0006\u0000\u0001\u0014\u0006\u0000\u0002\u0014\u0007\u0000\u0002\u0014\u0005\u0000" +
-                "\u0012\u0014\u0003\u0000\u0004\u0014\u0018\u0015\u0002\u0000\u0020\u0015\u0001\u0016\u0018\u0000" +
-                "\u0001\u0016\u0035\u0000\u0001\u005b\u0024\u0000\u0018\u001b\u0002\u0000\u0020\u001b\u0015\u0000" +
-                "\u0001\u001d\u0046\u0000\u0001\u005c\u000b\u0000\u0001\u005d\u0034\u0000\u0001\u005e\u0001\u005f" +
-                "\u0034\u0000\u0001\u0060\u0046\u0000\u0001\u0061\u0029\u0000\u0001\u0062\u003d\u0000\u0001\u0063" +
-                "\u0009\u0000\u0001\u0064\u002f\u0000\u0001\u0065\u0013\u0000\u0001\u0029\u0004\u0000\u0001\u003e" +
-                "\u0007\u0000\u0001\u001b\u000b\u0000\u0001\u0029\u0020\u0000\u0001\u003d\u000c\u0000\u0001\u001b" +
-                "\u000b\u0000\u0001\u003d\u0035\u0000\u0001\u0066\u0039\u0000\u0001\u0045\u0025\u0000\u0001\u0042" +
-                "\u0001\u0067\u0001\u0000\u0001\u0042\u000a\u0000\u0001\u0042\u0001\u0000\u0002\u0067\u0007\u0000" +
-                "\u0002\u0044\u0005\u0000\u0012\u0044\u0003\u0000\u0004\u0044\u0029\u0000\u0001\u0068\u0036\u0000" +
-                "\u0001\u0069\u0038\u0000\u0001\u006a\u0046\u0000\u0001\u006b\u0004\u0000\u0001\u006c\u002a\u0000" +
-                "\u0001\u006d\u0037\u0000\u0001\u006e\u003e\u0000\u0001\u006f\u0033\u0000\u0001\u0070\u003a\u0000" +
-                "\u0001\u0071\u0008\u0000\u0001\u0072\u000c\u0000\u0001\u0073\u000e\u0000\u0002\u0073\u0007\u0000" +
-                "\u0002\u0056\u0005\u0000\u0012\u0056\u0003\u0000\u0004\u0056\u0023\u0000\u0001\u0074\u0045\u0000" +
-                "\u0001\u0075\u001c\u0000\u0001\u0076\u004a\u0000\u0001\u0077\u0039\u0000\u0001\u0078\u0040\u0000" +
-                "\u0001\u0079\u0030\u0000\u0001\u007a\u004f\u0000\u0001\u007b\u0004\u0000\u0001\u0067\u000e\u0000" +
-                "\u0002\u0067\u0007\u0000\u0002\u0044\u0005\u0000\u0012\u0044\u0003\u0000\u0004\u0044\u002d\u0000" +
-                "\u0001\u007c\u003a\u0000\u0001\u007d\u000d\u0000\u0001\u007e\u005a\u0000\u0001\u007f\u0041\u0000" +
-                "\u0001\u0080\u0044\u0000\u0001\u0081\u003a\u0000\u0001\u0082\u0028\u0000\u0001\u0083\u0039\u0000" +
-                "\u0001\u0084\u0038\u0000\u0001\u0085\u0042\u0000\u0001\u0086\u002f\u0000\u0001\u0087\u0038\u0000" +
-                "\u0001\u0088\u003c\u0000\u0001\u0089\u003c\u0000\u0001\u008a\u0022\u0000\u0001\u008b\u0055\u0000" +
-                "\u0001\u008c\u0035\u0000\u0001\u008d\u0031\u0000\u0001\u008e\u0042\u0000\u0001\u008f\u000c\u0000" +
-                "\u0001\u0090\u002a\u0000\u0001\u0091\u0033\u0000\u0001\u0092\u0043\u0000\u0001\u0093\u0034\u0000" +
-                "\u0001\u0094\u0048\u0000\u0001\u0095\u002c\u0000\u0001\u0096\u0035\u0000\u0001\u0097\u0041\u0000" +
-                "\u0001\u0098\u0030\u0000\u0001\u0099\u0040\u0000\u0001\u009a\u003c\u0000\u0001\u009b\u0039\u0000" +
-                "\u0001\u009c\u002b\u0000\u0001\u009d\u0040\u0000\u0001\u009e\u0034\u0000\u0001\u009f\u0018\u0000" +
-                "\u0001\u00a0\u005d\u0000\u0001\u00a1\u003e\u0000\u0001\u00a2\u003d\u0000\u0001\u00a3\u0039\u0000" +
-                "\u0001\u00a4\u0035\u0000\u0001\u00a5\u0040\u0000\u0001\u00a6\u0009\u0000\u0001\u00a7\u005a\u0000" +
-                "\u0001\u00a8\u003e\u0000\u0001\u00a9\u0015\u0000\u0001\u00aa\u005b\u0000\u0001\u00ab\u0038\u0000" +
-                "\u0001\u00ac\u0044\u0000\u0001\u00ad\u0037\u0000\u0001\u00ae\u003b\u0000\u0001\u00af\u0031\u0000" +
-                "\u0001\u00b0\u0049\u0000\u0001\u00b1\u0038\u0000\u0001\u00b2\u0028\u0000\u0001\u00b3\u0015\u0000" +
-                "\u0001\u00b4\u006f\u0000\u0001\u00b5\u002a\u0000\u0001\u00b6\u0012\u0000\u0001\u00b7\u0065\u0000" +
-                "\u0001\u00b8\u0034\u0000\u0001\u00b9\u0014\u0000\u0001\u00ba\u0047\u0000\u0001\u00bb\u0050\u0000" +
-                "\u0001\u00bc\u0038\u0000\u0001\u009c\u0040\u0000\u0001\u00bd\u0032\u0000\u0001\u00be\u0048\u0000" +
-                "\u0001\u00bf\u002d\u0000\u0001\u00c0\u0036\u0000\u0001\u00c1\u0040\u0000\u0001\u00c2\u0035\u0000" +
-                "\u0001\u00c3\u003c\u0000\u0001\u00c4\u0033\u0000\u0001\u00c5\u003e\u0000\u0001\u00c6\u0037\u0000" +
-                "\u0001\u00c7\u003d\u0000\u0001\u00c8\u0031\u0000\u0001\u00c9\u0004\u0000\u0001\u00ca\u003d\u0000" +
-                "\u0001\u00cb\u002c\u0000\u0001\u00cc\u003c\u0000\u0001\u00cd\u0015\u0000\u0001\u00ce\u005d\u0000" +
-                "\u0001\u00cf\u0045\u0000\u0001\u00d0\u0030\u0000\u0001\u00d1\u0036\u0000\u0001\u00d2\u003b\u0000" +
-                "\u0001\u0048\u0013\u0000\u0001\u00d3\u002d\u0000\u0001\u00d4\u0032\u0000\u0001\u00d5\u0036\u0000" +
-                "\u0001\u00d6\u003e\u0000\u0001\u00d7\u0036\u0000\u0001\u00d8\u003e\u0000\u0001\u00d9\u001e\u0000" +
-                "\u0001\u00da\u0053\u0000\u0001\u00db\u0030\u0000\u0001\u00dc\u003a\u0000\u0001\u00dd\u0044\u0000" +
-                "\u0001\u00de\u002c\u0000\u0001\u00df\u004e\u0000\u0001\u00e0\u0026\u0000\u0001\u00e1\u003d\u0000" +
-                "\u0001\u00e2\u003f\u0000\u0001\u004a\u0044\u0000\u0001\u00e3\u0026\u0000\u0001\u00e4\u003c\u0000" +
-                "\u0001\u00e5\u003e\u0000\u0001\u00e6\u002c\u0000\u0001\u00e7\u0005\u0000\u0001\u00c9\u0001\u0000" +
-                "\u0001\u00e8\u0001\u00e9\u0005\u0000\u0001\u00ea\u002e\u0000\u0001\u00eb\u0043\u0000\u0001\u00ec" +
-                "\u002f\u0000\u0001\u00ed\u003d\u0000\u0001\u00ee\u0038\u0000\u0001\u00ef\u0040\u0000\u0001\u00f0" +
-                "\u0030\u0000\u0001\u00f1\u003d\u0000\u0001\u004b\u0032\u0000\u0001\u004c\u0040\u0000\u0001\u00f2" +
-                "\u003d\u0000\u0001\u00f3\u002d\u0000\u0001\u00f4\u003f\u0000\u0001\u00f5\u0033\u0000\u0001\u00f6" +
-                "\u0046\u0000\u0001\u00f7\u0033\u0000\u0001\u00f8\u0033\u0000\u0001\u00f9\u0040\u0000\u0001\u00fa" +
-                "\u0031\u0000\u0001\u00fb\u0049\u0000\u0001\u00fc\u0031\u0000\u0001\u00fd\u0032\u0000\u0001\u0049" +
-                "\u0041\u0000\u0001\u00fe\u0020\u0000\u0001\u00ff\u004a\u0000\u0001\u0100\u0044\u0000\u0001\u0101" +
-                "\u0035\u0000\u0001\u0102\u0040\u0000\u0001\u0103\u0038\u0000\u0001\u009c\u0034\u0000\u0001\u0104" +
-                "\u0031\u0000\u0001\u0105\u0018\u0000\u0001\u0106\u005b\u0000\u0001\u0107\u003a\u0000\u0001\u0108" +
-                "\u003b\u0000\u0001\u00c9\u0036\u0000\u0001\u0109\u003d\u0000\u0001\u010a\u0034\u0000\u0001\u010b" +
-                "\u003a\u0000\u0001\u010c\u003a\u0000\u0001\u010d\u0041\u0000\u0001\u010e\u0034\u0000\u0001\u010f" +
-                "\u0037\u0000\u0001\u009c\u0038\u0000\u0001\u0110\u0043\u0000\u0001\u0111\u0032\u0000\u0001\u00f8" +
-                "\u003c\u0000\u0001\u0112\u0034\u0000\u0001\u0113\u003c\u0000\u0001\u0114\u003a\u0000\u0001\u0115" +
-                "\u0035\u0000\u0001\u0116\u003d\u0000\u0001\u00ad\u0035\u0000\u0001\u00ad\u0025\u0000\u0001\u0117" +
-                "\u0055\u0000\u0001\u0118\u001d\u0000\u0001\u0119\u004d\u0000\u0001\u0089\u0001\u00c9\u003d\u0000" +
-                "\u0001\u011a\u003e\u0000\u0001\u011b\u002a\u0000\u0001\u011c\u0046\u0000\u0001\u011d\u0033\u0000" +
-                "\u0001\u011e\u0041\u0000\u0001\u011f\u0031\u0000\u0001\u0120\u0037\u0000\u0001\u0121\u0036\u0000" +
-                "\u0001\u0122\u0045\u0000\u0001\u0123\u002d\u0000\u0001\u00f2\u0016\u0000"
+        private const val ZZ_TRANS_PACKED_0 = "\u0001\u0010\u0001\u0011\u0001\u0012\u000a\u0011\u0001\u0013\u0002\u0011\u0001\u0014\u0001\u0015" +
+                "\u0006\u0011\u0001\u0016\u0001\u0010\u0002\u0017\u0001\u0016\u0004\u0011\u0012\u0017\u0003\u0011" +
+                "\u0005\u0017\u0001\u0010\u0003\u0018\u0006\u0011\u0001\u0018\u0002\u0011\u0001\u0019\u0002\u0011" +
+                "\u0001\u0014\u0002\u0018\u0005\u0011\u0001\u0016\u0001\u0010\u0002\u0018\u0001\u0016\u0004\u0011" +
+                "\u0012\u0018\u0003\u0011\u0005\u0018\u0001\u001a\u000f\u001b\u0001\u0014\u0007\u001b\u0001\u0016" +
+                "\u0001\u001a\u0003\u001b\u0001\u0011\u0016\u001b\u0001\u001c\u0001\u0011\u0005\u001b\u0001\u001a" +
+                "\u000f\u001b\u0001\u0014\u0007\u001b\u0001\u0016\u0001\u001a\u0003\u001b\u0001\u0011\u0016\u001b" +
+                "\u0001\u0011\u0001\u001d\u0005\u001b\u0001\u0010\u0009\u0011\u0001\u001e\u0002\u0011\u0001\u001f" +
+                "\u0002\u0011\u0001\u0014\u0004\u0011\u0001\u0020\u0001\u0011\u0001\u001e\u0001\u0016\u0001\u0010" +
+                "\u0002\u0011\u0001\u0016\u0001\u0011\u0001\u0021\u0001\u0022\u0001\u0023\u0001\u0024\u0003\u0011" +
+                "\u0001\u0025\u0001\u0026\u0001\u0011\u0001\u0027\u0001\u0011\u0001\u0028\u0001\u0029\u0003\u0011" +
+                "\u0001\u002a\u0004\u0011\u0001\u002b\u0001\u002c\u0005\u0011\u0001\u002d\u0001\u002e\u0001\u002f" +
+                "\u0001\u0030\u0001\u0031\u0002\u0030\u0001\u0032\u0001\u0033\u0001\u0034\u0001\u0030\u0001\u0035" +
+                "\u0001\u0036\u0001\u0037\u0001\u0038\u0001\u0039\u0001\u0014\u0001\u003a\u0001\u003b\u0001\u003c" +
+                "\u0001\u003d\u0002\u0030\u0001\u003e\u0001\u0016\u0001\u002d\u0001\u003f\u0001\u0040\u0001\u0016" +
+                "\u0002\u0011\u0002\u0030\u0012\u003f\u0002\u0011\u0001\u0030\u0005\u003f\u0001\u0041\u0001\u0011" +
+                "\u0001\u0042\u0002\u0011\u0001\u0043\u0001\u0044\u0001\u0011\u0001\u0033\u0001\u0034\u0001\u0045" +
+                "\u0001\u0046\u0004\u0011\u0001\u0014\u0001\u0047\u0003\u0011\u0001\u0048\u0001\u0011\u0001\u0045" +
+                "\u0001\u0016\u0001\u0041\u0002\u0049\u0001\u0016\u0001\u0011\u0001\u004a\u0001\u0022\u0001\u0023" +
+                "\u0012\u0049\u0003\u0011\u0005\u0049\u0001\u0010\u000f\u0011\u0001\u0014\u0007\u0011\u0001\u0016" +
+                "\u0001\u0010\u0002\u0011\u0001\u0016\u000b\u0011\u0001\u004b\u0001\u004c\u0001\u0011\u0001\u004d" +
+                "\u0001\u004e\u0004\u0011\u0001\u004f\u0009\u0011\u0001\u0010\u000f\u0011\u0001\u0014\u0007\u0011" +
+                "\u0001\u0016\u0001\u0010\u0002\u0011\u0001\u0016\u0006\u0011\u0001\u0050\u0001\u0011\u0001\u0051" +
+                "\u0001\u0052\u0001\u0011\u0001\u0053\u0001\u0054\u0001\u0011\u0001\u0055\u0001\u0056\u0004\u0011" +
+                "\u0001\u0057\u0009\u0011\u0001\u0010\u0003\u0011\u0001\u0058\u0001\u0011\u0001\u0044\u0009\u0011" +
+                "\u0001\u0014\u0007\u0011\u0001\u0016\u0001\u0010\u0002\u0059\u0001\u0016\u0004\u0011\u0012\u0059" +
+                "\u0003\u0011\u0005\u0059\u0001\u0010\u000f\u0011\u0001\u0014\u0007\u0011\u0001\u0016\u0001\u0010" +
+                "\u0002\u0011\u0001\u0016\u0007\u0011\u0001\u005a\u0016\u0011\u0001\u0010\u000f\u0011\u0001\u0014" +
+                "\u0004\u0011\u0001\u005b\u0002\u0011\u0001\u0016\u0001\u0010\u0002\u0011\u0001\u0016\u001e\u0011" +
+                "\u0001\u0010\u000f\u0011\u0001\u0014\u0007\u0011\u0001\u0016\u0001\u0010\u0002\u005c\u0001\u0016" +
+                "\u0004\u0011\u0012\u005c\u0003\u0011\u0005\u005c\u0001\u0010\u0003\u0011\u0001\u005d\u000b\u0011" +
+                "\u0001\u0014\u0007\u0011\u0001\u0016\u0001\u0010\u0002\u0011\u0001\u0016\u001e\u0011\u0001\u005e" +
+                "\u000c\u0011\u0001\u005f\u0002\u0011\u0001\u0014\u0007\u0011\u0001\u0016\u0001\u005e\u0001\u0011" +
+                "\u0001\u0060\u0001\u0016\u000b\u0011\u0001\u0060\u0003\u0011\u0001\u0060\u0002\u0011\u0001\u0060" +
+                "\u0001\u0011\u0001\u0060\u0004\u0011\u0001\u0060\u0001\u0011\u0002\u0060\u0001\u0011\u0001\u0010" +
+                "\u0018\u0000\u0001\u0010\u005e\u0000\u0001\u0061\u0038\u0000\u0018\u0013\u0002\u0000\u0021\u0013" +
+                "\u0018\u0000\u0001\u0062\u0003\u0000\u0001\u0062\u0020\u0000\u0001\u0063\u000e\u0000\u0002\u0063" +
+                "\u0007\u0000\u0002\u0017\u0005\u0000\u0012\u0017\u0003\u0000\u0005\u0017\u0001\u0000\u0003\u0018" +
+                "\u0006\u0000\u0001\u0018\u0006\u0000\u0002\u0018\u0007\u0000\u0002\u0018\u0005\u0000\u0012\u0018" +
+                "\u0003\u0000\u0005\u0018\u0018\u0019\u0002\u0000\u0021\u0019\u0001\u001a\u0018\u0000\u0001\u001a" +
+                "\u0036\u0000\u0001\u0064\u0025\u0000\u0018\u001f\u0002\u0000\u0021\u001f\u0015\u0000\u0001\u0021" +
+                "\u0047\u0000\u0001\u0065\u000b\u0000\u0001\u0066\u0035\u0000\u0001\u0067\u0001\u0068\u0035\u0000" +
+                "\u0001\u0069\u0047\u0000\u0001\u006a\u002a\u0000\u0001\u006b\u003e\u0000\u0001\u006c\u0009\u0000" +
+                "\u0001\u006d\u0030\u0000\u0001\u006e\u0014\u0000\u0001\u002d\u0004\u0000\u0001\u0043\u0007\u0000" +
+                "\u0001\u001f\u000b\u0000\u0001\u002d\u0021\u0000\u0001\u0041\u000c\u0000\u0001\u001f\u000b\u0000" +
+                "\u0001\u0041\u0023\u0000\u0001\u006f\u004d\u0000\u0001\u0070\u003a\u0000\u0001\u004a\u0026\u0000" +
+                "\u0001\u0047\u0001\u0071\u0001\u0000\u0001\u0047\u000a\u0000\u0001\u0047\u0001\u0000\u0002\u0071" +
+                "\u0007\u0000\u0002\u0049\u0005\u0000\u0012\u0049\u0003\u0000\u0005\u0049\u0029\u0000\u0001\u0072" +
+                "\u0037\u0000\u0001\u0073\u0039\u0000\u0001\u0074\u0047\u0000\u0001\u0075\u0005\u0000\u0001\u0076" +
+                "\u002a\u0000\u0001\u0077\u0038\u0000\u0001\u0078\u003f\u0000\u0001\u0079\u0034\u0000\u0001\u007a" +
+                "\u003b\u0000\u0001\u007b\u0008\u0000\u0001\u007c\u000d\u0000\u0001\u007d\u000e\u0000\u0002\u007d" +
+                "\u0007\u0000\u0002\u0059\u0005\u0000\u0012\u0059\u0003\u0000\u0005\u0059\u002f\u0000\u0001\u007e" +
+                "\u000d\u0000\u0001\u007f\u000e\u0000\u0002\u007f\u0007\u0000\u0002\u005c\u0005\u0000\u0012\u005c" +
+                "\u0003\u0000\u0005\u005c\u0001\u005e\u0018\u0000\u0001\u005e\u0021\u0000\u0018\u005f\u0002\u0000" +
+                "\u0021\u005f\u001b\u0000\u0001\u0060\u000c\u0000\u0001\u0060\u0003\u0000\u0001\u0060\u0002\u0000" +
+                "\u0001\u0060\u0001\u0000\u0001\u0060\u0004\u0000\u0001\u0060\u0001\u0000\u0002\u0060\u0024\u0000" +
+                "\u0001\u0080\u0046\u0000\u0001\u0081\u001d\u0000\u0001\u0082\u004b\u0000\u0001\u0083\u003a\u0000" +
+                "\u0001\u0084\u0041\u0000\u0001\u0085\u0031\u0000\u0001\u0086\u0051\u0000\u0001\u0087\u0004\u0000" +
+                "\u0001\u0071\u000e\u0000\u0002\u0071\u0007\u0000\u0002\u0049\u0005\u0000\u0012\u0049\u0003\u0000" +
+                "\u0005\u0049\u002d\u0000\u0001\u0088\u003b\u0000\u0001\u0089\u000e\u0000\u0001\u008a\u005b\u0000" +
+                "\u0001\u008b\u0042\u0000\u0001\u008c\u0046\u0000\u0001\u008d\u003b\u0000\u0001\u008e\u0028\u0000" +
+                "\u0001\u008f\u003a\u0000\u0001\u0090\u0039\u0000\u0001\u0091\u0043\u0000\u0001\u0092\u0036\u0000" +
+                "\u0001\u0093\u0034\u0000\u0001\u0094\u0039\u0000\u0001\u0095\u003d\u0000\u0001\u0096\u003d\u0000" +
+                "\u0001\u0097\u0023\u0000\u0001\u0098\u0056\u0000\u0001\u0099\u0036\u0000\u0001\u009a\u0032\u0000" +
+                "\u0001\u009b\u0043\u0000\u0001\u009c\u000d\u0000\u0001\u009d\u002a\u0000\u0001\u009e\u0034\u0000" +
+                "\u0001\u009f\u0044\u0000\u0001\u00a0\u0035\u0000\u0001\u00a1\u004a\u0000\u0001\u00a2\u002c\u0000" +
+                "\u0001\u00a3\u0036\u0000\u0001\u00a4\u0042\u0000\u0001\u00a5\u0030\u0000\u0001\u00a6\u003b\u0000" +
+                "\u0001\u00a7\u0041\u0000\u0001\u00a8\u003d\u0000\u0001\u00a9\u003a\u0000\u0001\u00aa\u002c\u0000" +
+                "\u0001\u00ab\u0041\u0000\u0001\u00ac\u0035\u0000\u0001\u00ad\u0019\u0000\u0001\u00ae\u005e\u0000" +
+                "\u0001\u00af\u003f\u0000\u0001\u00b0\u003e\u0000\u0001\u00b1\u003a\u0000\u0001\u00b2\u0036\u0000" +
+                "\u0001\u00b3\u0041\u0000\u0001\u00b4\u000a\u0000\u0001\u00b5\u005b\u0000\u0001\u00b6\u003f\u0000" +
+                "\u0001\u00b7\u0016\u0000\u0001\u00b8\u005c\u0000\u0001\u00b9\u0039\u0000\u0001\u00ba\u0045\u0000" +
+                "\u0001\u00bb\u0038\u0000\u0001\u00bc\u003c\u0000\u0001\u00bd\u0032\u0000\u0001\u00be\u004b\u0000" +
+                "\u0001\u00bf\u0039\u0000\u0001\u00c0\u0028\u0000\u0001\u00c1\u0016\u0000\u0001\u00c2\u0071\u0000" +
+                "\u0001\u00c3\u002a\u0000\u0001\u00c4\u0013\u0000\u0001\u00c5\u0066\u0000\u0001\u00c6\u0035\u0000" +
+                "\u0001\u00c7\u0015\u0000\u0001\u00c8\u0048\u0000\u0001\u00c9\u0051\u0000\u0001\u00ca\u0039\u0000" +
+                "\u0001\u00aa\u0041\u0000\u0001\u00cb\u0033\u0000\u0001\u00cc\u004a\u0000\u0001\u00cd\u002d\u0000" +
+                "\u0001\u00ce\u0037\u0000\u0001\u00cf\u0041\u0000\u0001\u00d0\u0036\u0000\u0001\u00d1\u003d\u0000" +
+                "\u0001\u00d2\u0034\u0000\u0001\u00d3\u003f\u0000\u0001\u00d4\u0038\u0000\u0001\u00d5\u003e\u0000" +
+                "\u0001\u00d6\u0032\u0000\u0001\u00d7\u0004\u0000\u0001\u00d8\u003e\u0000\u0001\u00d9\u002d\u0000" +
+                "\u0001\u00da\u003d\u0000\u0001\u00db\u0016\u0000\u0001\u00dc\u005e\u0000\u0001\u00dd\u0046\u0000" +
+                "\u0001\u00de\u0031\u0000\u0001\u00df\u0037\u0000\u0001\u00e0\u003c\u0000\u0001\u004b\u0014\u0000" +
+                "\u0001\u00e1\u002d\u0000\u0001\u00e2\u0033\u0000\u0001\u00e3\u0037\u0000\u0001\u00e4\u003f\u0000" +
+                "\u0001\u00e5\u0037\u0000\u0001\u00e6\u003f\u0000\u0001\u00e7\u001f\u0000\u0001\u00e8\u0054\u0000" +
+                "\u0001\u00e9\u0031\u0000\u0001\u00ea\u003b\u0000\u0001\u00eb\u0045\u0000\u0001\u00ec\u002d\u0000" +
+                "\u0001\u00ed\u0050\u0000\u0001\u00ee\u0026\u0000\u0001\u00ef\u003e\u0000\u0001\u00f0\u0040\u0000" +
+                "\u0001\u004d\u0046\u0000\u0001\u00f1\u0026\u0000\u0001\u00f2\u003d\u0000\u0001\u00f3\u003f\u0000" +
+                "\u0001\u00f4\u002d\u0000\u0001\u00f5\u0005\u0000\u0001\u00d7\u0001\u0000\u0001\u00f6\u0001\u00f7" +
+                "\u0005\u0000\u0001\u00f8\u002f\u0000\u0001\u00f9\u0044\u0000\u0001\u00fa\u0030\u0000\u0001\u00fb" +
+                "\u003e\u0000\u0001\u00fc\u0039\u0000\u0001\u00fd\u0041\u0000\u0001\u00fe\u0031\u0000\u0001\u00ff" +
+                "\u003e\u0000\u0001\u004e\u0033\u0000\u0001\u004f\u0041\u0000\u0001\u0100\u003e\u0000\u0001\u0101" +
+                "\u002e\u0000\u0001\u0102\u0040\u0000\u0001\u0103\u0034\u0000\u0001\u0104\u0047\u0000\u0001\u0105" +
+                "\u0034\u0000\u0001\u0106\u0034\u0000\u0001\u0107\u0041\u0000\u0001\u0108\u0032\u0000\u0001\u0109" +
+                "\u004a\u0000\u0001\u010a\u0032\u0000\u0001\u010b\u0033\u0000\u0001\u004c\u0042\u0000\u0001\u010c" +
+                "\u0021\u0000\u0001\u010d\u004b\u0000\u0001\u010e\u0045\u0000\u0001\u010f\u0036\u0000\u0001\u0110" +
+                "\u0041\u0000\u0001\u0111\u0039\u0000\u0001\u00aa\u0035\u0000\u0001\u0112\u0032\u0000\u0001\u0113" +
+                "\u0019\u0000\u0001\u0114\u005c\u0000\u0001\u0115\u003b\u0000\u0001\u0116\u003c\u0000\u0001\u00d7" +
+                "\u0037\u0000\u0001\u0117\u003e\u0000\u0001\u0118\u0035\u0000\u0001\u0119\u003b\u0000\u0001\u011a" +
+                "\u003b\u0000\u0001\u011b\u0042\u0000\u0001\u011c\u0035\u0000\u0001\u011d\u0038\u0000\u0001\u00aa" +
+                "\u0039\u0000\u0001\u011e\u0044\u0000\u0001\u011f\u0033\u0000\u0001\u0106\u003d\u0000\u0001\u0120" +
+                "\u0035\u0000\u0001\u0121\u003d\u0000\u0001\u0122\u003b\u0000\u0001\u0123\u0036\u0000\u0001\u0124" +
+                "\u003e\u0000\u0001\u00bb\u0036\u0000\u0001\u00bb\u0026\u0000\u0001\u0125\u0056\u0000\u0001\u0126" +
+                "\u001e\u0000\u0001\u0127\u004e\u0000\u0001\u0096\u0001\u00d7\u003e\u0000\u0001\u0128\u003f\u0000" +
+                "\u0001\u0129\u002b\u0000\u0001\u012a\u0047\u0000\u0001\u012b\u0034\u0000\u0001\u012c\u0042\u0000" +
+                "\u0001\u012d\u0032\u0000\u0001\u012e\u0038\u0000\u0001\u012f\u0037\u0000\u0001\u0130\u0046\u0000" +
+                "\u0001\u0131\u002e\u0000\u0001\u0100\u0017\u0000"
 
         private fun zzUnpackTrans(): IntArray {
-            val result = IntArray(13340)
+            val result = IntArray(14278)
             zzUnpackTrans(ZZ_TRANS_PACKED_0, 0, result)
             return result
         }
@@ -977,16 +1027,17 @@ class RequirementsLexer
          * ZZ_ATTRIBUTE[aState] contains the attributes of state `aState`
          */
         private val ZZ_ATTRIBUTE = zzUnpackAttribute()
-        private const val ZZ_ATTRIBUTE_PACKED_0 = "\u000b\u0000\u0001\u0001\u0001\u0009\u0003\u0001\u0002\u0009\u0004\u0001\u0003\u0009\u0004\u0001" +
-                "\u0002\u0009\u0007\u0001\u0002\u0009\u0001\u0001\u0013\u0009\u0001\u0001\u0002\u0009\u0001\u0001" +
-                "\u0002\u0009\u0003\u0001\u0001\u0009\u0001\u0001\u0005\u0009\u000a\u0001\u0003\u0009\u0001\u0000" +
-                "\u0001\u0009\u0002\u0000\u0001\u0009\u0004\u0000\u0001\u0009\u0002\u0000\u0001\u0009\u0010\u0000" +
-                "\u0001\u0009\u0003\u0000\u0001\u0009\u0020\u0000\u0001\u0009\u000d\u0000\u0001\u0009\u000f\u0000" +
-                "\u0001\u0009\u0015\u0000\u0001\u0009\u000e\u0000\u0001\u0009\u001b\u0000\u0001\u0009\u0009\u0000" +
-                "\u0001\u0009\u000f\u0000\u0001\u0009\u0002\u0000\u0001\u0009\u000b\u0000"
+        private const val ZZ_ATTRIBUTE_PACKED_0 = "\u000f\u0000\u0001\u0001\u0001\u0009\u0003\u0001\u0002\u0009\u0004\u0001\u0003\u0009\u0004\u0001" +
+                "\u0002\u0009\u0007\u0001\u0002\u0009\u0001\u0001\u0013\u0009\u0002\u0001\u0002\u0009\u0001\u0001" +
+                "\u0002\u0009\u0003\u0001\u0005\u0009\u000b\u0001\u0001\u0009\u0001\u0001\u0001\u0009\u0003\u0001" +
+                "\u0002\u0009\u0001\u0000\u0001\u0009\u0002\u0000\u0001\u0009\u0004\u0000\u0001\u0009\u0002\u0000" +
+                "\u0002\u0009\u0012\u0000\u0001\u0009\u0003\u0000\u0001\u0009\u001e\u0000\u0001\u0009\u0003\u0000" +
+                "\u0001\u0009\u000d\u0000\u0001\u0009\u000f\u0000\u0001\u0009\u0015\u0000\u0001\u0009\u000e\u0000" +
+                "\u0001\u0009\u001b\u0000\u0001\u0009\u0009\u0000\u0001\u0009\u000f\u0000\u0001\u0009\u0002\u0000" +
+                "\u0001\u0009\u000b\u0000"
 
         private fun zzUnpackAttribute(): IntArray {
-            val result = IntArray(291)
+            val result = IntArray(305)
             zzUnpack(ZZ_ATTRIBUTE_PACKED_0, 0, result)
             return result
         }

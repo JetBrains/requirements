@@ -139,16 +139,24 @@ SUB_DELIMS=({EXCLAMATION_MARK}
            | {SEMICOLON}
            | {EQUAL})
 
+HEX = [a-fA-F0-9]+
+
+HASH = "hash"
+
 %state WAITING_VERSION
 %state DQUOTE_STR
 %state SQUOTE_STR
 %state QUOTED_MARK
 %state URI
 %state REQ
-%state ESCAPE_NEW_LINE
 %state SHORT_OPTION_STATE
 %state LONG_OPTION_STATE
 %state BINARY
+%state WAITING_HASH
+%state WAITING_EQUAL
+%state WAITING_ALG
+%state WAITING_COLON
+%state WAITING_HASH_VALUE
 
 %%
 
@@ -189,6 +197,28 @@ SUB_DELIMS=({EXCLAMATION_MARK}
     {COMMA}                  { return COMMA; }
 }
 
+<WAITING_HASH> {
+    {HASH}                   { yypush(WAITING_EQUAL); return HASH; }
+}
+
+<WAITING_EQUAL> {
+    {EQUAL}                  { yypush(WAITING_ALG); return EQUAL; }
+}
+
+<WAITING_ALG> {
+    {IDENTIFIER}             { yypush(WAITING_COLON); return IDENTIFIER; }
+}
+
+<WAITING_COLON> {
+    {COLON}                  { yypush(WAITING_HASH_VALUE); return COLON; }
+}
+
+<WAITING_HASH_VALUE> {
+    {HEX}                    { yypush(REQ); return HEX; }
+    {WHITE_SPACE}            { yypush(REQ); return WHITE_SPACE; }
+    {COMMENT}                { yypush(REQ); return COMMENT; }
+}
+
 <REQ> {
     {IDENTIFIER}{PLUS}       { yypush(URI); yypushback(yylength()); }
     {IDENTIFIER}{COLON}      { yypush(URI); yypushback(yylength()); }
@@ -205,6 +235,7 @@ SUB_DELIMS=({EXCLAMATION_MARK}
     {DOT}                    { yypush(URI); yypushback(yylength()); }
 
     {WHITE_SPACE}{COMMENT}   { yyinitial(); return COMMENT; }
+    "--"                     { yypush(WAITING_HASH); return LONG_OPTION; }
 }
 
 <WAITING_VERSION> {
@@ -264,13 +295,7 @@ SUB_DELIMS=({EXCLAMATION_MARK}
 }
 
 {WHITE_SPACE}                { return WHITE_SPACE; }
-{BACKSLASH}{BACKSLASH}       { return BAD_CHARACTER; }
-{BACKSLASH}{EOL}             { yypush(ESCAPE_NEW_LINE); }
-
-<ESCAPE_NEW_LINE>{
-    <<EOF>>                  { yypop(); return EOL; }
-    [^]                      { yypop(); yypushback(yylength()); }
-}
+{BACKSLASH}{EOL}             { }
 
 {EOL}                        { yyinitial(); return EOL; }
 
