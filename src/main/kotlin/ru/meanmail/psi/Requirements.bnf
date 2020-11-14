@@ -46,7 +46,8 @@ name          ::= IDENTIFIER
 extras_list   ::= IDENTIFIER (wsps COMMA wsps IDENTIFIER)*
 extras        ::= LSBRACE wsps extras_list? wsps RSBRACE
 
-name_req      ::= name wsps extras? wsps !AT wsps versionspec? wsps quoted_marker? {pin=5}
+name_req      ::= (name wsps extras? wsps !AT wsps versionspec? wsps
+                   (LONG_OPTION hash_option wsps)* quoted_marker?) {pin=5}
 
 option        ::= (SHORT_OPTION | LONG_OPTION) (
                    refer_req
@@ -73,8 +74,9 @@ binary_list       ::= extras_list | BINARY_ALL | BINARY_NONE
 no_binary_req     ::= NO_BINARY WHITE_SPACE+ binary_list {pin=1}
 only_binary_req   ::= ONLY_BINARY WHITE_SPACE+ binary_list {pin=1}
 trusted_host_req  ::= TRUSTED_HOST WHITE_SPACE+ host (COLON port)? {pin=1}
+hash_option       ::= HASH EQUAL IDENTIFIER COLON HEX
 
-path_req      ::= uri_reference
+path_req      ::= uri_reference wsps quoted_marker? {pin=1 }
 url_req       ::= name wsps extras? wsps urlspec wsps quoted_marker? {pin=5 }
 
 urlspec       ::= AT wsps uri_reference

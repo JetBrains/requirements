@@ -1,3 +1,8 @@
+## 2020.4 (November, 15, 2020)
+* Fix Local file path requirement breaks parsing
+* Fix environment markers for path requirements
++ Add support --hash statement
+
 ## 2020.3 (October, 12, 2020)
 
 * Fix exception: java.lang.Throwable
