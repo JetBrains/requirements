@@ -25,6 +25,10 @@ class ParsingTest : ParsingTestCase("testData", "requirements.txt",
         doTest(true)
     }
 
+    fun testLocalPathReq() {
+        doTest(true)
+    }
+
     fun testNameReq() {
         doTest(true)
     }

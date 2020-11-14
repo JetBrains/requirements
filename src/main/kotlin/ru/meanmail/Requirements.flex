@@ -192,6 +192,7 @@ SUB_DELIMS=({EXCLAMATION_MARK}
 <REQ> {
     {IDENTIFIER}{PLUS}       { yypush(URI); yypushback(yylength()); }
     {IDENTIFIER}{COLON}      { yypush(URI); yypushback(yylength()); }
+    {IDENTIFIER}{SLASH}      { yypush(URI); yypushback(yylength()); }
     {IDENTIFIER}             { return IDENTIFIER; }
     {VERSION_CMP}            { yypush(WAITING_VERSION); return VERSION_CMP; }
     {AT}                     { yypush(URI); return AT; }
