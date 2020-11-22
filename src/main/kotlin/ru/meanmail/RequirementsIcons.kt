@@ -4,6 +4,6 @@ import com.intellij.openapi.util.IconLoader
 
 object AllIcons {
 
-    val FILE = IconLoader.getIcon("/fileTypes/config.png") // 16x16
+    val FILE = IconLoader.getIcon("/fileTypes/config.png", this::class.java) // 16x16
 
 }
