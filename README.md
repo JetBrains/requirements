@@ -11,12 +11,12 @@ Your ratings and feedback are very important. The feature will appear the faster
 ## Supported versions of Intellij:
 
 *Supported Products*
-- IntelliJ IDEA Education 2019.3 — 2020.3(eap)
-- PyCharm Professional 2019.3 — 2020.3(eap)
-- PyCharm Educational 2019.3 — 2020.3(eap)
-- IntelliJ IDEA Community 2019.3 — 2020.3(eap)
-- IntelliJ IDEA Ultimate 2019.3 — 2020.3(eap)
-- PyCharm Community 2019.3 — 2020.3(eap)
+- IntelliJ IDEA Education 2020.2 — 2020.3
+- PyCharm Professional 2020.2 — 2020.3
+- PyCharm Educational 2020.2 — 2020.3
+- IntelliJ IDEA Community 2020.2 — 2020.3
+- IntelliJ IDEA Ultimate 2020.2 — 2020.3
+- PyCharm Community 2020.2 — 2020.3
 
 ## Syntax
 
