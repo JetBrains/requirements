@@ -1,3 +1,8 @@
+## 2020.4.1 (December, 5, 2020)
+* Fix environment marker comparison
+* Improve files detection
+* Fix renaming
+
 ## 2020.4 (November, 15, 2020)
 * Fix Local file path requirement breaks parsing
 * Fix environment markers for path requirements
