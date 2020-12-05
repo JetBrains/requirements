@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    kotlin("jvm") version "1.4.10"
-    id("org.jetbrains.intellij") version "0.6.3"
+    kotlin("jvm") version "1.4.20"
+    id("org.jetbrains.intellij") version "0.6.5"
 }
 
 group = "ru.meanmail"
