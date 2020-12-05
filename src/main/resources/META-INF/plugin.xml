@@ -1,9 +1,9 @@
-<idea-plugin>
+<idea-plugin url="https://meanmail.dev/plugin/1">
     <id>ru.meanmail.plugin.requirements</id>
     <name>Requirements</name>
     <version>SNAPSHOT</version>
     <idea-version since-build="173"/>
-    <vendor email="plugin@meanmail.ru" url="https://meanmail.dev/plugin/1">meanmail</vendor>
+    <vendor email="plugin@meanmail.ru" url="https://meanmail.dev">meanmail</vendor>
     <description></description>
     <change-notes></change-notes>
 
