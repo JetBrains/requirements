@@ -15,8 +15,10 @@
                   language="requirements.txt"
                   order="first"
                   name="requirements.txt"
-                  fileNames="requirements.txt"
-                  patterns="*.txt"/>
+                  fileNames="requirements.txt;constrains.txt"
+                  patterns="*requirements*.txt;*.txt"/>
+        <fileTypeDetector implementation="ru.meanmail.RequirementsFileTypeDetector"
+                          order="first"/>
         <localInspection language="requirements.txt"
                          shortName="ReferenceExistsInspection"
                          suppressId="Requirements"
