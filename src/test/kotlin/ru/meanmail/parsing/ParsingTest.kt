@@ -3,8 +3,9 @@ package ru.meanmail.parsing
 import com.intellij.testFramework.ParsingTestCase
 import ru.meanmail.RequirementsParserDefinition
 
-class ParsingTest : ParsingTestCase("testData", "requirements.txt",
-        RequirementsParserDefinition()) {
+class ParsingTest : ParsingTestCase(
+    "testData", "requirements.txt", RequirementsParserDefinition()
+) {
     fun testEditable() {
         doTest(true)
     }
@@ -62,6 +63,10 @@ class ParsingTest : ParsingTestCase("testData", "requirements.txt",
     }
 
     fun testRequirement() {
+        doTest(true)
+    }
+
+    fun testSysPlatform() {
         doTest(true)
     }
 
