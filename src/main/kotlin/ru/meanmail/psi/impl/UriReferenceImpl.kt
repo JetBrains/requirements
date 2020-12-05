@@ -7,15 +7,15 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiReference
-import com.intellij.util.IncorrectOperationException
 import ru.meanmail.Reference
+import ru.meanmail.createUriReference
 import ru.meanmail.psi.RelativeRef
 import ru.meanmail.psi.Uri
 import ru.meanmail.psi.UriReference
 import ru.meanmail.psi.Visitor
 
 class UriReferenceImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), UriReference {
+    ASTWrapperPsiElement(node), UriReference {
 
     override val relativeRef: RelativeRef?
         get() = findChildByClass(RelativeRef::class.java)
@@ -46,7 +46,7 @@ class UriReferenceImpl(node: ASTNode) :
 
 
     override fun setName(name: String): PsiElement {
-        throw IncorrectOperationException()
+        return createUriReference(project, name)
     }
 
     override fun getName(): String? {

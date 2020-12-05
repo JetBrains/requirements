@@ -8,7 +8,7 @@ import ru.meanmail.psi.RelativeRef
 import ru.meanmail.psi.UriReference
 
 class Reference(uriReference: UriReference) :
-        PsiReferenceBase<UriReference>(uriReference, null, false) {
+    PsiReferenceBase<UriReference>(uriReference, null, false) {
     override fun resolve(): PsiElement? {
         val relativeRef = element.relativeRef
 
@@ -27,5 +27,11 @@ class Reference(uriReference: UriReference) :
 
     override fun getRangeInElement(): TextRange {
         return TextRange(0, element.textLength)
+    }
+
+    override fun handleElementRename(newElementName: String): PsiElement? {
+        val newElement = element.setName(newElementName)
+        element.parent.node.replaceChild(element.node, newElement.node)
+        return newElement
     }
 }
