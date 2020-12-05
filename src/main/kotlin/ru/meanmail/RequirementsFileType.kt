@@ -23,7 +23,7 @@ object RequirementsFileType : LanguageFileType(RequirementsLanguage) {
         return DEFAULT_EXTENSION
     }
 
-    override fun getIcon(): Icon? {
+    override fun getIcon(): Icon {
         return AllIcons.FILE
     }
 

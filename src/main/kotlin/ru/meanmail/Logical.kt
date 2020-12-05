@@ -28,8 +28,9 @@ class And(private vararg val items: Logical) : Logical {
 
 }
 
-class Expression(val variable: String,
-                 val operation: String, var value: String) : Logical {
+class Expression(
+    val variable: String, val operation: String, var value: String
+) : Logical {
     override fun check(values: Map<String, String?>): Boolean {
         val actual = values[variable] ?: return false
 
@@ -39,17 +40,22 @@ class Expression(val variable: String,
 
         if (variable in VERSION_VARIABLES) {
             return compareVersions(
-                    PyPackageVersionNormalizer.normalize(actual),
-                    operation,
-                    PyPackageVersionNormalizer.normalize(value)
+                PyPackageVersionNormalizer.normalize(actual),
+                operation,
+                PyPackageVersionNormalizer.normalize(value)
             )
         }
 
-        if (operation == "==") {
-            return actual == value
+        return when (operation) {
+            "==" -> {
+                actual == value
+            }
+            "!=" -> {
+                actual != value
+            }
+            else -> false
         }
 
-        return false
     }
 
 }

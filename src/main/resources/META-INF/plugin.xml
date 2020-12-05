@@ -1,9 +1,9 @@
-<idea-plugin>
+<idea-plugin url="https://meanmail.dev/plugin/1">
     <id>ru.meanmail.plugin.requirements</id>
     <name>Requirements</name>
     <version>SNAPSHOT</version>
     <idea-version since-build="173"/>
-    <vendor email="plugin@meanmail.ru" url="https://meanmail.dev/plugin/1">meanmail</vendor>
+    <vendor email="plugin@meanmail.ru" url="https://meanmail.dev">meanmail</vendor>
     <description></description>
     <change-notes></change-notes>
 
@@ -15,8 +15,10 @@
                   language="requirements.txt"
                   order="first"
                   name="requirements.txt"
-                  fileNames="requirements.txt"
-                  patterns="*.txt"/>
+                  fileNames="requirements.txt;constrains.txt"
+                  patterns="*requirements*.txt;*.txt"/>
+        <fileTypeDetector implementation="ru.meanmail.RequirementsFileTypeDetector"
+                          order="first"/>
         <localInspection language="requirements.txt"
                          shortName="ReferenceExistsInspection"
                          suppressId="Requirements"
