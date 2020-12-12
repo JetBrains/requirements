@@ -1,3 +1,8 @@
+## 2020.5 (December, 12, 2020)
+* Fix: java.lang.NoClassDefFoundError
+* Fix: Package manager is not available
++ Support error reporting
+
 ## 2020.4.1 (December, 5, 2020)
 * Fix environment marker comparison
 * Improve files detection
