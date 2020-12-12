@@ -1,4 +1,5 @@
 # Requirements plugin
+
 ![JetBrains IntelliJ Plugins](https://img.shields.io/jetbrains/plugin/r/stars/10837?label=JetBrans%20Marketplace)
 ![JetBrains IntelliJ plugins](https://img.shields.io/jetbrains/plugin/d/10837)
 
@@ -11,6 +12,7 @@ Your ratings and feedback are very important. The feature will appear the faster
 ## Supported versions of Intellij:
 
 *Supported Products*
+
 - IntelliJ IDEA Education 2020.2 — 2020.3
 - PyCharm Professional 2020.2 — 2020.3
 - PyCharm Educational 2020.2 — 2020.3
@@ -33,20 +35,28 @@ Your ratings and feedback are very important. The feature will appear the faster
 * Opening packages in a browser (Ctrl + click)
 * Reformat file
 
+## Actions
+
+* Install All packages
+
 ## Code Inspections
 
 PyCharm, and other products if the Python plugin is installed:
+
 * Check if packages are installed
 * Checking package versions
+* Check for duplicate definitions
 
 All IDEs:
+
 * Check if there are files to which there is a link
-* Check for duplicate definitions
 
 ## Quick fixes
 
 PyCharm, and other products if the Python plugin is installed:
+
 * Install package
+* Remove duplicate
 
 ## TODO
 
