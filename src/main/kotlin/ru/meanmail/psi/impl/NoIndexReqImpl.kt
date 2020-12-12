@@ -13,7 +13,7 @@ class NoIndexReqImpl(node: ASTNode) : ASTWrapperPsiElement(node), NoIndexReq {
         visitor.visitNoIndexReq(this)
     }
 
-    override fun getNameIdentifier(): PsiElement? {
+    override fun getNameIdentifier(): PsiElement {
         return this
     }
 

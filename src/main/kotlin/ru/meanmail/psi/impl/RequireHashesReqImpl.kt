@@ -9,13 +9,13 @@ import ru.meanmail.psi.RequireHashesReq
 import ru.meanmail.psi.Visitor
 
 class RequireHashesReqImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), RequireHashesReq {
+    ASTWrapperPsiElement(node), RequireHashesReq {
     fun accept(visitor: Visitor) {
         visitor.visitRequireHashesReq(this)
     }
 
 
-    override fun getNameIdentifier(): PsiElement? {
+    override fun getNameIdentifier(): PsiElement {
         return this
     }
 

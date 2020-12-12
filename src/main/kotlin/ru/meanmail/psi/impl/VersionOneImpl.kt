@@ -7,12 +7,12 @@ import com.intellij.openapi.paths.WebReference
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiReference
-import com.jetbrains.python.packaging.PyPIPackageUtil
+import ru.meanmail.PYPI_URL
 import ru.meanmail.createNodeFromText
 import ru.meanmail.psi.*
 
 class VersionOneImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), VersionOne {
+    ASTWrapperPsiElement(node), VersionOne {
 
     override val version: VersionStmt
         get() = findNotNullChildByClass(VersionStmt::class.java)
@@ -40,17 +40,17 @@ class VersionOneImpl(node: ASTNode) :
             parent = parent.parent
         }
         val packageName = (parent as? NameReq)?.name ?: return null
-        val url = "${PyPIPackageUtil.PYPI_URL}/${packageName.text}/${version.text}"
+        val url = "${PYPI_URL}/${packageName.text}/${version.text}"
         val textRange = TextRange(0, textLength)
         return WebReference(this, textRange, url)
     }
 
     override fun setVersion(newVersion: String) {
         WriteCommandAction.runWriteCommandAction(project,
-                "Update package version",
-                "Requirements", Runnable {
-            val newVersionNode = createNodeFromText(Types.VERSION, newVersion)
-            version.node.replaceChild(version.firstChild.node, newVersionNode)
-        })
+            "Update package version",
+            "Requirements", {
+                val newVersionNode = createNodeFromText(Types.VERSION, newVersion)
+                version.node.replaceChild(version.firstChild.node, newVersionNode)
+            })
     }
 }

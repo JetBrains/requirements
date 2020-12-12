@@ -10,12 +10,12 @@ import ru.meanmail.psi.NoBinaryReq
 import ru.meanmail.psi.Visitor
 
 class NoBinaryReqImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), NoBinaryReq {
+    ASTWrapperPsiElement(node), NoBinaryReq {
     fun accept(visitor: Visitor) {
         visitor.visitNoBinaryReq(this)
     }
 
-    override fun getNameIdentifier(): PsiElement? {
+    override fun getNameIdentifier(): PsiElement {
         return this
     }
 

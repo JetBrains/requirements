@@ -8,10 +8,10 @@ class RequirementsCommenter : Commenter {
 
     override fun getCommentedBlockCommentSuffix(): String? = null
 
-    override fun getBlockCommentPrefix(): String? = ""
+    override fun getBlockCommentPrefix(): String? = null
 
     override fun getBlockCommentSuffix(): String? = null
 
-    override fun getLineCommentPrefix(): String? = "# "
+    override fun getLineCommentPrefix(): String = "# "
 
 }

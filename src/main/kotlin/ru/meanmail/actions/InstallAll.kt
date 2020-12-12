@@ -12,6 +12,7 @@ import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import ru.meanmail.RequirementsLanguage
+import ru.meanmail.getPackageManager
 import ru.meanmail.psi.*
 import ru.meanmail.reparseFile
 
@@ -41,20 +42,24 @@ class InstallAllAction : AnAction() {
         ProgressManager.getInstance().run(task)
     }
 
-    class InstallTask(project: Project, val requirements: List<String>,
-                      title: String, private val virtualFile: VirtualFile) :
-            Task.Backgroundable(project, title, false) {
+    class InstallTask(
+        project: Project, val requirements: List<String>,
+        title: String, private val virtualFile: VirtualFile
+    ) :
+        Task.Backgroundable(project, title, false) {
         override fun run(indicator: ProgressIndicator) {
             indicator.text = this.title
             indicator.isIndeterminate = true
 
-            val packageManager = RequirementsPsiImplUtil.getPackageManager(project)
+            val packageManager = getPackageManager(project)
 
             if (packageManager == null) {
-                Notification("pip",
-                        title,
-                        "Package manager is not available",
-                        NotificationType.ERROR).notify(project)
+                Notification(
+                    "pip",
+                    title,
+                    "Package manager is not available",
+                    NotificationType.ERROR
+                ).notify(project)
                 return
             }
             for (requirement in requirements) {
@@ -75,15 +80,19 @@ class InstallAllAction : AnAction() {
         }
 
         private fun showSuccess(requirement: String) {
-            val notification = Notification("pip",
-                    requirement, "Successfully installed",
-                    NotificationType.INFORMATION)
+            val notification = Notification(
+                "pip",
+                requirement, "Successfully installed",
+                NotificationType.INFORMATION
+            )
             notification.notify(project)
         }
 
         private fun showError(requirement: String, message: String) {
-            val notification = Notification("pip.failed",
-                    requirement, message, NotificationType.ERROR)
+            val notification = Notification(
+                "pip.failed",
+                requirement, message, NotificationType.ERROR
+            )
             notification.notify(project)
         }
     }

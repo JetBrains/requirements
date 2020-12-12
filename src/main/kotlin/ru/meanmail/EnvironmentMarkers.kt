@@ -1,8 +1,10 @@
+@file:Suppress("unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused")
+
 package ru.meanmail
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.projectRoots.Sdk
-import ru.meanmail.psi.RequirementsPsiImplUtil
+import java.io.File
 import java.io.IOException
 import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
@@ -21,16 +23,16 @@ const val IMPLEMENTATION_VERSION = "implementation_version"
 const val EXTRA = "extra"
 
 val VERSION_VARIABLES = listOf(
-        IMPLEMENTATION_VERSION,
-        PLATFORM_RELEASE,
-        PYTHON_FULL_VERSION,
-        PYTHON_VERSION
+    IMPLEMENTATION_VERSION,
+    PLATFORM_RELEASE,
+    PYTHON_FULL_VERSION,
+    PYTHON_VERSION
 )
 
 val markersCache = mutableMapOf<String, Pair<Map<String, String?>, LocalDateTime>>()
 
 fun getMarkers(project: Project): Map<String, String?> {
-    val sdk = RequirementsPsiImplUtil.getSdk(project) ?: return emptyMap()
+    val sdk = getSdk(project) ?: return emptyMap()
 
     val cached = markersCache[sdk.name]
     if (cached != null) {
@@ -39,10 +41,9 @@ fun getMarkers(project: Project): Map<String, String?> {
             return cached.first
         }
     }
-    val scriptResource = RequirementsPsiImplUtil::class.java
-            .getResource("/python_info.py")
+    val scriptResource = object {}.javaClass.getResource("/python_info.py")
 
-    val script = createTempFile()
+    val script = File.createTempFile("tmp", null)
     script.writeText(scriptResource.readText())
 
     val result = execPython(sdk, script.path) ?: return emptyMap()
@@ -66,9 +67,9 @@ fun execPython(sdk: Sdk, path: String): String? {
     try {
         val parts = listOf(sdk.homePath, path)
         val proc = ProcessBuilder(*parts.toTypedArray())
-                .redirectOutput(ProcessBuilder.Redirect.PIPE)
-                .redirectError(ProcessBuilder.Redirect.PIPE)
-                .start()
+            .redirectOutput(ProcessBuilder.Redirect.PIPE)
+            .redirectError(ProcessBuilder.Redirect.PIPE)
+            .start()
 
         proc.waitFor(5, TimeUnit.SECONDS)
         val errors = proc.errorStream.bufferedReader().readText()

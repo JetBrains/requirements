@@ -29,7 +29,7 @@ class And(private vararg val items: Logical) : Logical {
 }
 
 class Expression(
-    val variable: String, val operation: String, var value: String
+    private val variable: String, private val operation: String, private var value: String
 ) : Logical {
     override fun check(values: Map<String, String?>): Boolean {
         val actual = values[variable] ?: return false

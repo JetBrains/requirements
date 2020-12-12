@@ -12,7 +12,7 @@ fun createUriReference(project: Project, name: String): UriReference {
 }
 
 fun createFile(project: Project, text: String): RequirementsFile {
-    val name = "dummy.txt";
+    val name = "dummy.txt"
     return PsiFileFactory.getInstance(project).createFileFromText(
         name, RequirementsFileType, text
     ) as RequirementsFile
