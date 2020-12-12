@@ -5,7 +5,7 @@
 
 https://plugins.jetbrains.com/plugin/10837
 
-https://meanmail.dev/plugin/1
+[meanmail.dev](https://meanmail.dev/plugin/1?utm_source=guthub&utm_medium=readme&utm_campaign=requirements&utm_content=meanmail.dev)
 
 Your ratings and feedback are very important. The feature will appear the faster the more people request it.
 
@@ -34,8 +34,11 @@ Your ratings and feedback are very important. The feature will appear the faster
 * Reference to subrequirements files (Ctrl + click)
 * Opening packages in a browser (Ctrl + click)
 * Reformat file
+* Support renaming
 
 ## Actions
+
+PyCharm, and other products if the Python plugin is installed:
 
 * Install All packages
 
@@ -46,6 +49,7 @@ PyCharm, and other products if the Python plugin is installed:
 * Check if packages are installed
 * Checking package versions
 * Check for duplicate definitions
+* Checking environment markers
 
 All IDEs:
 
