@@ -3,7 +3,7 @@
     <id>ru.meanmail.plugin.requirements</id>
     <name>Requirements</name>
     <version>SNAPSHOT</version>
-    <idea-version since-build="203.3645.34"/>
+    <idea-version since-build="202"/>
     <vendor email="plugin@meanmail.ru" url="https://meanmail.dev">meanmail</vendor>
     <description></description>
     <change-notes></change-notes>
