@@ -8,7 +8,7 @@ import ru.meanmail.psi.PctEncoded
 import ru.meanmail.psi.Visitor
 
 class PctEncodedImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), PctEncoded {
+    ASTWrapperPsiElement(node), PctEncoded {
 
     override val hexdig: Hexdig
         get() = findNotNullChildByClass(Hexdig::class.java)

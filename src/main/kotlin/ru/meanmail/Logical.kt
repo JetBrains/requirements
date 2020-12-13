@@ -20,30 +20,31 @@ class Or(private vararg val items: Logical) : Logical {
 
 class And(private vararg val items: Logical) : Logical {
     override fun check(values: Map<String, String?>): Boolean {
-        if (items.isEmpty()) {
-            return false
-        }
         return items.all { it.check(values) }
     }
 
 }
 
 class Expression(
-    private val variable: String, private val operation: String, private var value: String
+    private val variable: String, private val operation: String,
+    private val value: String
 ) : Logical {
-    override fun check(values: Map<String, String?>): Boolean {
-        val actual = values[variable] ?: return false
-
-        if (operation == "===") {
-            return actual == value
+    private val isVersion: Boolean
+        get() {
+            return variable in VERSION_VARIABLES
         }
 
-        if (variable in VERSION_VARIABLES) {
-            return compareVersions(
-                PyPackageVersionNormalizer.normalize(actual),
-                operation,
-                PyPackageVersionNormalizer.normalize(value)
-            )
+    private fun checkVersion(actual: String, value: String): Boolean {
+        return compareVersions(
+            PyPackageVersionNormalizer.normalize(actual),
+            operation,
+            PyPackageVersionNormalizer.normalize(value)
+        )
+    }
+
+    private fun checkOther(actual: String, value: String): Boolean {
+        if (operation == "===") {
+            return actual == value
         }
 
         return when (operation) {
@@ -55,7 +56,16 @@ class Expression(
             }
             else -> false
         }
+    }
 
+    override fun check(values: Map<String, String?>): Boolean {
+        val actual = values[variable] ?: return false
+
+        return if (isVersion) {
+            checkVersion(actual, value)
+        } else {
+            checkOther(actual, value)
+        }
     }
 
 }

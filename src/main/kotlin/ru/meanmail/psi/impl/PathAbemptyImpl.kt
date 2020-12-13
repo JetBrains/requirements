@@ -9,7 +9,7 @@ import ru.meanmail.psi.Segment
 import ru.meanmail.psi.Visitor
 
 class PathAbemptyImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), PathAbempty {
+    ASTWrapperPsiElement(node), PathAbempty {
 
     override val segmentList: List<Segment>
         get() = PsiTreeUtil.getChildrenOfTypeAsList(this, Segment::class.java)

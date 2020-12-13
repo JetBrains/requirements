@@ -8,7 +8,7 @@ import ru.meanmail.psi.QuotedMarker
 import ru.meanmail.psi.Visitor
 
 class QuotedMarkerImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), QuotedMarker {
+    ASTWrapperPsiElement(node), QuotedMarker {
 
     override val marker: Marker
         get() = findNotNullChildByClass(Marker::class.java)

@@ -21,12 +21,14 @@ const val PYTHON_FULL_VERSION = "python_full_version"
 const val IMPLEMENTATION_NAME = "implementation_name"
 const val IMPLEMENTATION_VERSION = "implementation_version"
 const val EXTRA = "extra"
+const val PACKAGE_VERSION = "package_version"
 
 val VERSION_VARIABLES = listOf(
     IMPLEMENTATION_VERSION,
     PLATFORM_RELEASE,
     PYTHON_FULL_VERSION,
-    PYTHON_VERSION
+    PYTHON_VERSION,
+    PACKAGE_VERSION
 )
 
 val markersCache = mutableMapOf<String, Pair<Map<String, String?>, LocalDateTime>>()

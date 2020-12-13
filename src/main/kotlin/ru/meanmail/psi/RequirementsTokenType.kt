@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NonNls
 import ru.meanmail.RequirementsLanguage
 
 class RequirementsTokenType(@NonNls debugName: String) :
-        IElementType(debugName, RequirementsLanguage) {
+    IElementType(debugName, RequirementsLanguage) {
 
     override fun toString(): String {
         return "RequirementsTokenType.${super.toString()}"

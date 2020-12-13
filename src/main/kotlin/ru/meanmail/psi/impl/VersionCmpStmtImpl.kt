@@ -7,7 +7,7 @@ import ru.meanmail.psi.VersionCmpStmt
 import ru.meanmail.psi.Visitor
 
 class VersionCmpStmtImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), VersionCmpStmt {
+    ASTWrapperPsiElement(node), VersionCmpStmt {
 
     fun accept(visitor: Visitor) {
         visitor.visitVersionCmpStmt(this)

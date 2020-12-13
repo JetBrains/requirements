@@ -10,24 +10,30 @@ import ru.meanmail.quickfix.RemoveUnusedQuickFix
 
 
 class UnusedInspection : LocalInspectionTool() {
-    override fun buildVisitor(holder: ProblemsHolder,
-                              isOnTheFly: Boolean,
-                              session: LocalInspectionToolSession): PsiElementVisitor {
+    override fun buildVisitor(
+        holder: ProblemsHolder,
+        isOnTheFly: Boolean,
+        session: LocalInspectionToolSession
+    ): PsiElementVisitor {
         return Visitor(holder, isOnTheFly, session)
     }
 
     companion object {
-        class Visitor(holder: ProblemsHolder,
-                      onTheFly: Boolean,
-                      session: LocalInspectionToolSession) :
-                BaseInspectionVisitor(holder, onTheFly, session) {
+        class Visitor(
+            holder: ProblemsHolder,
+            onTheFly: Boolean,
+            session: LocalInspectionToolSession
+        ) :
+            BaseInspectionVisitor(holder, onTheFly, session) {
 
             override fun visitRequirementsFile(element: RequirementsFile) {
                 for (req in element.disabledRequirements()) {
                     val message = "Unused ${req.displayName}"
-                    holder.registerProblem(req, message,
-                            ProblemHighlightType.LIKE_UNUSED_SYMBOL,
-                            RemoveUnusedQuickFix(req, "Remove unused: ${req.displayName}"))
+                    holder.registerProblem(
+                        req, message,
+                        ProblemHighlightType.LIKE_UNUSED_SYMBOL,
+                        RemoveUnusedQuickFix(req, "Remove unused: ${req.displayName}")
+                    )
                 }
             }
         }

@@ -2,10 +2,12 @@ package ru.meanmail.psi.impl
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
+import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.util.PsiTreeUtil.getChildrenOfTypeAsList
 import com.intellij.util.IncorrectOperationException
+import ru.meanmail.createVersionspec
 import ru.meanmail.psi.*
 
 class NameReqImpl(node: ASTNode) : ASTWrapperPsiElement(node), NameReq {
@@ -48,4 +50,17 @@ class NameReqImpl(node: ASTNode) : ASTWrapperPsiElement(node), NameReq {
         return name
     }
 
+    override fun setVersion(newVersion: String) {
+        WriteCommandAction.runWriteCommandAction(project,
+            "Update package version",
+            "Requirements", {
+                val newVersionSpecNode = createVersionspec(project, newVersion).node
+                val oldVersionSpecNode = versionspec?.node
+                if (oldVersionSpecNode == null) {
+                    node.addChild(newVersionSpecNode)
+                } else {
+                    node.replaceChild(oldVersionSpecNode, newVersionSpecNode)
+                }
+            })
+    }
 }

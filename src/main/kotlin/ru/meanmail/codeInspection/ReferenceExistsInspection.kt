@@ -9,17 +9,21 @@ import ru.meanmail.psi.EditableReq
 import ru.meanmail.psi.UriReference
 
 class ReferenceExistsInspection : LocalInspectionTool() {
-    override fun buildVisitor(holder: ProblemsHolder,
-                              isOnTheFly: Boolean,
-                              session: LocalInspectionToolSession): PsiElementVisitor {
+    override fun buildVisitor(
+        holder: ProblemsHolder,
+        isOnTheFly: Boolean,
+        session: LocalInspectionToolSession
+    ): PsiElementVisitor {
         return Visitor(holder, isOnTheFly, session)
     }
 
     companion object {
-        class Visitor(holder: ProblemsHolder,
-                      onTheFly: Boolean,
-                      session: LocalInspectionToolSession) :
-                BaseInspectionVisitor(holder, onTheFly, session) {
+        class Visitor(
+            holder: ProblemsHolder,
+            onTheFly: Boolean,
+            session: LocalInspectionToolSession
+        ) :
+            BaseInspectionVisitor(holder, onTheFly, session) {
 
             override fun visitUriReference(element: UriReference) {
                 val reference = element.reference

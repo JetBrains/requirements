@@ -10,19 +10,23 @@ import ru.meanmail.quickfix.RemoveUnusedQuickFix
 
 
 class DuplicatedInspection : LocalInspectionTool() {
-    override fun buildVisitor(holder: ProblemsHolder,
-                              isOnTheFly: Boolean,
-                              session: LocalInspectionToolSession): PsiElementVisitor {
+    override fun buildVisitor(
+        holder: ProblemsHolder,
+        isOnTheFly: Boolean,
+        session: LocalInspectionToolSession
+    ): PsiElementVisitor {
         return Visitor(holder, isOnTheFly, session)
     }
 
     companion object {
         const val MAX_LENGTH: Int = 32
 
-        class Visitor(holder: ProblemsHolder,
-                      onTheFly: Boolean,
-                      session: LocalInspectionToolSession) :
-                BaseInspectionVisitor(holder, onTheFly, session) {
+        class Visitor(
+            holder: ProblemsHolder,
+            onTheFly: Boolean,
+            session: LocalInspectionToolSession
+        ) :
+            BaseInspectionVisitor(holder, onTheFly, session) {
 
             override fun visitRequirementsFile(element: RequirementsFile) {
                 val names = mutableMapOf<String, Int>()
@@ -45,8 +49,10 @@ class DuplicatedInspection : LocalInspectionTool() {
 
                         val message = "The '$name' $type on line $lineNumber " +
                                 "is already defined on line $line"
-                        holder.registerProblem(req, message,
-                                RemoveUnusedQuickFix(req, "Remove duplicate"))
+                        holder.registerProblem(
+                            req, message,
+                            RemoveUnusedQuickFix(req, "Remove duplicate")
+                        )
                     } else {
                         names[text] = lineNumber
                     }

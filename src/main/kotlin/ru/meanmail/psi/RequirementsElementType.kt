@@ -5,4 +5,4 @@ import org.jetbrains.annotations.NonNls
 import ru.meanmail.RequirementsLanguage
 
 class RequirementsElementType(@NonNls debugName: String) :
-        IElementType(debugName, RequirementsLanguage)
+    IElementType(debugName, RequirementsLanguage)

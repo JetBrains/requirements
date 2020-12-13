@@ -11,10 +11,6 @@ import com.intellij.openapi.projectRoots.Sdk
 import com.intellij.openapi.roots.ProjectRootManager
 import com.jetbrains.python.packaging.*
 import com.jetbrains.python.sdk.PythonSdkType
-import java.io.IOException
-import java.time.LocalDateTime
-
-val cache = mutableMapOf<String, Pair<PyPackageVersion?, LocalDateTime>>()
 
 fun getSdk(project: Project): Sdk? {
     val projectRootManager = ProjectRootManager.getInstance(project)
@@ -43,7 +39,7 @@ fun getPackage(project: Project, packageName: String): PyPackage? {
     return packages.firstOrNull { formatPackageName(it.name) == formattedPackageName }
 }
 
-fun getCurrentVersion(project: Project, packageName: String): PyPackageVersion? {
+fun getInstalledVersion(project: Project, packageName: String): PyPackageVersion? {
     val pyPackage = getPackage(project, packageName) ?: return null
     if (!pyPackage.isInstalled) {
         return null
@@ -51,56 +47,13 @@ fun getCurrentVersion(project: Project, packageName: String): PyPackageVersion? 
     return PyPackageVersionNormalizer.normalize(pyPackage.version)
 }
 
-fun getVersions(
-    project: Project,
-    packageName: String,
-    version: String?
-): Triple<PyPackageVersion?, PyPackageVersion?, PyPackageVersion?> {
-    val installed = getCurrentVersion(project, packageName)
-    val latest = getLatestVersion(project, packageName)
-    val required = if (version == null) {
-        latest
-    } else {
-        PyPackageVersionNormalizer.normalize(version)
-    }
-
-    return Triple(
-        first = required,
-        second = installed,
-        third = latest
-    )
-}
-
-fun getLatestVersion(project: Project, packageName: String): PyPackageVersion? {
-    val key = formatPackageName(packageName)
-    val cached = cache[key]
-    if (cached != null) {
-        val actual = cached.second.plusDays(1).isAfter(LocalDateTime.now())
-        if (actual) {
-            return cached.first
-        }
-    }
-
-    val latestVersion: String
-
-    try {
-        latestVersion = PyPIPackageUtil.INSTANCE
-            .fetchLatestPackageVersion(project, packageName) ?: return null
-    } catch (e: IOException) {
-        return null
-    }
-    val version = PyPackageVersionNormalizer.normalize(latestVersion) ?: return null
-    cache[key] = version to LocalDateTime.now()
-    return version
-}
-
 fun installPackage(
     project: Project, packageName: String,
-    version: String, versionCmp: String,
+    version: String,
     onInstalled: (() -> Unit)?
 ) {
-    val currentVersion = getCurrentVersion(project, packageName)
-    if (currentVersion?.presentableText == version) {
+    val installedVersion = getInstalledVersion(project, packageName)
+    if (installedVersion?.presentableText == version) {
         Notification(
             "pip",
             "$packageName (${version})",
@@ -113,10 +66,8 @@ fun installPackage(
         return
     }
 
-    val text = "$packageName$versionCmp$version"
+    val text = "$packageName version $version"
     val title = "Installing '$text'"
-
-    // TODO Use versionCmp
 
     val task = object : Task.Backgroundable(project, title) {
         override fun run(indicator: ProgressIndicator) {
@@ -127,7 +78,7 @@ fun installPackage(
                 val packageManager = getPackageManager(project)
 
                 if (packageManager != null) {
-                    packageManager.install(text)
+                    packageManager.install("$packageName==$version")
                 } else {
                     Notification(
                         "pip",

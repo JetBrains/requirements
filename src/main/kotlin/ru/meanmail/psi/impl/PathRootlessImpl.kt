@@ -10,7 +10,7 @@ import ru.meanmail.psi.SegmentNz
 import ru.meanmail.psi.Visitor
 
 class PathRootlessImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), PathRootless {
+    ASTWrapperPsiElement(node), PathRootless {
 
     override val segmentList: List<Segment>
         get() = PsiTreeUtil.getChildrenOfTypeAsList(this, Segment::class.java)

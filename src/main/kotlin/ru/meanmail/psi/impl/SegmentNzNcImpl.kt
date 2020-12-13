@@ -10,7 +10,7 @@ import ru.meanmail.psi.Unreserved
 import ru.meanmail.psi.Visitor
 
 class SegmentNzNcImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), SegmentNzNc {
+    ASTWrapperPsiElement(node), SegmentNzNc {
 
     override val pctEncodedList: List<PctEncoded>
         get() = PsiTreeUtil.getChildrenOfTypeAsList(this, PctEncoded::class.java)

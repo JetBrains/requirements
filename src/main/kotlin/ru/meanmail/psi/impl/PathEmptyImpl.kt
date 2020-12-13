@@ -8,7 +8,7 @@ import ru.meanmail.psi.Pchar
 import ru.meanmail.psi.Visitor
 
 class PathEmptyImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), PathEmpty {
+    ASTWrapperPsiElement(node), PathEmpty {
 
     override val pchar: Pchar
         get() = findNotNullChildByClass(Pchar::class.java)

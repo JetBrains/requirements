@@ -9,7 +9,8 @@ import com.intellij.psi.NavigatablePsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import ru.meanmail.psi.*
 
-class RequirementsStructureViewElement(private val element: NavigatablePsiElement) : StructureViewTreeElement, SortableTreeElement {
+class RequirementsStructureViewElement(private val element: NavigatablePsiElement) : StructureViewTreeElement,
+    SortableTreeElement {
 
     override fun getValue(): Any {
         return element
@@ -41,14 +42,16 @@ class RequirementsStructureViewElement(private val element: NavigatablePsiElemen
 
     override fun getChildren(): Array<TreeElement> {
         if (element is RequirementsFile) {
-            return PsiTreeUtil.getChildrenOfAnyType(element,
-                    NameReq::class.java,
-                    EditableReq::class.java,
-                    PathReq::class.java,
-                    ReferReq::class.java,
-                    UrlReq::class.java)
-                    .map { RequirementsStructureViewElement(it as NavigatablePsiElement) }
-                    .toTypedArray()
+            return PsiTreeUtil.getChildrenOfAnyType(
+                element,
+                NameReq::class.java,
+                EditableReq::class.java,
+                PathReq::class.java,
+                ReferReq::class.java,
+                UrlReq::class.java
+            )
+                .map { RequirementsStructureViewElement(it as NavigatablePsiElement) }
+                .toTypedArray()
         }
         return emptyArray()
     }

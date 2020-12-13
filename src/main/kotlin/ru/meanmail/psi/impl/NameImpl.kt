@@ -24,7 +24,7 @@ class NameImpl(node: ASTNode) : ASTWrapperPsiElement(node), Name {
     }
 
     override fun getReference(): PsiReference {
-        val url = "${PYPI_URL}/$text"
+        val url = "${PYPI_URL}/project/$text"
         val textRange = TextRange(0, textLength)
         return WebReference(this, textRange, url)
     }

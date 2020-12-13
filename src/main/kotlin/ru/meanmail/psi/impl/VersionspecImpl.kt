@@ -3,12 +3,13 @@ package ru.meanmail.psi.impl
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElementVisitor
+import ru.meanmail.PACKAGE_VERSION
 import ru.meanmail.psi.VersionMany
 import ru.meanmail.psi.Versionspec
 import ru.meanmail.psi.Visitor
 
 class VersionspecImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), Versionspec {
+    ASTWrapperPsiElement(node), Versionspec {
 
     override val versionMany: VersionMany
         get() = findNotNullChildByClass(VersionMany::class.java)
@@ -22,6 +23,14 @@ class VersionspecImpl(node: ASTNode) :
             accept(visitor)
         else
             super.accept(visitor)
+    }
+
+    override fun isActual(version: String): Boolean {
+        return versionMany.logical().check(
+            mapOf(
+                PACKAGE_VERSION to version
+            )
+        )
     }
 
 }
