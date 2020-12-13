@@ -47,6 +47,8 @@ PyCharm, and other products if the Python plugin is installed:
 PyCharm, and other products if the Python plugin is installed:
 
 * Check if packages are installed
+* Check if package exists
+* Check if package version exists
 * Checking package versions
 * Check for duplicate definitions
 * Checking environment markers
@@ -61,10 +63,3 @@ PyCharm, and other products if the Python plugin is installed:
 
 * Install package
 * Remove duplicate
-
-## TODO
-
-* Distinguish a plain text file from file requirements.txt
-* Support all relations
-* Opening local source code
-* Code completion
