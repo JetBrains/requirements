@@ -2,7 +2,6 @@ package ru.meanmail.codeInspection
 
 import com.intellij.codeInspection.*
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.util.NlsSafe
 import com.intellij.psi.PsiElementVisitor
 import com.jetbrains.python.packaging.PyPackageVersion
 import com.jetbrains.python.packaging.PyPackageVersionNormalizer
@@ -82,7 +81,7 @@ class InstalledPackageInspection : LocalInspectionTool() {
 
             private fun exactRequiredIsNotInstalled(
                 element: NameReq,
-                packageName: @NlsSafe String,
+                packageName: String,
                 exactRequired: PyPackageVersion,
                 installed: PyPackageVersion?,
                 latest: PyPackageVersion?
@@ -108,7 +107,7 @@ class InstalledPackageInspection : LocalInspectionTool() {
 
             private fun exactRequiredIsOutdated(
                 element: NameReq,
-                packageName: @NlsSafe String,
+                packageName: String,
                 exactRequired: PyPackageVersion,
                 installed: PyPackageVersion?,
                 latest: PyPackageVersion
@@ -137,7 +136,7 @@ class InstalledPackageInspection : LocalInspectionTool() {
 
             private fun requiredIsNotInstalled(
                 element: NameReq,
-                packageName: @NlsSafe String,
+                packageName: String,
                 installed: PyPackageVersion?,
                 latest: PyPackageVersion?,
                 suitableVersion: PyPackageVersion
@@ -166,7 +165,7 @@ class InstalledPackageInspection : LocalInspectionTool() {
 
             private fun requiredIsOutdated(
                 element: NameReq,
-                packageName: @NlsSafe String,
+                packageName: String,
                 installed: PyPackageVersion?,
                 latest: PyPackageVersion
             ) {
@@ -196,7 +195,7 @@ class InstalledPackageInspection : LocalInspectionTool() {
 
             private fun noSuitableVersion(
                 element: NameReq,
-                packageName: @NlsSafe String,
+                packageName: String,
                 installed: PyPackageVersion?,
                 latest: PyPackageVersion?,
                 versions: List<PyPackageVersion>

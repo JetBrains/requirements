@@ -1,22 +1,23 @@
 package ru.meanmail.reformat
 
 import com.intellij.formatting.*
+import com.intellij.psi.PsiElement
 import com.intellij.psi.codeStyle.CodeStyleSettings
 import ru.meanmail.RequirementsLanguage
 import ru.meanmail.psi.Types
 
 class RequirementsFormattingModelBuilder : FormattingModelBuilder {
-    override fun createModel(formattingContext: FormattingContext): FormattingModel {
+    override fun createModel(element: PsiElement, settings: CodeStyleSettings): FormattingModel {
         return FormattingModelProvider
             .createFormattingModelForPsiFile(
-                formattingContext.containingFile,
+                element.containingFile,
                 Block(
-                    formattingContext.node,
+                    element.node,
                     Wrap.createWrap(WrapType.ALWAYS, false),
                     Alignment.createAlignment(),
-                    createSpaceBuilder(formattingContext.codeStyleSettings)
+                    createSpaceBuilder(settings)
                 ),
-                formattingContext.codeStyleSettings
+                settings
             )
     }
 

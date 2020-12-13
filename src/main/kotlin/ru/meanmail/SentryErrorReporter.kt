@@ -55,11 +55,12 @@ class SentryErrorReporter : ErrorReportSubmitter() {
     }
 
     override fun submit(
-        events: Array<out IdeaLoggingEvent>,
+        events: Array<out IdeaLoggingEvent>?,
         additionalInfo: String?,
         parentComponent: Component,
-        consumer: Consumer<in SubmittedReportInfo>
+        consumer: Consumer<SubmittedReportInfo>
     ): Boolean {
+        events ?: return true
         val dataManager = DataManager.getInstance();
         val context = dataManager.getDataContext(parentComponent);
         val project = CommonDataKeys.PROJECT.getData(context);
