@@ -1,7 +1,11 @@
-## 2020.5 (December, 12, 2020)
+## 2020.5 (December, 13, 2020)
 * Fix: java.lang.NoClassDefFoundError
 * Fix: Package manager is not available
 + Support error reporting
+* Support all relations
++ Check if package exists
++ Check if package version exists
+* Improved performance
 
 ## 2020.4.1 (December, 5, 2020)
 * Fix environment marker comparison
