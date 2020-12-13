@@ -7,7 +7,7 @@ import ru.meanmail.psi.ExtrasList
 import ru.meanmail.psi.Visitor
 
 class ExtrasListImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), ExtrasList {
+    ASTWrapperPsiElement(node), ExtrasList {
 
     fun accept(visitor: Visitor) {
         visitor.visitExtrasList(this)

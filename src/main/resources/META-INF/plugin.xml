@@ -1,8 +1,9 @@
+<!--suppress PluginXmlValidity, CheckTagEmptyBody -->
 <idea-plugin url="https://meanmail.dev/plugin/1">
     <id>ru.meanmail.plugin.requirements</id>
     <name>Requirements</name>
     <version>SNAPSHOT</version>
-    <idea-version since-build="173"/>
+    <idea-version since-build="203.3645.34"/>
     <vendor email="plugin@meanmail.ru" url="https://meanmail.dev">meanmail</vendor>
     <description></description>
     <change-notes></change-notes>
@@ -27,22 +28,7 @@
                          level="ERROR"
                          displayName="File is not exists"
                          implementationClass="ru.meanmail.codeInspection.ReferenceExistsInspection"/>
-        <localInspection language="requirements.txt"
-                         shortName="DuplicatedInspection"
-                         suppressId="DuplicatedInspection"
-                         groupName="Requirements"
-                         enabledByDefault="true"
-                         level="WARNING"
-                         displayName="Duplicated package"
-                         implementationClass="ru.meanmail.codeInspection.DuplicatedInspection"/>
-        <localInspection language="requirements.txt"
-                         shortName="UnusedInspection"
-                         suppressId="UnusedInspection"
-                         groupName="Requirements"
-                         enabledByDefault="true"
-                         level="WARNING"
-                         displayName="Unused package"
-                         implementationClass="ru.meanmail.codeInspection.UnusedInspection"/>
+        <errorHandler implementation="ru.meanmail.SentryErrorReporter"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij.lang">

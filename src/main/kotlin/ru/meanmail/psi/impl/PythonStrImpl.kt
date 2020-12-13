@@ -7,7 +7,7 @@ import ru.meanmail.psi.PythonStr
 import ru.meanmail.psi.Visitor
 
 class PythonStrImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), PythonStr {
+    ASTWrapperPsiElement(node), PythonStr {
 
     fun accept(visitor: Visitor) {
         visitor.visitPythonStr(this)

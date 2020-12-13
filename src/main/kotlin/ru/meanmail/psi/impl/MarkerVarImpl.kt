@@ -8,7 +8,7 @@ import ru.meanmail.psi.PythonStr
 import ru.meanmail.psi.Visitor
 
 class MarkerVarImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), MarkerVar {
+    ASTWrapperPsiElement(node), MarkerVar {
 
     override val pythonStr: PythonStr?
         get() = findChildByClass(PythonStr::class.java)

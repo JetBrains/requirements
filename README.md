@@ -1,16 +1,18 @@
 # Requirements plugin
+
 ![JetBrains IntelliJ Plugins](https://img.shields.io/jetbrains/plugin/r/stars/10837?label=JetBrans%20Marketplace)
 ![JetBrains IntelliJ plugins](https://img.shields.io/jetbrains/plugin/d/10837)
 
 https://plugins.jetbrains.com/plugin/10837
 
-https://meanmail.dev/plugin/1
+[meanmail.dev](https://meanmail.dev/plugin/1?utm_source=guthub&utm_medium=readme&utm_campaign=requirements&utm_content=meanmail.dev)
 
 Your ratings and feedback are very important. The feature will appear the faster the more people request it.
 
 ## Supported versions of Intellij:
 
 *Supported Products*
+
 - IntelliJ IDEA Education 2020.2 — 2020.3
 - PyCharm Professional 2020.2 — 2020.3
 - PyCharm Educational 2020.2 — 2020.3
@@ -32,25 +34,32 @@ Your ratings and feedback are very important. The feature will appear the faster
 * Reference to subrequirements files (Ctrl + click)
 * Opening packages in a browser (Ctrl + click)
 * Reformat file
+* Support renaming
+
+## Actions
+
+PyCharm, and other products if the Python plugin is installed:
+
+* Install All packages
 
 ## Code Inspections
 
 PyCharm, and other products if the Python plugin is installed:
+
 * Check if packages are installed
+* Check if package exists
+* Check if package version exists
 * Checking package versions
+* Check for duplicate definitions
+* Checking environment markers
 
 All IDEs:
+
 * Check if there are files to which there is a link
-* Check for duplicate definitions
 
 ## Quick fixes
 
 PyCharm, and other products if the Python plugin is installed:
+
 * Install package
-
-## TODO
-
-* Distinguish a plain text file from file requirements.txt
-* Support all relations
-* Opening local source code
-* Code completion
+* Remove duplicate

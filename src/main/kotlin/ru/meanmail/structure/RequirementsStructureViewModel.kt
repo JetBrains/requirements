@@ -8,8 +8,8 @@ import com.intellij.psi.PsiFile
 import ru.meanmail.psi.*
 
 class RequirementsStructureViewModel(psiFile: PsiFile) :
-        StructureViewModelBase(psiFile, RequirementsStructureViewElement(psiFile)),
-        StructureViewModel.ElementInfoProvider {
+    StructureViewModelBase(psiFile, RequirementsStructureViewElement(psiFile)),
+    StructureViewModel.ElementInfoProvider {
 
     override fun getSorters(): Array<Sorter> {
         return arrayOf(Sorter.ALPHA_SORTER)

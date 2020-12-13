@@ -6,7 +6,7 @@ import com.intellij.psi.PsiElementVisitor
 import ru.meanmail.psi.*
 
 class AuthorityImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), Authority {
+    ASTWrapperPsiElement(node), Authority {
 
     override val host: Host
         get() = findNotNullChildByClass(Host::class.java)

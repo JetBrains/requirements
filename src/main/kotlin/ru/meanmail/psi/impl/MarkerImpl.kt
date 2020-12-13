@@ -8,7 +8,7 @@ import ru.meanmail.psi.MarkerOr
 import ru.meanmail.psi.Visitor
 
 class MarkerImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), Marker {
+    ASTWrapperPsiElement(node), Marker {
 
     override val markerOr: MarkerOr
         get() = findNotNullChildByClass(MarkerOr::class.java)

@@ -9,7 +9,7 @@ import ru.meanmail.psi.MarkerExpr
 import ru.meanmail.psi.Visitor
 
 class MarkerAndImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), MarkerAnd {
+    ASTWrapperPsiElement(node), MarkerAnd {
 
     override val markerExprList: List<MarkerExpr>
         get() = PsiTreeUtil.getChildrenOfTypeAsList(this, MarkerExpr::class.java)

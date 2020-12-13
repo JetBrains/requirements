@@ -31,4 +31,6 @@ interface NameReq : NamedElement, Requirement {
     override val type: RequirementType
         get() = RequirementType.NAME
 
+    fun setVersion(newVersion: String)
+
 }

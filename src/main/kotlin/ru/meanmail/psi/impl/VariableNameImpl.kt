@@ -7,7 +7,7 @@ import ru.meanmail.psi.VariableName
 import ru.meanmail.psi.Visitor
 
 class VariableNameImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), VariableName {
+    ASTWrapperPsiElement(node), VariableName {
 
     fun accept(visitor: Visitor) {
         visitor.visitVariableName(this)

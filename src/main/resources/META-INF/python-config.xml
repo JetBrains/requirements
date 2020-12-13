@@ -8,6 +8,22 @@
                          level="WARNING"
                          displayName="Package is not installed"
                          implementationClass="ru.meanmail.codeInspection.InstalledPackageInspection"/>
+        <localInspection language="requirements.txt"
+                         shortName="DuplicatedInspection"
+                         suppressId="DuplicatedInspection"
+                         groupName="Requirements"
+                         enabledByDefault="true"
+                         level="WARNING"
+                         displayName="Duplicated package"
+                         implementationClass="ru.meanmail.codeInspection.DuplicatedInspection"/>
+        <localInspection language="requirements.txt"
+                         shortName="UnusedInspection"
+                         suppressId="UnusedInspection"
+                         groupName="Requirements"
+                         enabledByDefault="true"
+                         level="WARNING"
+                         displayName="Unused package"
+                         implementationClass="ru.meanmail.codeInspection.UnusedInspection"/>
     </extensions>
     <actions>
         <action id="requirements.InstallAllAction"

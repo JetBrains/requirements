@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package ru.meanmail.codeInspection
 
 import com.intellij.codeInspection.LocalInspectionToolSession
@@ -8,9 +10,11 @@ import ru.meanmail.psi.NameReq
 import ru.meanmail.psi.RequirementsFile
 import ru.meanmail.psi.UriReference
 
-open class BaseInspectionVisitor(val holder: ProblemsHolder,
-                                 val onTheFly: Boolean,
-                                 val session: LocalInspectionToolSession) : PsiElementVisitor() {
+open class BaseInspectionVisitor(
+    val holder: ProblemsHolder,
+    val onTheFly: Boolean,
+    val session: LocalInspectionToolSession
+) : PsiElementVisitor() {
     override fun visitElement(element: PsiElement) {
         when (element) {
             is RequirementsFile -> visitRequirementsFile(element)

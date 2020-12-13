@@ -8,7 +8,7 @@ import ru.meanmail.RequirementsLanguage
 import ru.meanmail.getMarkers
 
 class RequirementsFile(viewProvider: FileViewProvider) :
-        PsiFileBase(viewProvider, RequirementsLanguage) {
+    PsiFileBase(viewProvider, RequirementsLanguage) {
 
     override fun getFileType(): FileType {
         return RequirementsFileType

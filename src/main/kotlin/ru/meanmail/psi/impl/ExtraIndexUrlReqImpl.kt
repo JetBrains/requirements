@@ -10,7 +10,7 @@ import ru.meanmail.psi.UriReference
 import ru.meanmail.psi.Visitor
 
 class ExtraIndexUrlReqImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), ExtraIndexUrlReq {
+    ASTWrapperPsiElement(node), ExtraIndexUrlReq {
     fun accept(visitor: Visitor) {
         visitor.visitExtraIndexUrlReq(this)
     }

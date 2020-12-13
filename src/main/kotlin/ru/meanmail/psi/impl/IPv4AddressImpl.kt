@@ -9,7 +9,7 @@ import ru.meanmail.psi.IPv4Address
 import ru.meanmail.psi.Visitor
 
 class IPv4AddressImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), IPv4Address {
+    ASTWrapperPsiElement(node), IPv4Address {
 
     override val decOctetList: List<DecOctet>
         get() = PsiTreeUtil.getChildrenOfTypeAsList(this, DecOctet::class.java)

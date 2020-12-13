@@ -8,7 +8,7 @@ import ru.meanmail.psi.Nz
 import ru.meanmail.psi.Visitor
 
 class DecOctetImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), DecOctet {
+    ASTWrapperPsiElement(node), DecOctet {
 
     override val nz: Nz?
         get() = findChildByClass(Nz::class.java)

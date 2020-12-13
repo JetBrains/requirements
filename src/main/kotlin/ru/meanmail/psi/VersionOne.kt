@@ -1,12 +1,14 @@
 package ru.meanmail.psi
 
 import com.intellij.psi.PsiElement
+import ru.meanmail.Logical
 
 interface VersionOne : PsiElement {
 
-    val version: VersionStmt
-
     val versionCmp: VersionCmpStmt
 
-    fun setVersion(newVersion: String)
+    val version: VersionStmt
+
+    fun logical(): Logical
+
 }

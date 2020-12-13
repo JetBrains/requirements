@@ -10,7 +10,7 @@ import ru.meanmail.psi.SegmentNzNc
 import ru.meanmail.psi.Visitor
 
 class PathNoschemeImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), PathNoscheme {
+    ASTWrapperPsiElement(node), PathNoscheme {
 
     override val segmentList: List<Segment>
         get() = PsiTreeUtil.getChildrenOfTypeAsList(this, Segment::class.java)

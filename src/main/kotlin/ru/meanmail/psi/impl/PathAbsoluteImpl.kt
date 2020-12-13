@@ -10,7 +10,7 @@ import ru.meanmail.psi.SegmentNz
 import ru.meanmail.psi.Visitor
 
 class PathAbsoluteImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), PathAbsolute {
+    ASTWrapperPsiElement(node), PathAbsolute {
 
     override val segmentList: List<Segment>
         get() = PsiTreeUtil.getChildrenOfTypeAsList(this, Segment::class.java)

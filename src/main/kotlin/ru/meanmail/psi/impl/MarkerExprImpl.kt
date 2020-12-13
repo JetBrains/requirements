@@ -7,7 +7,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import ru.meanmail.psi.*
 
 class MarkerExprImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), MarkerExpr {
+    ASTWrapperPsiElement(node), MarkerExpr {
 
     override val marker: Marker?
         get() = findChildByClass(Marker::class.java)

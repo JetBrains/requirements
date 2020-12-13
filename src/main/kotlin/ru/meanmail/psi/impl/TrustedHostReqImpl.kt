@@ -11,12 +11,12 @@ import ru.meanmail.psi.TrustedHostReq
 import ru.meanmail.psi.Visitor
 
 class TrustedHostReqImpl(node: ASTNode) :
-        ASTWrapperPsiElement(node), TrustedHostReq {
+    ASTWrapperPsiElement(node), TrustedHostReq {
     fun accept(visitor: Visitor) {
         visitor.visitTrustedHostReq(this)
     }
 
-    override fun getNameIdentifier(): PsiElement? {
+    override fun getNameIdentifier(): PsiElement {
         return this
     }
 

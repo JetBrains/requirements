@@ -2,8 +2,8 @@ package ru.meanmail
 
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiManager
 import com.intellij.psi.PsiReferenceBase
-import com.jetbrains.extensions.python.toPsi
 import ru.meanmail.psi.RelativeRef
 import ru.meanmail.psi.UriReference
 
@@ -21,8 +21,9 @@ class Reference(uriReference: UriReference) :
 
     private fun resolveFile(relativeRef: RelativeRef): PsiElement? {
         val directory = element.containingFile.containingDirectory.virtualFile
-        val file = resolveFile(relativeRef.text, directory)
-        return file?.toPsi(element.project)
+        val file = resolveFile(relativeRef.text, directory) ?: return null
+
+        return PsiManager.getInstance(element.project).findFile(file)
     }
 
     override fun getRangeInElement(): TextRange {

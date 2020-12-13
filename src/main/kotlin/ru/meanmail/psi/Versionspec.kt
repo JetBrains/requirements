@@ -6,4 +6,6 @@ interface Versionspec : PsiElement {
 
     val versionMany: VersionMany
 
+    fun isActual(version: String): Boolean
+
 }
