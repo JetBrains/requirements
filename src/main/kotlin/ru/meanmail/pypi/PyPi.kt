@@ -1,4 +1,4 @@
-package ru.meanmail
+package ru.meanmail.pypi
 
 import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.application.ApplicationManager
@@ -7,9 +7,11 @@ import com.intellij.util.io.HttpRequests
 import com.jetbrains.python.packaging.PyPackageVersion
 import com.jetbrains.python.packaging.PyPackageVersionComparator
 import com.jetbrains.python.packaging.PyPackageVersionNormalizer
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import ru.meanmail.compareTo
+import ru.meanmail.formatPackageName
+import ru.meanmail.pypi.serializers.PackageInfo
 import java.io.IOException
 import java.time.Duration
 import java.time.Instant
@@ -23,26 +25,6 @@ fun getUserAgent(): String {
     return ApplicationNamesInfo.getInstance().productName +
             "/" + ApplicationInfo.getInstance().fullVersion
 }
-
-@Serializable
-data class FileInfo(
-    val comment_text: String,
-    val digests: Map<String, String>,
-    val downloads: Int,
-    val filename: String,
-    val has_sig: Boolean,
-    val md5_digest: String,
-    val packagetype: String,
-    val python_version: String,
-    val size: Int,
-    val upload_time_iso_8601: String,
-    val url: String,
-    val yanked: Boolean,
-    val yanked_reason: String?,
-)
-
-@Serializable
-data class PackageInfo(val releases: Map<String, List<FileInfo>>)
 
 fun loadPackage(packageName: String): PackageInfo {
     return HttpRequests.request("$PYPI_URL/pypi/$packageName/json")
@@ -77,9 +59,21 @@ fun getVersionsList(packageName: String): List<PyPackageVersion> {
             return@executeOnPooledThread getPackageInfo(packageName)
         }.get() ?: return emptyList()
 
+    val infoVersion = packageInfo.info.version
+
+    val currentVersion = if (infoVersion != null) {
+        PyPackageVersionNormalizer.normalize(infoVersion)
+    } else {
+        null
+    }
+
     return packageInfo.releases.keys
-        .sortedWith(PyPackageVersionComparator.STR_COMPARATOR.reversed())
         .mapNotNull {
             PyPackageVersionNormalizer.normalize(it)
         }
+        .filter {
+            currentVersion != null && it <= currentVersion
+        }
+        .sortedWith(PyPackageVersionComparator::compare)
+        .reversed()
 }

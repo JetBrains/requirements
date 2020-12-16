@@ -8,6 +8,7 @@ import com.jetbrains.python.packaging.PyPackageVersion
 import com.jetbrains.python.packaging.PyPackageVersionNormalizer
 import ru.meanmail.*
 import ru.meanmail.psi.NameReq
+import ru.meanmail.pypi.getVersionsList
 import ru.meanmail.quickfix.InstallPackageQuickFix
 import java.util.concurrent.Future
 
@@ -45,10 +46,12 @@ class InstalledPackageInspection : LocalInspectionTool() {
                 val versions = task.get() ?: return
 
                 val suitableVersion: PyPackageVersion? = versions.find {
-                    isVersionActual(element, it)
+                    it.pre == null && isVersionActual(element, it)
                 }
 
-                val latest = versions.firstOrNull()
+                val latest = versions.firstOrNull {
+                    it.pre == null
+                }
 
                 val installed = getInstalledVersion(element.project, packageName)
 
