@@ -9,8 +9,8 @@ import com.intellij.psi.PsiReference
 import ru.meanmail.Expression
 import ru.meanmail.Logical
 import ru.meanmail.PACKAGE_VERSION
-import ru.meanmail.PYPI_URL
 import ru.meanmail.psi.*
+import ru.meanmail.pypi.PYPI_URL
 
 class VersionOneImpl(node: ASTNode) :
     ASTWrapperPsiElement(node), VersionOne {
@@ -41,7 +41,7 @@ class VersionOneImpl(node: ASTNode) :
             parent = parent.parent
         }
         val packageName = (parent as? NameReq)?.name ?: return null
-        val url = "${PYPI_URL}/project/${packageName.text}/${version.text}"
+        val url = "$PYPI_URL/project/${packageName.text}/${version.text}"
         val textRange = TextRange(0, textLength)
         return WebReference(this, textRange, url)
     }
