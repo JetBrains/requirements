@@ -1,7 +1,7 @@
 <idea-plugin>
     <extensions defaultExtensionNs="com.intellij">
         <localInspection language="requirements.txt"
-                         shortName="InstalledPackageInspection"
+                         shortName="requirements.InstalledPackageInspection"
                          suppressId="InstalledPackageInspection"
                          groupName="Requirements"
                          enabledByDefault="true"
@@ -9,7 +9,7 @@
                          displayName="Package is not installed"
                          implementationClass="ru.meanmail.codeInspection.InstalledPackageInspection"/>
         <localInspection language="requirements.txt"
-                         shortName="DuplicatedInspection"
+                         shortName="requirements.DuplicatedInspection"
                          suppressId="DuplicatedInspection"
                          groupName="Requirements"
                          enabledByDefault="true"
@@ -17,7 +17,7 @@
                          displayName="Duplicated package"
                          implementationClass="ru.meanmail.codeInspection.DuplicatedInspection"/>
         <localInspection language="requirements.txt"
-                         shortName="UnusedInspection"
+                         shortName="requirements.UnusedInspection"
                          suppressId="UnusedInspection"
                          groupName="Requirements"
                          enabledByDefault="true"

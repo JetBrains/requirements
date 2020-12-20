@@ -21,7 +21,7 @@
         <fileTypeDetector implementation="ru.meanmail.RequirementsFileTypeDetector"
                           order="first"/>
         <localInspection language="requirements.txt"
-                         shortName="ReferenceExistsInspection"
+                         shortName="requirements.ReferenceExistsInspection"
                          suppressId="Requirements"
                          groupName="Requirements"
                          enabledByDefault="true"
