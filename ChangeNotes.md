@@ -1,3 +1,6 @@
+## 2020.5.2 (December, 20, 2020)
+* Fix: Inspection has no description
+
 ## 2020.5.1 (December, 16, 2020)
 * Fix: rerelease versions of packages are recommended
 
