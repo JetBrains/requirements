@@ -2,7 +2,7 @@
 * Fix: Inspection has no description
 
 ## 2020.5.1 (December, 16, 2020)
-* Fix: rerelease versions of packages are recommended
+* Fix: prerelease versions of packages are recommended
 
 ## 2020.5 (December, 13, 2020)
 * Fix: java.lang.NoClassDefFoundError
