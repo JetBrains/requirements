@@ -33,7 +33,6 @@ object SentryClient {
 
 class SentryErrorReporter : ErrorReportSubmitter() {
 
-
     override fun getReportActionText(): String {
         return "Submit to meanmail.dev"
     }

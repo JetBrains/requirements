@@ -12,16 +12,16 @@
     <depends optional="true" config-file="python-config.xml">com.intellij.modules.python</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <fileType implementationClass="ru.meanmail.RequirementsFileType"
+        <fileType implementationClass="ru.meanmail.fileTypes.RequirementsFileType"
                   language="requirements.txt"
                   order="first"
                   name="requirements.txt"
                   fileNames="requirements.txt;constrains.txt"
                   patterns="*requirements*.txt;*.txt"/>
-        <fileTypeDetector implementation="ru.meanmail.RequirementsFileTypeDetector"
+        <fileTypeDetector implementation="ru.meanmail.fileTypes.RequirementsFileTypeDetector"
                           order="first"/>
         <localInspection language="requirements.txt"
-                         shortName="ReferenceExistsInspection"
+                         shortName="requirements.ReferenceExistsInspection"
                          suppressId="Requirements"
                          groupName="Requirements"
                          enabledByDefault="true"
@@ -33,13 +33,13 @@
 
     <extensions defaultExtensionNs="com.intellij.lang">
         <parserDefinition language="requirements.txt"
-                          implementationClass="ru.meanmail.RequirementsParserDefinition"/>
+                          implementationClass="ru.meanmail.lang.RequirementsParserDefinition"/>
         <syntaxHighlighterFactory language="requirements.txt"
-                                  implementationClass="ru.meanmail.RequirementsSyntaxHighlighterFactory"/>
+                                  implementationClass="ru.meanmail.fileTypes.RequirementsSyntaxHighlighterFactory"/>
         <psiStructureViewFactory language="requirements.txt"
                                  implementationClass="ru.meanmail.structure.RequirementsStructureViewFactory"/>
         <commenter language="requirements.txt"
-                   implementationClass="ru.meanmail.RequirementsCommenter"/>
+                   implementationClass="ru.meanmail.lang.RequirementsCommenter"/>
         <formatter language="requirements.txt"
                    implementationClass="ru.meanmail.reformat.RequirementsFormattingModelBuilder"/>
     </extensions>

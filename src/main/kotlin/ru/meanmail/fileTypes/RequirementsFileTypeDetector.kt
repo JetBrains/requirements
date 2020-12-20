@@ -1,4 +1,4 @@
-package ru.meanmail
+package ru.meanmail.fileTypes
 
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.fileTypes.FileTypeRegistry

@@ -1,7 +1,7 @@
 package ru.meanmail.parsing
 
 import com.intellij.testFramework.ParsingTestCase
-import ru.meanmail.RequirementsParserDefinition
+import ru.meanmail.lang.RequirementsParserDefinition
 
 class ParsingTest : ParsingTestCase(
     "testData", "requirements.txt", RequirementsParserDefinition()

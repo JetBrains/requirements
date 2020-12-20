@@ -1,4 +1,4 @@
-package ru.meanmail
+package ru.meanmail.lang
 
 import com.intellij.lang.Language
 
