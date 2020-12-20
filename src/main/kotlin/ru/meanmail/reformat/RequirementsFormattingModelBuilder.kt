@@ -2,7 +2,7 @@ package ru.meanmail.reformat
 
 import com.intellij.formatting.*
 import com.intellij.psi.codeStyle.CodeStyleSettings
-import ru.meanmail.RequirementsLanguage
+import ru.meanmail.lang.RequirementsLanguage
 import ru.meanmail.psi.Types
 
 class RequirementsFormattingModelBuilder : FormattingModelBuilder {

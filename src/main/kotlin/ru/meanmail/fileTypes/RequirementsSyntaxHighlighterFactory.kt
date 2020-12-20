@@ -1,4 +1,4 @@
-package ru.meanmail
+package ru.meanmail.fileTypes
 
 import com.intellij.openapi.fileTypes.SyntaxHighlighter
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory

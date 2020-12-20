@@ -1,4 +1,4 @@
-package ru.meanmail
+package ru.meanmail.fileTypes
 
 import com.intellij.lexer.Lexer
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
@@ -8,6 +8,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributes
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase
 import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IElementType
+import ru.meanmail.lexer.RequirementsLexerAdapter
 import ru.meanmail.psi.Types
 
 class RequirementsSyntaxHighlighter : SyntaxHighlighterBase() {

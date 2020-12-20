@@ -1,4 +1,4 @@
-package ru.meanmail
+package ru.meanmail.lang
 
 import com.intellij.lang.ASTNode
 import com.intellij.lang.ParserDefinition
@@ -11,6 +11,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
+import ru.meanmail.lexer.RequirementsLexerAdapter
 import ru.meanmail.psi.RequirementsFile
 import ru.meanmail.psi.Types
 import ru.meanmail.psi.parser.RequirementsParser

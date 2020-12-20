@@ -1,65 +1,9 @@
-@file:Suppress("DuplicatedCode", "KDocUnresolvedReference", "KDocUnresolvedReference")
-
-package ru.meanmail
+package ru.meanmail.lexer
 
 import com.intellij.lexer.FlexLexer
-import com.intellij.psi.TokenType.BAD_CHARACTER
+import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IElementType
-import ru.meanmail.psi.Types.Companion.AND
-import ru.meanmail.psi.Types.Companion.AT
-import ru.meanmail.psi.Types.Companion.BINARY_ALL
-import ru.meanmail.psi.Types.Companion.BINARY_NONE
-import ru.meanmail.psi.Types.Companion.COLON
-import ru.meanmail.psi.Types.Companion.COMMA
-import ru.meanmail.psi.Types.Companion.COMMENT
-import ru.meanmail.psi.Types.Companion.CONSTRAINT
-import ru.meanmail.psi.Types.Companion.DIGIT
-import ru.meanmail.psi.Types.Companion.DOLLAR_SIGN
-import ru.meanmail.psi.Types.Companion.DOT
-import ru.meanmail.psi.Types.Companion.DQUOTE
-import ru.meanmail.psi.Types.Companion.EDITABLE
-import ru.meanmail.psi.Types.Companion.ENV_VAR
-import ru.meanmail.psi.Types.Companion.EOL
-import ru.meanmail.psi.Types.Companion.EQUAL
-import ru.meanmail.psi.Types.Companion.EXTRA_INDEX_URL
-import ru.meanmail.psi.Types.Companion.FIND_LINKS
-import ru.meanmail.psi.Types.Companion.HASH
-import ru.meanmail.psi.Types.Companion.HEX
-import ru.meanmail.psi.Types.Companion.IDENTIFIER
-import ru.meanmail.psi.Types.Companion.IN
-import ru.meanmail.psi.Types.Companion.INDEX_URL
-import ru.meanmail.psi.Types.Companion.LBRACE
-import ru.meanmail.psi.Types.Companion.LETTER
-import ru.meanmail.psi.Types.Companion.LONG_OPTION
-import ru.meanmail.psi.Types.Companion.LPARENTHESIS
-import ru.meanmail.psi.Types.Companion.LSBRACE
-import ru.meanmail.psi.Types.Companion.MINUS
-import ru.meanmail.psi.Types.Companion.NOT
-import ru.meanmail.psi.Types.Companion.NO_BINARY
-import ru.meanmail.psi.Types.Companion.NO_INDEX
-import ru.meanmail.psi.Types.Companion.ONLY_BINARY
-import ru.meanmail.psi.Types.Companion.OR
-import ru.meanmail.psi.Types.Companion.PERCENT_SIGN
-import ru.meanmail.psi.Types.Companion.PLUS
-import ru.meanmail.psi.Types.Companion.PYTHON_STR_C
-import ru.meanmail.psi.Types.Companion.QUESTION_MARK
-import ru.meanmail.psi.Types.Companion.RBRACE
-import ru.meanmail.psi.Types.Companion.REFER
-import ru.meanmail.psi.Types.Companion.REQUIRE_HASHES
-import ru.meanmail.psi.Types.Companion.RPARENTHESIS
-import ru.meanmail.psi.Types.Companion.RSBRACE
-import ru.meanmail.psi.Types.Companion.SEMICOLON
-import ru.meanmail.psi.Types.Companion.SHARP
-import ru.meanmail.psi.Types.Companion.SHORT_OPTION
-import ru.meanmail.psi.Types.Companion.SLASH
-import ru.meanmail.psi.Types.Companion.SQUOTE
-import ru.meanmail.psi.Types.Companion.SUB_DELIMS
-import ru.meanmail.psi.Types.Companion.TILDA
-import ru.meanmail.psi.Types.Companion.TRUSTED_HOST
-import ru.meanmail.psi.Types.Companion.UNDERSCORE
-import ru.meanmail.psi.Types.Companion.VERSION
-import ru.meanmail.psi.Types.Companion.VERSION_CMP
-import ru.meanmail.psi.Types.Companion.WHITE_SPACE
+import ru.meanmail.psi.Types
 import java.io.Reader
 import java.util.*
 
@@ -339,24 +283,24 @@ class RequirementsLexer
             } else {
                 when (if (zzAction < 0) zzAction else ZZ_ACTION[zzAction]) {
                     1 -> {
-                        return WHITE_SPACE
+                        return Types.WHITE_SPACE
                     }
                     71 -> {
                     }
                     2 -> {
                         yyinitial()
-                        return BAD_CHARACTER
+                        return TokenType.BAD_CHARACTER
                     }
                     72 -> {
                     }
                     3 -> {
                         yypush(SHORT_OPTION_STATE)
-                        return SHORT_OPTION
+                        return Types.SHORT_OPTION
                     }
                     73 -> {
                     }
                     4 -> {
-                        return COMMENT
+                        return Types.COMMENT
                     }
                     74 -> {
                     }
@@ -368,181 +312,181 @@ class RequirementsLexer
                     }
                     6 -> {
                         yyinitial()
-                        return EOL
+                        return Types.EOL
                     }
                     76 -> {
                     }
                     7 -> {
                         yypop()
-                        return VERSION
+                        return Types.VERSION
                     }
                     77 -> {
                     }
                     8 -> {
                         yypop()
-                        return COMMENT
+                        return Types.COMMENT
                     }
                     78 -> {
                     }
                     9 -> {
-                        return PYTHON_STR_C
+                        return Types.PYTHON_STR_C
                     }
                     79 -> {
                     }
                     10 -> {
                         yypop()
-                        return DQUOTE
+                        return Types.DQUOTE
                     }
                     80 -> {
                     }
                     11 -> {
                         yypop()
-                        return SQUOTE
+                        return Types.SQUOTE
                     }
                     81 -> {
                     }
                     12 -> {
                         yyinitial()
-                        return COMMENT
+                        return Types.COMMENT
                     }
                     82 -> {
                     }
                     13 -> {
-                        return VERSION_CMP
+                        return Types.VERSION_CMP
                     }
                     83 -> {
                     }
                     14 -> {
-                        return LPARENTHESIS
+                        return Types.LPARENTHESIS
                     }
                     84 -> {
                     }
                     15 -> {
-                        return RPARENTHESIS
+                        return Types.RPARENTHESIS
                     }
                     85 -> {
                     }
                     16 -> {
                         yypush(DQUOTE_STR)
-                        return DQUOTE
+                        return Types.DQUOTE
                     }
                     86 -> {
                     }
                     17 -> {
                         yypush(SQUOTE_STR)
-                        return SQUOTE
+                        return Types.SQUOTE
                     }
                     87 -> {
                     }
                     18 -> {
-                        return PLUS
+                        return Types.PLUS
                     }
                     88 -> {
                     }
                     19 -> {
-                        return MINUS
+                        return Types.MINUS
                     }
                     89 -> {
                     }
                     20 -> {
-                        return SUB_DELIMS
+                        return Types.SUB_DELIMS
                     }
                     90 -> {
                     }
                     21 -> {
-                        return COLON
+                        return Types.COLON
                     }
                     91 -> {
                     }
                     22 -> {
-                        return QUESTION_MARK
+                        return Types.QUESTION_MARK
                     }
                     92 -> {
                     }
                     23 -> {
-                        return LSBRACE
+                        return Types.LSBRACE
                     }
                     93 -> {
                     }
                     24 -> {
-                        return RSBRACE
+                        return Types.RSBRACE
                     }
                     94 -> {
                     }
                     25 -> {
-                        return AT
+                        return Types.AT
                     }
                     95 -> {
                     }
                     26 -> {
-                        return DOLLAR_SIGN
+                        return Types.DOLLAR_SIGN
                     }
                     96 -> {
                     }
                     27 -> {
-                        return SHARP
+                        return Types.SHARP
                     }
                     97 -> {
                     }
                     28 -> {
-                        return PERCENT_SIGN
+                        return Types.PERCENT_SIGN
                     }
                     98 -> {
                     }
                     29 -> {
-                        return SLASH
+                        return Types.SLASH
                     }
                     99 -> {
                     }
                     30 -> {
-                        return DOT
+                        return Types.DOT
                     }
                     100 -> {
                     }
                     31 -> {
-                        return UNDERSCORE
+                        return Types.UNDERSCORE
                     }
                     101 -> {
                     }
                     32 -> {
-                        return LBRACE
+                        return Types.LBRACE
                     }
                     102 -> {
                     }
                     33 -> {
-                        return RBRACE
+                        return Types.RBRACE
                     }
                     103 -> {
                     }
                     34 -> {
-                        return TILDA
+                        return Types.TILDA
                     }
                     104 -> {
                     }
                     35 -> {
-                        return LETTER
+                        return Types.LETTER
                     }
                     105 -> {
                     }
                     36 -> {
-                        return DIGIT
+                        return Types.DIGIT
                     }
                     106 -> {
                     }
                     37 -> {
                         yypush(QUOTED_MARK)
-                        return SEMICOLON
+                        return Types.SEMICOLON
                     }
                     107 -> {
                     }
                     38 -> {
-                        return COMMA
+                        return Types.COMMA
                     }
                     108 -> {
                     }
                     39 -> {
                         yypush(URI)
-                        return AT
+                        return Types.AT
                     }
                     109 -> {
                     }
@@ -553,85 +497,85 @@ class RequirementsLexer
                     110 -> {
                     }
                     41 -> {
-                        return IDENTIFIER
+                        return Types.IDENTIFIER
                     }
                     111 -> {
                     }
                     42 -> {
                         yypush(WAITING_VERSION)
-                        return VERSION_CMP
+                        return Types.VERSION_CMP
                     }
                     112 -> {
                     }
                     43 -> {
                         yypush(URI)
-                        return EDITABLE
+                        return Types.EDITABLE
                     }
                     113 -> {
                     }
                     44 -> {
                         yypush(URI)
-                        return REFER
+                        return Types.REFER
                     }
                     114 -> {
                     }
                     45 -> {
                         yypush(URI)
-                        return INDEX_URL
+                        return Types.INDEX_URL
                     }
                     115 -> {
                     }
                     46 -> {
                         yypush(URI)
-                        return FIND_LINKS
+                        return Types.FIND_LINKS
                     }
                     116 -> {
                     }
                     47 -> {
                         yypush(URI)
-                        return CONSTRAINT
+                        return Types.CONSTRAINT
                     }
                     117 -> {
                     }
                     48 -> {
                         yypush(WAITING_ALG)
-                        return EQUAL
+                        return Types.EQUAL
                     }
                     118 -> {
                     }
                     49 -> {
                         yypush(WAITING_COLON)
-                        return IDENTIFIER
+                        return Types.IDENTIFIER
                     }
                     119 -> {
                     }
                     50 -> {
                         yypush(WAITING_HASH_VALUE)
-                        return COLON
+                        return Types.COLON
                     }
                     120 -> {
                     }
                     51 -> {
                         yypush(REQ)
-                        return WHITE_SPACE
+                        return Types.WHITE_SPACE
                     }
                     121 -> {
                     }
                     52 -> {
                         yypush(REQ)
-                        return COMMENT
+                        return Types.COMMENT
                     }
                     122 -> {
                     }
                     53 -> {
                         yypush(REQ)
-                        return HEX
+                        return Types.HEX
                     }
                     123 -> {
                     }
                     54 -> {
                         yypush(LONG_OPTION_STATE)
-                        return LONG_OPTION
+                        return Types.LONG_OPTION
                     }
                     124 -> {
                     }
@@ -640,83 +584,83 @@ class RequirementsLexer
                     125 -> {
                     }
                     56 -> {
-                        return OR
+                        return Types.OR
                     }
                     126 -> {
                     }
                     57 -> {
-                        return IN
+                        return Types.IN
                     }
                     127 -> {
                     }
                     58 -> {
                         yypush(WAITING_HASH)
-                        return LONG_OPTION
+                        return Types.LONG_OPTION
                     }
                     128 -> {
                     }
                     59 -> {
-                        return NOT
+                        return Types.NOT
                     }
                     129 -> {
                     }
                     60 -> {
-                        return AND
+                        return Types.AND
                     }
                     130 -> {
                     }
                     61 -> {
                         yypush(WAITING_EQUAL)
-                        return HASH
+                        return Types.HASH
                     }
                     131 -> {
                     }
                     62 -> {
-                        return ENV_VAR
+                        return Types.ENV_VAR
                     }
                     132 -> {
                     }
                     63 -> {
-                        return BINARY_ALL
+                        return Types.BINARY_ALL
                     }
                     133 -> {
                     }
                     64 -> {
-                        return BINARY_NONE
+                        return Types.BINARY_NONE
                     }
                     134 -> {
                     }
                     65 -> {
-                        return NO_INDEX
+                        return Types.NO_INDEX
                     }
                     135 -> {
                     }
                     66 -> {
                         yypush(BINARY)
-                        return NO_BINARY
+                        return Types.NO_BINARY
                     }
                     136 -> {
                     }
                     67 -> {
                         yypush(BINARY)
-                        return ONLY_BINARY
+                        return Types.ONLY_BINARY
                     }
                     137 -> {
                     }
                     68 -> {
                         yypush(URI)
-                        return TRUSTED_HOST
+                        return Types.TRUSTED_HOST
                     }
                     138 -> {
                     }
                     69 -> {
-                        return REQUIRE_HASHES
+                        return Types.REQUIRE_HASHES
                     }
                     139 -> {
                     }
                     70 -> {
                         yypush(URI)
-                        return EXTRA_INDEX_URL
+                        return Types.EXTRA_INDEX_URL
                     }
                     140 -> {
                     }

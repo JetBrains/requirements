@@ -3,9 +3,9 @@ package ru.meanmail.psi
 import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.psi.FileViewProvider
-import ru.meanmail.RequirementsFileType
-import ru.meanmail.RequirementsLanguage
+import ru.meanmail.fileTypes.RequirementsFileType
 import ru.meanmail.getMarkers
+import ru.meanmail.lang.RequirementsLanguage
 
 class RequirementsFile(viewProvider: FileViewProvider) :
     PsiFileBase(viewProvider, RequirementsLanguage) {

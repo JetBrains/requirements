@@ -2,6 +2,7 @@ package ru.meanmail
 
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFileFactory
+import ru.meanmail.fileTypes.RequirementsFileType
 import ru.meanmail.psi.RequirementsFile
 import ru.meanmail.psi.UriReference
 import ru.meanmail.psi.Versionspec

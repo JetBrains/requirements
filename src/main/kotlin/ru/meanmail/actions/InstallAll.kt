@@ -11,8 +11,8 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import ru.meanmail.RequirementsLanguage
 import ru.meanmail.getPackageManager
+import ru.meanmail.lang.RequirementsLanguage
 import ru.meanmail.psi.*
 import ru.meanmail.reparseFile
 

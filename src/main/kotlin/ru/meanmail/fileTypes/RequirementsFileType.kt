@@ -1,10 +1,10 @@
-package ru.meanmail
-
+package ru.meanmail.fileTypes
 
 import com.intellij.openapi.fileTypes.LanguageFileType
 import org.jetbrains.annotations.NonNls
+import ru.meanmail.AllIcons
+import ru.meanmail.lang.RequirementsLanguage
 import javax.swing.Icon
-
 
 object RequirementsFileType : LanguageFileType(RequirementsLanguage) {
 
