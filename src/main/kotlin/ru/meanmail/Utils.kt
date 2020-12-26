@@ -23,6 +23,13 @@ fun resolveFile(filepath: String, base: VirtualFile): VirtualFile? {
 fun reparseFile(project: Project, virtualFile: VirtualFile) {
     val application = ApplicationManager.getApplication()
     application.invokeLater {
+        var isDisposed = false
+        application.runReadAction {
+            isDisposed = project.isDisposed
+        }
+        if (isDisposed) {
+            return@invokeLater
+        }
         application.runWriteAction {
             FileContentUtil.reparseFiles(project, listOf(virtualFile), true)
         }

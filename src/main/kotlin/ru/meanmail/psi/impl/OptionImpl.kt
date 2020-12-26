@@ -38,6 +38,12 @@ class OptionImpl(node: ASTNode) : ASTWrapperPsiElement(node), Option {
     override val onlyBinaryReq: OnlyBinaryReq?
         get() = findChildByClass(OnlyBinaryReq::class.java)
 
+    override val preReq: PreReq?
+        get() = findChildByClass(PreReq::class.java)
+
+    override val preferBinaryReq: PreferBinaryReq?
+        get() = findChildByClass(PreferBinaryReq::class.java)
+
     override val referReq: ReferReq?
         get() = findChildByClass(ReferReq::class.java)
 
@@ -46,4 +52,7 @@ class OptionImpl(node: ASTNode) : ASTWrapperPsiElement(node), Option {
 
     override val trustedHostReq: TrustedHostReq?
         get() = findChildByClass(TrustedHostReq::class.java)
+
+    override val useFeatureReq: UseFeatureReq?
+        get() = findChildByClass(UseFeatureReq::class.java)
 }

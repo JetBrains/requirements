@@ -6,6 +6,10 @@ import ru.meanmail.lang.RequirementsParserDefinition
 class ParsingTest : ParsingTestCase(
     "testData", "requirements.txt", RequirementsParserDefinition()
 ) {
+    fun testConstraint() {
+        doTest(true)
+    }
+
     fun testEditable() {
         doTest(true)
     }
@@ -58,6 +62,14 @@ class ParsingTest : ParsingTestCase(
         doTest(true)
     }
 
+    fun testPre() {
+        doTest(true)
+    }
+
+    fun testPreferBinary() {
+        doTest(true)
+    }
+
     fun testRequireHashes() {
         doTest(true)
     }
@@ -71,6 +83,10 @@ class ParsingTest : ParsingTestCase(
     }
 
     fun testTrustedHost() {
+        doTest(true)
+    }
+
+    fun testUseFeature() {
         doTest(true)
     }
 

@@ -1,4 +1,4 @@
-package ru.meanmail
+package ru.meanmail.diagnostic
 
 import com.intellij.diagnostic.IdeaReportingEvent
 import com.intellij.ide.DataManager

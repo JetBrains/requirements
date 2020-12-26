@@ -1,6 +1,6 @@
 {
   parserClass="ru.meanmail.psi.parser.RequirementsParser"
-  parserUtilClass="ru.meanmail.psi.parser.ParserUtil"
+  parserUtilClass="com.intellij.lang.parser.GeneratedParserUtilBase"
 
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
@@ -31,7 +31,7 @@ version_stmt  ::= VERSION
 version_many  ::= version_one (wsps COMMA wsps version_one)*
 versionspec   ::= LPARENTHESIS wsps version_many wsps RPARENTHESIS | version_many
 
-marker_op     ::= VERSION_CMP | IN | NOT WHITE_SPACE+ IN
+marker_op     ::= VERSION_CMP | IN | NOT IN
 python_str    ::= (SQUOTE (PYTHON_STR_C | DQUOTE)* SQUOTE |
                    DQUOTE (PYTHON_STR_C | SQUOTE)* DQUOTE)
 marker_var    ::= ENV_VAR | python_str
@@ -55,26 +55,32 @@ option        ::= (SHORT_OPTION | LONG_OPTION) (
                    | editable_req
                    | index_url_req
                    | extra_index_url_req
-                   | find_links_req
                    | no_index_req
-                   | require_hashes_req
+                   | find_links_req
                    | no_binary_req
                    | only_binary_req
-                   | trusted_host_req) {pin=1}
+                   | prefer_binary_req
+                   | require_hashes_req
+                   | pre_req
+                   | trusted_host_req
+                   | use_feature_req) {pin=1}
 
-refer_req     ::= REFER WHITE_SPACE+ uri_reference {pin=1}
-constraint_req::= CONSTRAINT WHITE_SPACE+ uri_reference {pin=1}
-editable_req  ::= EDITABLE WHITE_SPACE+ uri_reference {pin=1}
-index_url_req ::= INDEX_URL WHITE_SPACE+ uri_reference {pin=1}
-extra_index_url_req::= EXTRA_INDEX_URL WHITE_SPACE+ uri_reference {pin=1}
-find_links_req::= FIND_LINKS WHITE_SPACE+ uri_reference {pin=1}
-no_index_req  ::= NO_INDEX
-require_hashes_req::= REQUIRE_HASHES
-binary_list       ::= extras_list | BINARY_ALL | BINARY_NONE
-no_binary_req     ::= NO_BINARY WHITE_SPACE+ binary_list {pin=1}
-only_binary_req   ::= ONLY_BINARY WHITE_SPACE+ binary_list {pin=1}
-trusted_host_req  ::= TRUSTED_HOST WHITE_SPACE+ host (COLON port)? {pin=1}
-hash_option       ::= HASH EQUAL IDENTIFIER COLON HEX
+refer_req ::= REFER uri_reference {pin=1}
+constraint_req ::= CONSTRAINT  uri_reference {pin=1}
+editable_req ::= EDITABLE uri_reference {pin=1}
+index_url_req ::= INDEX_URL uri_reference {pin=1}
+extra_index_url_req ::= EXTRA_INDEX_URL uri_reference {pin=1}
+no_index_req ::= NO_INDEX
+find_links_req ::= FIND_LINKS uri_reference {pin=1}
+binary_list ::= extras_list | BINARY_ALL | BINARY_NONE
+no_binary_req ::= NO_BINARY binary_list {pin=1}
+only_binary_req ::= ONLY_BINARY binary_list {pin=1}
+prefer_binary_req ::= PREFER_BINARY
+require_hashes_req ::= REQUIRE_HASHES
+pre_req ::= PRE
+trusted_host_req ::= TRUSTED_HOST host (COLON port)? {pin=1}
+use_feature_req ::= USE_FEATURE IDENTIFIER {pin=1}
+hash_option ::= HASH EQUAL IDENTIFIER COLON HEX {pin=1}
 
 path_req      ::= uri_reference wsps quoted_marker? {pin=1 }
 url_req       ::= name wsps extras? wsps urlspec wsps quoted_marker? {pin=5 }

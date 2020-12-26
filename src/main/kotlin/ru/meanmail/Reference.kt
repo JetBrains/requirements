@@ -20,7 +20,8 @@ class Reference(uriReference: UriReference) :
     }
 
     private fun resolveFile(relativeRef: RelativeRef): PsiElement? {
-        val directory = element.containingFile.containingDirectory.virtualFile
+        val directory = element.containingFile
+            ?.containingDirectory?.virtualFile ?: return null
         val file = resolveFile(relativeRef.text, directory) ?: return null
 
         return PsiManager.getInstance(element.project).findFile(file)

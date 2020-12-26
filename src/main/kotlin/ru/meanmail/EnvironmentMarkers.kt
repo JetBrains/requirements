@@ -1,5 +1,3 @@
-@file:Suppress("unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused")
-
 package ru.meanmail
 
 import com.intellij.openapi.project.Project

@@ -1,8 +1,6 @@
 package ru.meanmail
 
 import com.intellij.execution.ExecutionException
-import com.intellij.notification.Notification
-import com.intellij.notification.NotificationType
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
@@ -11,6 +9,7 @@ import com.intellij.openapi.projectRoots.Sdk
 import com.intellij.openapi.roots.ProjectRootManager
 import com.jetbrains.python.packaging.*
 import com.jetbrains.python.sdk.PythonSdkType
+import ru.meanmail.notification.Notifier
 
 fun getSdk(project: Project): Sdk? {
     val projectRootManager = ProjectRootManager.getInstance(project)
@@ -54,12 +53,9 @@ fun installPackage(
 ) {
     val installedVersion = getInstalledVersion(project, packageName)
     if (installedVersion?.presentableText == version) {
-        Notification(
-            "pip",
-            "$packageName (${version})",
-            "Successfully installed",
-            NotificationType.INFORMATION
-        ).notify(project)
+        Notifier.notifyInformation(
+            project, "$packageName (${version})", "Successfully installed"
+        )
         if (onInstalled != null) {
             onInstalled()
         }
@@ -80,42 +76,32 @@ fun installPackage(
                 if (packageManager != null) {
                     packageManager.install("$packageName==$version")
                 } else {
-                    Notification(
-                        "pip",
-                        title,
-                        "Package manager is not available",
-                        NotificationType.ERROR
-                    ).notify(project)
+                    Notifier.notifyError(
+                        project, title, "Package manager is not available"
+                    )
                     return
                 }
                 val pyPackage = getPackage(project, packageName)
 
                 if (pyPackage == null) {
-                    Notification(
-                        "pip",
-                        title,
-                        "Failed. Not installed",
-                        NotificationType.ERROR
-                    ).notify(project)
+                    Notifier.notifyError(
+                        project, title, "Failed. Not installed"
+                    )
                     return
                 }
 
-                Notification(
-                    "pip",
+                Notifier.notifyInformation(
+                    project,
                     "${pyPackage.name} (${pyPackage.version})",
-                    "Successfully installed",
-                    NotificationType.INFORMATION
-                ).notify(project)
+                    "Successfully installed"
+                )
                 if (onInstalled != null) {
                     onInstalled()
                 }
             } catch (e: PyExecutionException) {
-                Notification(
-                    e.command,
-                    e.stdout,
-                    e.stderr,
-                    NotificationType.ERROR
-                ).notify(project)
+                Notifier.notifyError(
+                    project, e.command, e.toString()
+                )
             }
         }
     }

@@ -1,8 +1,6 @@
 package ru.meanmail.actions
 
 import com.intellij.execution.ExecutionException
-import com.intellij.notification.Notification
-import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.LangDataKeys
@@ -13,6 +11,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import ru.meanmail.getPackageManager
 import ru.meanmail.lang.RequirementsLanguage
+import ru.meanmail.notification.Notifier
 import ru.meanmail.psi.*
 import ru.meanmail.reparseFile
 
@@ -54,12 +53,9 @@ class InstallAllAction : AnAction() {
             val packageManager = getPackageManager(project)
 
             if (packageManager == null) {
-                Notification(
-                    "pip",
-                    title,
-                    "Package manager is not available",
-                    NotificationType.ERROR
-                ).notify(project)
+                Notifier.notifyError(
+                    project, title, "Package manager is not available"
+                )
                 return
             }
             for (requirement in requirements) {
@@ -68,32 +64,17 @@ class InstallAllAction : AnAction() {
                     val requirementString = packageManager.parseRequirement(requirement)
                     if (requirementString != null) {
                         packageManager.install(listOf(requirementString), emptyList())
-                        showSuccess(requirement)
+                        Notifier.notifyInformation(
+                            project, requirement, "Successfully installed",
+                        )
                     } else {
-                        showError(requirement, "Can not install")
+                        Notifier.notifyError(project, requirement, "Can not install")
                     }
                 } catch (e: ExecutionException) {
-                    showError(requirement, e.localizedMessage)
+                    Notifier.notifyError(project, requirement, e.localizedMessage)
                 }
             }
             reparseFile(project, virtualFile)
-        }
-
-        private fun showSuccess(requirement: String) {
-            val notification = Notification(
-                "pip",
-                requirement, "Successfully installed",
-                NotificationType.INFORMATION
-            )
-            notification.notify(project)
-        }
-
-        private fun showError(requirement: String, message: String) {
-            val notification = Notification(
-                "pip.failed",
-                requirement, message, NotificationType.ERROR
-            )
-            notification.notify(project)
         }
     }
 }
