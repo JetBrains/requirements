@@ -1,6 +1,6 @@
 package ru.meanmail.notification
 
-import com.intellij.notification.NotificationGroupManager
+import com.intellij.notification.Notification
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.project.Project
 
@@ -12,10 +12,9 @@ object Notifier {
         project: Project?, title: String,
         content: String, type: NotificationType
     ) {
-        NotificationGroupManager.getInstance()
-            .getNotificationGroup(GROUP_ID)
-            .createNotification(title, content, type)
-            .notify(project)
+        Notification(
+            GROUP_ID, title, content, type
+        ).notify(project)
     }
 
     fun notifyError(project: Project?, title: String, content: String) {
