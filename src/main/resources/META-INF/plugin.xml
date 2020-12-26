@@ -28,7 +28,7 @@
                          level="ERROR"
                          displayName="File is not exists"
                          implementationClass="ru.meanmail.codeInspection.ReferenceExistsInspection"/>
-        <errorHandler implementation="ru.meanmail.SentryErrorReporter"/>
+        <errorHandler implementation="ru.meanmail.diagnostic.SentryErrorReporter"/>
         <notificationGroup id="Requirements" displayType="BALLOON"/>
     </extensions>
 
