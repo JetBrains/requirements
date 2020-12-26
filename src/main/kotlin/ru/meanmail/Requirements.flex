@@ -1,11 +1,13 @@
 package ru.meanmail;
 
+import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
 import static com.intellij.psi.TokenType.BAD_CHARACTER;
 import static com.intellij.psi.TokenType.WHITE_SPACE;
+import static ru.meanmail.psi.Types.*;
 
 %%
 
@@ -157,6 +159,7 @@ HASH = "hash"
 %state WAITING_ALG
 %state WAITING_COLON
 %state WAITING_HASH_VALUE
+%state WAITING_IDENTIFIER
 
 %%
 
@@ -169,25 +172,28 @@ HASH = "hash"
 }
 
 <SHORT_OPTION_STATE> {
-    "r"                      { yypush(URI); return REFER; }
-    "c"                      { yypush(URI); return CONSTRAINT; }
-    "e"                      { yypush(URI); return EDITABLE; }
     "i"                      { yypush(URI); return INDEX_URL; }
+    "c"                      { yypush(URI); return CONSTRAINT; }
+    "r"                      { yypush(URI); return REFER; }
+    "e"                      { yypush(URI); return EDITABLE; }
     "f"                      { yypush(URI); return FIND_LINKS; }
 }
 
 <LONG_OPTION_STATE> {
-    "requirement"            { yypush(URI); return REFER; }
-    "constraint"             { yypush(URI); return CONSTRAINT; }
-    "editable"               { yypush(URI); return EDITABLE; }
     "index-url"              { yypush(URI); return INDEX_URL; }
     "extra-index-url"        { yypush(URI); return EXTRA_INDEX_URL; }
     "no-index"               { return NO_INDEX; }
+    "constraint"             { yypush(URI); return CONSTRAINT; }
+    "requirement"            { yypush(URI); return REFER; }
+    "editable"               { yypush(URI); return EDITABLE; }
     "find-links"             { yypush(URI); return FIND_LINKS; }
     "no-binary"              { yypush(BINARY); return NO_BINARY; }
     "only-binary"            { yypush(BINARY); return ONLY_BINARY; }
+    "prefer-binary"          { return PREFER_BINARY; }
     "require-hashes"         { return REQUIRE_HASHES; }
+    "pre"                    { return PRE; }
     "trusted-host"           { yypush(URI); return TRUSTED_HOST; }
+    "use-feature"            { yypush(WAITING_IDENTIFIER); return USE_FEATURE; }
 }
 
 <BINARY> {
@@ -195,6 +201,10 @@ HASH = "hash"
     ":none:"                 { return BINARY_NONE; }
     {IDENTIFIER}             { return IDENTIFIER; }
     {COMMA}                  { return COMMA; }
+}
+
+<WAITING_IDENTIFIER> {
+    {IDENTIFIER}             { yyinitial(); return IDENTIFIER; }
 }
 
 <WAITING_HASH> {

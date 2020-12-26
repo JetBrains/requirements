@@ -64,15 +64,15 @@ class Visitor : PsiElementVisitor() {
         visitPsiElement(o)
     }
 
-    fun visitHashOption(o: HashOption) {
-        visitPsiElement(o)
-    }
-
     fun visitH16(o: H16) {
         visitPsiElement(o)
     }
 
     fun visitH16Colon(o: H16Colon) {
+        visitPsiElement(o)
+    }
+
+    fun visitHashOption(o: HashOption) {
         visitPsiElement(o)
     }
 
@@ -184,6 +184,14 @@ class Visitor : PsiElementVisitor() {
         visitPsiElement(o)
     }
 
+    fun visitPreReq(o: PreReq) {
+        visitPsiElement(o)
+    }
+
+    fun visitPreferBinaryReq(o: PreferBinaryReq) {
+        visitPsiElement(o)
+    }
+
     fun visitPythonStr(o: PythonStr) {
         visitPsiElement(o)
     }
@@ -253,6 +261,10 @@ class Visitor : PsiElementVisitor() {
     }
 
     fun visitUrlspec(o: Urlspec) {
+        visitPsiElement(o)
+    }
+
+    fun visitUseFeatureReq(o: UseFeatureReq) {
         visitPsiElement(o)
     }
 
