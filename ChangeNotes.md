@@ -1,26 +1,44 @@
+## 2020.6 (December, 27, 2020)
+
+* Fix: element.containingFile.containingDirectory must not be null
+* Fix: Assertion failed: Notification should have title and/or content; groupId: pipenv
+* Fix: DisposalException: Already disposed
+* Support prefer-binary, pre, use-feature syntax
+* Improve constrain option
+
 ## 2020.5.2 (December, 20, 2020)
+
 * Fix: Inspection has no description
 
 ## 2020.5.1 (December, 16, 2020)
+
 * Fix: prerelease versions of packages are recommended
 
 ## 2020.5 (December, 13, 2020)
+
 * Fix: java.lang.NoClassDefFoundError
 * Fix: Package manager is not available
+
 + Support error reporting
+
 * Support all relations
+
 + Check if package exists
 + Check if package version exists
+
 * Improved performance
 
 ## 2020.4.1 (December, 5, 2020)
+
 * Fix environment marker comparison
 * Improve files detection
 * Fix renaming
 
 ## 2020.4 (November, 15, 2020)
+
 * Fix Local file path requirement breaks parsing
 * Fix environment markers for path requirements
+
 + Add support --hash statement
 
 ## 2020.3 (October, 12, 2020)
@@ -66,7 +84,6 @@ Read more https://meanmail.dev/post/3
 * Version for Intellij 2019.3.*
 * jvmTarget 11
 
-
 ## 2019.6.0.1 (Nov, 21, 2019)
 
 * Version for Intellij 2019.1.*
@@ -88,6 +105,7 @@ Read more https://meanmail.dev/post/3
 ## 2019.4 (May, 26, 2019)
 
 * Fix: installing without required version is failed
+
 + Add Open in browser for package
 + Add Open in browser for version
 + Improve inspections
@@ -96,6 +114,7 @@ Read more https://meanmail.dev/post/3
 ## 2019.3 (Apr, 6, 2019)
 
 * Fix: after installing a package reloaded from disk
+
 + Show a error notification when a package is not installed
 + Improved detection of not installed package
 + Syntax highlight work without python plugin
@@ -110,7 +129,6 @@ Update IDE build
 + Package installation. Not installed packages are highlighted
 
 + Support Reference to subrequirements files (Ctrl + click)
-
 
 ## 2019.1 (Mar 01, 2019)
 
