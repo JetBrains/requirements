@@ -10,24 +10,31 @@ import ru.meanmail.psi.UriReference
 import ru.meanmail.psi.Visitor
 
 class ConstraintReqImpl(node: ASTNode) : ASTWrapperPsiElement(node), ConstraintReq {
+    override val uriReference: UriReference?
+        get() = findChildByClass(UriReference::class.java)
+
     fun accept(visitor: Visitor) {
         visitor.visitConstraintReq(this)
     }
 
     override fun accept(visitor: PsiElementVisitor) {
-        if (visitor is Visitor) {
+        if (visitor is Visitor)
             accept(visitor)
-        } else super.accept(visitor)
-    }
-
-    override fun getNameIdentifier(): PsiElement? {
-        return uriReference
+        else {
+            super.accept(visitor)
+        }
     }
 
     override fun setName(name: String): PsiElement {
         throw IncorrectOperationException()
     }
 
-    override val uriReference: UriReference?
-        get() = findChildByClass(UriReference::class.java)
+    override fun getName(): String? {
+        return nameIdentifier?.text
+    }
+
+    override fun getNameIdentifier(): PsiElement? {
+        return uriReference
+    }
+
 }

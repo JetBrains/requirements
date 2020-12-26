@@ -6,6 +6,10 @@ import ru.meanmail.lang.RequirementsParserDefinition
 class ParsingTest : ParsingTestCase(
     "testData", "requirements.txt", RequirementsParserDefinition()
 ) {
+    fun testConstraint() {
+        doTest(true)
+    }
+
     fun testEditable() {
         doTest(true)
     }
