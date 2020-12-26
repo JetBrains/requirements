@@ -29,6 +29,7 @@
                          displayName="File is not exists"
                          implementationClass="ru.meanmail.codeInspection.ReferenceExistsInspection"/>
         <errorHandler implementation="ru.meanmail.SentryErrorReporter"/>
+        <notificationGroup id="Requirements" displayType="BALLOON"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij.lang">
