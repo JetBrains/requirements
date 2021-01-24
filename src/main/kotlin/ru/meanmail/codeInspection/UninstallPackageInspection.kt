@@ -2,6 +2,7 @@ package ru.meanmail.codeInspection
 
 import com.intellij.codeInspection.LocalInspectionTool
 import com.intellij.codeInspection.LocalInspectionToolSession
+import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
 import ru.meanmail.getInstalledVersion
@@ -30,10 +31,11 @@ class UninstalledPackageInspection : LocalInspectionTool() {
                 val installed = getInstalledVersion(element.project, packageName)
 
                 if (installed != null) {
-                    val message = "Uninstall '$packageName' "
+                    val message = "Uninstall '$packageName'"
                     holder.registerProblem(
                         element,
                         message,
+                        ProblemHighlightType.INFORMATION,
                         UninstallPackageQuickFix(element, message)
                     )
                 }

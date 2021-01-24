@@ -1,6 +1,7 @@
 package ru.meanmail
 
 import com.intellij.execution.ExecutionException
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
@@ -29,7 +30,9 @@ fun getPackage(project: Project, packageName: String): PyPackage? {
     val packageManager = getPackageManager(project) ?: return null
     val packages: List<PyPackage>
     try {
-        packages = packageManager.refreshAndGetPackages(false)
+        packages = ReadAction.compute<List<PyPackage>, Throwable> {
+            packageManager.refreshAndGetPackages(false)
+        }
     } catch (e: ExecutionException) {
         return null
     }
