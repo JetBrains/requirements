@@ -24,6 +24,14 @@
                          level="WARNING"
                          displayName="Unused package"
                          implementationClass="ru.meanmail.codeInspection.UnusedInspection"/>
+        <localInspection language="requirements.txt"
+                         shortName="requirements.UninstalledPackageInspection"
+                         suppressId="UninstallPackageInspection"
+                         groupName="Requirements"
+                         enabledByDefault="true"
+                         level="WARNING"
+                         displayName="Uninstall package"
+                         implementationClass="ru.meanmail.codeInspection.UninstalledPackageInspection"/>
     </extensions>
     <actions>
         <action id="requirements.InstallAllAction"

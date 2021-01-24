@@ -1,5 +1,6 @@
 ## 2021.1 (January, 24, 2021)
 + Consider python version when checking package versions
++ Uninstall package inspection
 
 ## 2020.6 (December, 27, 2020)
 

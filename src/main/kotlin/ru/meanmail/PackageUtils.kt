@@ -109,6 +109,58 @@ fun installPackage(
     ProgressManager.getInstance().run(task)
 }
 
+fun uninstallPackage(
+    project: Project, packageName: String, onInstalled: (() -> Unit)?
+) {
+    val installedVersion = getPackage(project, packageName)
+    if (installedVersion?.isInstalled != true) {
+        Notifier.notifyInformation(
+            project, packageName, "Successfully uninstalled"
+        )
+        if (onInstalled != null) {
+            onInstalled()
+        }
+        return
+    }
+
+    val title = "Uninstalling '$packageName'"
+
+    val task = object : Task.Backgroundable(project, title) {
+        override fun run(indicator: ProgressIndicator) {
+            indicator.text = this.title
+            indicator.isIndeterminate = true
+
+            try {
+                val packageManager = getPackageManager(project)
+
+                if (packageManager != null) {
+                    packageManager.uninstall(listOf(installedVersion))
+                } else {
+                    Notifier.notifyError(
+                        project, title, "Package manager is not available"
+                    )
+                    return
+                }
+
+                Notifier.notifyInformation(
+                    project,
+                    packageName,
+                    "Successfully uninstalled"
+                )
+                if (onInstalled != null) {
+                    onInstalled()
+                }
+            } catch (e: PyExecutionException) {
+                Notifier.notifyError(
+                    project, e.command, e.toString()
+                )
+            }
+        }
+    }
+
+    ProgressManager.getInstance().run(task)
+}
+
 operator fun PyPackageVersion?.compareTo(b: PyPackageVersion?): Int {
     if (this == null && b == null) {
         return 0
