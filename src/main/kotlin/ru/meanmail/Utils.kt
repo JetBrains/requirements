@@ -1,6 +1,8 @@
 package ru.meanmail
 
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.ReadAction
+import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
@@ -21,16 +23,15 @@ fun resolveFile(filepath: String, base: VirtualFile): VirtualFile? {
 }
 
 fun reparseFile(project: Project, virtualFile: VirtualFile) {
-    val application = ApplicationManager.getApplication()
-    application.invokeLater {
+    ApplicationManager.getApplication().invokeLater {
         var isDisposed = false
-        application.runReadAction {
+        ReadAction.run<Throwable> {
             isDisposed = project.isDisposed
         }
         if (isDisposed) {
             return@invokeLater
         }
-        application.runWriteAction {
+        WriteAction.run<Throwable> {
             FileContentUtil.reparseFiles(project, listOf(virtualFile), true)
         }
     }

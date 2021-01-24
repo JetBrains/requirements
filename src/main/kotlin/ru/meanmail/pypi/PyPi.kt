@@ -3,6 +3,8 @@ package ru.meanmail.pypi
 import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ApplicationNamesInfo
+import com.intellij.openapi.progress.ProgressManager
+import com.intellij.openapi.project.Project
 import com.intellij.util.io.HttpRequests
 import com.jetbrains.python.packaging.PyPackageVersion
 import com.jetbrains.python.packaging.PyPackageVersionComparator
@@ -10,6 +12,7 @@ import com.jetbrains.python.packaging.PyPackageVersionNormalizer
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import ru.meanmail.compareTo
+import ru.meanmail.createVersionspec
 import ru.meanmail.formatPackageName
 import ru.meanmail.pypi.serializers.PackageInfo
 import java.io.IOException
@@ -53,7 +56,9 @@ fun getPackageInfo(packageName: String): PackageInfo? {
     return packageInfo
 }
 
-fun getVersionsList(packageName: String): List<PyPackageVersion> {
+fun getVersionsList(
+    project: Project, packageName: String, pythonVersion: String?
+): List<PyPackageVersion> {
     val packageInfo = ApplicationManager.getApplication()
         .executeOnPooledThread<PackageInfo?> {
             return@executeOnPooledThread getPackageInfo(packageName)
@@ -67,9 +72,22 @@ fun getVersionsList(packageName: String): List<PyPackageVersion> {
         null
     }
 
-    return packageInfo.releases.keys
+    return packageInfo.releases
+        .filter {
+            it.value.any {
+                if (it.requires_python == null || pythonVersion == null) {
+                    return@any true
+                }
+                var isActual = false
+                ProgressManager.getInstance().runInReadActionWithWriteActionPriority({
+                    isActual = createVersionspec(project, it.requires_python)
+                        .isActual(pythonVersion)
+                }, null)
+                return@any isActual
+            }
+        }
         .mapNotNull {
-            PyPackageVersionNormalizer.normalize(it)
+            PyPackageVersionNormalizer.normalize(it.key)
         }
         .filter {
             currentVersion != null && it <= currentVersion

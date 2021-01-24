@@ -1,6 +1,7 @@
 package ru.meanmail
 
 import com.intellij.execution.ExecutionException
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
@@ -29,7 +30,9 @@ fun getPackage(project: Project, packageName: String): PyPackage? {
     val packageManager = getPackageManager(project) ?: return null
     val packages: List<PyPackage>
     try {
-        packages = packageManager.refreshAndGetPackages(false)
+        packages = ReadAction.compute<List<PyPackage>, Throwable> {
+            packageManager.refreshAndGetPackages(false)
+        }
     } catch (e: ExecutionException) {
         return null
     }
@@ -94,6 +97,58 @@ fun installPackage(
                     project,
                     "${pyPackage.name} (${pyPackage.version})",
                     "Successfully installed"
+                )
+                if (onInstalled != null) {
+                    onInstalled()
+                }
+            } catch (e: PyExecutionException) {
+                Notifier.notifyError(
+                    project, e.command, e.toString()
+                )
+            }
+        }
+    }
+
+    ProgressManager.getInstance().run(task)
+}
+
+fun uninstallPackage(
+    project: Project, packageName: String, onInstalled: (() -> Unit)?
+) {
+    val installedVersion = getPackage(project, packageName)
+    if (installedVersion?.isInstalled != true) {
+        Notifier.notifyInformation(
+            project, packageName, "Successfully uninstalled"
+        )
+        if (onInstalled != null) {
+            onInstalled()
+        }
+        return
+    }
+
+    val title = "Uninstalling '$packageName'"
+
+    val task = object : Task.Backgroundable(project, title) {
+        override fun run(indicator: ProgressIndicator) {
+            indicator.text = this.title
+            indicator.isIndeterminate = true
+
+            try {
+                val packageManager = getPackageManager(project)
+
+                if (packageManager != null) {
+                    packageManager.uninstall(listOf(installedVersion))
+                } else {
+                    Notifier.notifyError(
+                        project, title, "Package manager is not available"
+                    )
+                    return
+                }
+
+                Notifier.notifyInformation(
+                    project,
+                    packageName,
+                    "Successfully uninstalled"
                 )
                 if (onInstalled != null) {
                     onInstalled()

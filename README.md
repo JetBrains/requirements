@@ -35,6 +35,7 @@ Your ratings and feedback are very important. The feature will appear the faster
 * Opening packages in a browser (Ctrl + click)
 * Reformat file
 * Support renaming
+* Uninstall package
 
 ## Actions
 
@@ -63,3 +64,5 @@ PyCharm, and other products if the Python plugin is installed:
 
 * Install package
 * Remove duplicate
+* Remove unused package
+* Uninstall package
