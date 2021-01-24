@@ -2,6 +2,7 @@ package ru.meanmail.codeInspection
 
 import com.intellij.codeInspection.*
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.NlsSafe
 import com.intellij.psi.PsiElementVisitor
 import com.jetbrains.python.packaging.PyPackageVersion
@@ -38,11 +39,15 @@ class InstalledPackageInspection : LocalInspectionTool() {
             }
 
             override fun visitNameReq(element: NameReq) {
-                if (!element.enabled(getMarkers(element.project))) {
+                val markers = getMarkers(element.project)
+                if (!element.enabled(markers)) {
                     return
                 }
                 val packageName = element.name.text ?: return
-                val task = getVersionsAsync(packageName)
+                val pythonVersion = markers.getOrDefault(PYTHON_FULL_VERSION, null)
+                val task = getVersionsAsync(
+                    element.project, packageName, pythonVersion
+                )
                 val versions = task.get() ?: return
 
                 val suitableVersion: PyPackageVersion? = versions.find {
@@ -245,10 +250,14 @@ class InstalledPackageInspection : LocalInspectionTool() {
                         "latest: ${latest?.presentableText ?: "<nothing>"}"
             }
 
-            private fun getVersionsAsync(packageName: String): Future<List<PyPackageVersion>> {
+            private fun getVersionsAsync(
+                project: Project, packageName: String, pythonVersion: String?
+            ): Future<List<PyPackageVersion>> {
                 return ApplicationManager.getApplication()
                     .executeOnPooledThread<List<PyPackageVersion>> {
-                        return@executeOnPooledThread getVersionsList(packageName)
+                        return@executeOnPooledThread getVersionsList(
+                            project, packageName, pythonVersion
+                        )
                     }
             }
         }

@@ -12,6 +12,7 @@ data class FileInfo(
     val md5_digest: String,
     val packagetype: String,
     val python_version: String,
+    val requires_python: String?,
     val size: Int,
     val upload_time_iso_8601: String,
     val url: String,

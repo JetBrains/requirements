@@ -1,3 +1,6 @@
+## 2021.1 (January, 24, 2021)
++ Consider python version when checking package versions
+
 ## 2020.6 (December, 27, 2020)
 
 * Fix: element.containingFile.containingDirectory must not be null

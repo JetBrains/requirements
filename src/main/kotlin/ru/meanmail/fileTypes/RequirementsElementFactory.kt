@@ -21,6 +21,10 @@ fun createUriReference(project: Project, name: String): UriReference {
 }
 
 fun createVersionspec(project: Project, version: String): Versionspec {
-    val file = createFile(project, "packageName${version}")
+    val preparedVersion = version.split(',')
+        .map { it.trim() }
+        .filter { it.isNotEmpty() }
+        .joinToString(",")
+    val file = createFile(project, "packageName${preparedVersion}")
     return file.firstChild.children.find { it is Versionspec } as Versionspec
 }
