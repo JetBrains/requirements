@@ -1,3 +1,6 @@
+## 2021.1 (February, 7, 2021)
+* Fix: Consider python version when checking package versions
+
 ## 2021.1 (January, 24, 2021)
 + Consider python version when checking package versions
 + Uninstall package inspection
