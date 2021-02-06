@@ -44,7 +44,10 @@ class InstalledPackageInspection : LocalInspectionTool() {
                     return
                 }
                 val packageName = element.name.text ?: return
-                val pythonVersion = markers.getOrDefault(PYTHON_FULL_VERSION, null)
+                var pythonVersion = markers.getOrDefault(IMPLEMENTATION_VERSION, null)
+                if (pythonVersion == "0") {
+                    pythonVersion = markers.getOrDefault(PYTHON_FULL_VERSION, null)
+                }
                 val task = getVersionsAsync(
                     element.project, packageName, pythonVersion
                 )
