@@ -1,4 +1,4 @@
-## 2021.1 (February, 7, 2021)
+## 2021.1.1 (February, 7, 2021)
 * Fix: Consider python version when checking package versions
 * Fix: null cannot be cast to non-null type ru.meanmail.psi.Versionspec
 
