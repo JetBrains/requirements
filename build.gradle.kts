@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    kotlin("jvm") version "1.4.20"
-    kotlin("plugin.serialization") version "1.4.20"
+    kotlin("jvm") version "1.4.21"
+    kotlin("plugin.serialization") version "1.4.21"
     id("org.jetbrains.intellij") version "0.6.5"
 }
 
@@ -19,8 +19,8 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
-    implementation("io.sentry:sentry:3.1.0")
-    testImplementation("junit:junit:4.13")
+    implementation("io.sentry:sentry:4.1.0")
+    testImplementation("junit:junit:4.13.1")
 }
 
 configure<JavaPluginConvention> {

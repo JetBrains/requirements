@@ -20,11 +20,11 @@ fun createUriReference(project: Project, name: String): UriReference {
     return file.firstChild.children[0].children[0] as UriReference
 }
 
-fun createVersionspec(project: Project, version: String): Versionspec {
+fun createVersionspec(project: Project, version: String): Versionspec? {
     val preparedVersion = version.split(',')
         .map { it.trim() }
         .filter { it.isNotEmpty() }
         .joinToString(",")
     val file = createFile(project, "packageName${preparedVersion}")
-    return file.firstChild.children.find { it is Versionspec } as Versionspec
+    return file.firstChild.children.find { it is Versionspec } as? Versionspec
 }
