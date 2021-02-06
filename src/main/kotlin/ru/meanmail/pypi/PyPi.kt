@@ -81,7 +81,7 @@ fun getVersionsList(
                 var isActual = false
                 ProgressManager.getInstance().runInReadActionWithWriteActionPriority({
                     isActual = createVersionspec(project, it.requires_python)
-                        .isActual(pythonVersion)
+                        ?.isActual(pythonVersion) ?: true
                 }, null)
                 return@any isActual
             }

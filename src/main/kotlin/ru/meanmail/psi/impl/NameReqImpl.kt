@@ -54,12 +54,14 @@ class NameReqImpl(node: ASTNode) : ASTWrapperPsiElement(node), NameReq {
         WriteCommandAction.runWriteCommandAction(project,
             "Update package version",
             "Requirements", {
-                val newVersionSpecNode = createVersionspec(project, newVersion).node
-                val oldVersionSpecNode = versionspec?.node
-                if (oldVersionSpecNode == null) {
-                    node.addChild(newVersionSpecNode)
-                } else {
-                    node.replaceChild(oldVersionSpecNode, newVersionSpecNode)
+                val newVersionSpecNode = createVersionspec(project, newVersion)?.node
+                if (newVersionSpecNode != null) {
+                    val oldVersionSpecNode = versionspec?.node
+                    if (oldVersionSpecNode == null) {
+                        node.addChild(newVersionSpecNode)
+                    } else {
+                        node.replaceChild(oldVersionSpecNode, newVersionSpecNode)
+                    }
                 }
             })
     }
