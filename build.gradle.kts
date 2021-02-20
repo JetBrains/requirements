@@ -49,7 +49,12 @@ intellij {
     } else {
         project.properties["IdeVersion"].toString()
     }
-    setPlugins(project.properties["pythonPluginVersion"].toString())
+    type = project.properties["ideType"].toString()
+    if (type !in setOf("PY", "PC")) {
+        setPlugins(project.properties["pythonPluginVersion"].toString())
+    } else {
+        setPlugins("PythonCore")
+    }
 }
 
 fun readChangeNotes(pathname: String): String {
