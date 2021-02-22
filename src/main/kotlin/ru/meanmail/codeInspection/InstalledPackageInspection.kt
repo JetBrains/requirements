@@ -1,17 +1,20 @@
 package ru.meanmail.codeInspection
 
-import com.intellij.codeInspection.*
-import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.project.Project
+import com.intellij.codeInspection.LocalInspectionTool
+import com.intellij.codeInspection.LocalInspectionToolSession
+import com.intellij.codeInspection.ProblemHighlightType
+import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.util.NlsSafe
 import com.intellij.psi.PsiElementVisitor
 import com.jetbrains.python.packaging.PyPackageVersion
 import com.jetbrains.python.packaging.PyPackageVersionNormalizer
-import ru.meanmail.*
+import ru.meanmail.compareTo
+import ru.meanmail.getInstalledVersion
+import ru.meanmail.getMarkers
 import ru.meanmail.psi.NameReq
-import ru.meanmail.pypi.getVersionsList
+import ru.meanmail.pypi.getPythonVersion
+import ru.meanmail.pypi.getVersionsAsync
 import ru.meanmail.quickfix.InstallPackageQuickFix
-import java.util.concurrent.Future
 
 class InstalledPackageInspection : LocalInspectionTool() {
     override fun buildVisitor(
@@ -44,10 +47,7 @@ class InstalledPackageInspection : LocalInspectionTool() {
                     return
                 }
                 val packageName = element.name.text ?: return
-                var pythonVersion = markers.getOrDefault(IMPLEMENTATION_VERSION, null)
-                if (pythonVersion == "0") {
-                    pythonVersion = markers.getOrDefault(PYTHON_FULL_VERSION, null)
-                }
+                val pythonVersion = getPythonVersion(markers)
                 val task = getVersionsAsync(
                     element.project, packageName, pythonVersion
                 )
@@ -253,16 +253,7 @@ class InstalledPackageInspection : LocalInspectionTool() {
                         "latest: ${latest?.presentableText ?: "<nothing>"}"
             }
 
-            private fun getVersionsAsync(
-                project: Project, packageName: String, pythonVersion: String?
-            ): Future<List<PyPackageVersion>> {
-                return ApplicationManager.getApplication()
-                    .executeOnPooledThread<List<PyPackageVersion>> {
-                        return@executeOnPooledThread getVersionsList(
-                            project, packageName, pythonVersion
-                        )
-                    }
-            }
+
         }
     }
 }

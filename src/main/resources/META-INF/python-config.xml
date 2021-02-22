@@ -32,6 +32,8 @@
                          level="WARNING"
                          displayName="Uninstall package"
                          implementationClass="ru.meanmail.codeInspection.UninstalledPackageInspection"/>
+        <completion.contributor language="requirements.txt"
+                                implementationClass="ru.meanmail.codeInsight.completion.RequirementsCompletionContributor"/>
     </extensions>
     <actions>
         <action id="requirements.InstallAllAction"
