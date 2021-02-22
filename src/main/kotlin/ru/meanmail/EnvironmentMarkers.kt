@@ -2,6 +2,7 @@ package ru.meanmail
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.projectRoots.Sdk
+import com.jetbrains.python.sdk.PythonSdkType
 import java.io.File
 import java.io.IOException
 import java.time.LocalDateTime
@@ -64,6 +65,10 @@ fun getMarkers(project: Project): Map<String, String?> {
 }
 
 fun execPython(sdk: Sdk, path: String): String? {
+    if (sdk.sdkType !is PythonSdkType) {
+        return null
+    }
+
     try {
         val parts = listOf(sdk.homePath, path)
         val proc = ProcessBuilder(*parts.toTypedArray())

@@ -164,17 +164,34 @@ fun uninstallPackage(
     ProgressManager.getInstance().run(task)
 }
 
-operator fun PyPackageVersion?.compareTo(b: PyPackageVersion?): Int {
-    if (this == null && b == null) {
+operator fun PyPackageVersion?.compareTo(other: PyPackageVersion?): Int {
+    if (this == null && other == null) {
         return 0
     }
     if (this == null) {
         return -1
     }
-    if (b == null) {
+    if (other == null) {
         return 1
     }
-    return PyPackageVersionComparator.compare(this, b)
+    val partsThis = this.release.split('.')
+    val partsOther = other.release.split('.')
+    val diff = partsThis.size - partsOther.size
+    var a = this
+    var b = other
+    if (diff != 0) {
+        val tail = Array(kotlin.math.abs(diff)) { _ -> "0" }
+        if (diff > 0) {
+            b = other.copy(
+                release = (partsOther + tail).joinToString(".")
+            )
+        } else {
+            a = this.copy(
+                release = (partsThis + tail).joinToString(".")
+            )
+        }
+    }
+    return PyPackageVersionComparator.compare(a, b)
 }
 
 fun compareVersions(
@@ -183,22 +200,33 @@ fun compareVersions(
     required: PyPackageVersion?
 ): Boolean {
     if (operation == "===") {
-        return actual == required
+        return actual?.presentableText == required?.presentableText
     }
 
     actual ?: return false
     required ?: return false
 
     if (operation == "==") {
-        return actual == required
+        return actual.compareTo(required) == 0
     }
 
     if (operation == "~=") {
-        return actual >= required
+        val parts = required.release.split('.')
+        if (parts.size < 2) {
+            return compareVersions(actual, "==", required)
+        }
+        val partsAsInt = parts.subList(0, parts.size - 2).map { it.toInt() }
+        val lastGroup = parts[parts.size - 2].toInt() + 1
+
+        val maxRequired = required.copy(
+            release = (partsAsInt + listOf(lastGroup)).joinToString(".")
+        )
+        return compareVersions(actual, ">=", required) &&
+                compareVersions(actual, "<", maxRequired)
     }
 
     if (operation == "!=") {
-        return actual != required
+        return actual.compareTo(required) != 0
     }
 
     if (operation == ">=") {

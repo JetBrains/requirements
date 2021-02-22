@@ -123,3 +123,4 @@ $RECYCLE.BIN/
 build
 .gradle
 src/main/gen
+.idea/csv-plugin.xml

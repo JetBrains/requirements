@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    kotlin("jvm") version "1.4.21"
-    kotlin("plugin.serialization") version "1.4.21"
+    kotlin("jvm") version "1.4.30"
+    kotlin("plugin.serialization") version "1.4.30"
     id("org.jetbrains.intellij") version "0.6.5"
 }
 
@@ -20,7 +20,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
     implementation("io.sentry:sentry:4.1.0")
-    testImplementation("junit:junit:4.13.1")
+    testImplementation("junit:junit:4.13.2")
 }
 
 configure<JavaPluginConvention> {
@@ -49,7 +49,12 @@ intellij {
     } else {
         project.properties["IdeVersion"].toString()
     }
-    setPlugins(project.properties["pythonPluginVersion"].toString())
+    type = project.properties["ideType"].toString()
+    if (type !in setOf("PY", "PC")) {
+        setPlugins(project.properties["pythonPluginVersion"].toString())
+    } else {
+        setPlugins("PythonCore")
+    }
 }
 
 fun readChangeNotes(pathname: String): String {

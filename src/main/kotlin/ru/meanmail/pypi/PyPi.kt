@@ -11,13 +11,12 @@ import com.jetbrains.python.packaging.PyPackageVersionComparator
 import com.jetbrains.python.packaging.PyPackageVersionNormalizer
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import ru.meanmail.compareTo
-import ru.meanmail.createVersionspec
-import ru.meanmail.formatPackageName
+import ru.meanmail.*
 import ru.meanmail.pypi.serializers.PackageInfo
 import java.io.IOException
 import java.time.Duration
 import java.time.Instant
+import java.util.concurrent.Future
 
 const val PYPI_URL = "https://pypi.org"
 val EXPIRATION_TIMEOUT: Duration = Duration.ofHours(1L)
@@ -54,6 +53,14 @@ fun getPackageInfo(packageName: String): PackageInfo? {
     }
 
     return packageInfo
+}
+
+fun getPythonVersion(markers: Map<String, String?>): String? {
+    var pythonVersion = markers.getOrDefault(IMPLEMENTATION_VERSION, null)
+    if (pythonVersion == "0") {
+        pythonVersion = markers.getOrDefault(PYTHON_FULL_VERSION, null)
+    }
+    return pythonVersion
 }
 
 fun getVersionsList(
@@ -94,4 +101,15 @@ fun getVersionsList(
         }
         .sortedWith(PyPackageVersionComparator::compare)
         .reversed()
+}
+
+fun getVersionsAsync(
+    project: Project, packageName: String, pythonVersion: String?
+): Future<List<PyPackageVersion>> {
+    return ApplicationManager.getApplication()
+        .executeOnPooledThread<List<PyPackageVersion>> {
+            return@executeOnPooledThread getVersionsList(
+                project, packageName, pythonVersion
+            )
+        }
 }
