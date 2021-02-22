@@ -1,3 +1,9 @@
+## 2021.2 (February, 23, 2021)
++ Versions completion (beta)
++ Options completion (beta)
+* Improved version comparison
+* Update file icon
+
 ## 2021.1.1 (February, 7, 2021)
 * Fix: Consider python version when checking package versions
 * Fix: null cannot be cast to non-null type ru.meanmail.psi.Versionspec
