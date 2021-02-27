@@ -1,14 +1,23 @@
+## 2021.3 (February, 27, 2021)
+
++ Create a new blank Requirements file
++ Create a new Requirements file with installed packages (pip freeze)
+
 ## 2021.2 (February, 23, 2021)
+
 + Versions completion (beta)
 + Options completion (beta)
+
 * Improved version comparison
 * Update file icon
 
 ## 2021.1.1 (February, 7, 2021)
+
 * Fix: Consider python version when checking package versions
 * Fix: null cannot be cast to non-null type ru.meanmail.psi.Versionspec
 
 ## 2021.1 (January, 24, 2021)
+
 + Consider python version when checking package versions
 + Uninstall package inspection
 

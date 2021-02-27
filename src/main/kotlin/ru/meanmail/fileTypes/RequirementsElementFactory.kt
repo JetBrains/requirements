@@ -8,7 +8,7 @@ import ru.meanmail.psi.UriReference
 import ru.meanmail.psi.Versionspec
 
 
-fun createFile(project: Project, text: String): RequirementsFile {
+fun createFileFromText(project: Project, text: String): RequirementsFile {
     val name = "dummy.txt"
     return PsiFileFactory.getInstance(project).createFileFromText(
         name, RequirementsFileType, text
@@ -16,7 +16,7 @@ fun createFile(project: Project, text: String): RequirementsFile {
 }
 
 fun createUriReference(project: Project, name: String): UriReference {
-    val file = createFile(project, "-r $name")
+    val file = createFileFromText(project, "-r $name")
     return file.firstChild.children[0].children[0] as UriReference
 }
 
@@ -25,6 +25,6 @@ fun createVersionspec(project: Project, version: String): Versionspec? {
         .map { it.trim() }
         .filter { it.isNotEmpty() }
         .joinToString(",")
-    val file = createFile(project, "packageName${preparedVersion}")
+    val file = createFileFromText(project, "packageName${preparedVersion}")
     return file.firstChild.children.find { it is Versionspec } as? Versionspec
 }
