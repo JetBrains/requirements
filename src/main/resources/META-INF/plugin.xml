@@ -8,6 +8,7 @@
     <description></description>
     <change-notes></change-notes>
 
+    <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
     <depends optional="true" config-file="python-config.xml">com.intellij.modules.python</depends>
 
