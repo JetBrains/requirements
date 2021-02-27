@@ -41,6 +41,20 @@ fun getPackage(project: Project, packageName: String): PyPackage? {
     return packages.firstOrNull { formatPackageName(it.name) == formattedPackageName }
 }
 
+fun getInstalledPackages(project: Project): List<PyPackage> {
+    val packageManager = getPackageManager(project) ?: return emptyList()
+    val packages: List<PyPackage>
+    try {
+        packages = ReadAction.compute<List<PyPackage>, Throwable> {
+            packageManager.refreshAndGetPackages(false)
+        }
+    } catch (e: ExecutionException) {
+        return emptyList()
+    }
+
+    return packages.filter { it.isInstalled }
+}
+
 fun getInstalledVersion(project: Project, packageName: String): PyPackageVersion? {
     val pyPackage = getPackage(project, packageName) ?: return null
     if (!pyPackage.isInstalled) {

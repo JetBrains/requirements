@@ -34,13 +34,20 @@
                          implementationClass="ru.meanmail.codeInspection.UninstalledPackageInspection"/>
         <completion.contributor language="requirements.txt"
                                 implementationClass="ru.meanmail.codeInsight.completion.RequirementsCompletionContributor"/>
+        <internalFileTemplate name="Blank Requirements File"/>
+        <internalFileTemplate name="Freeze Requirements File"/>
+        <createFromTemplateHandler implementation="ru.meanmail.actions.RequirementsCreateFromTemplateHandler"/>
     </extensions>
+
     <actions>
         <action id="requirements.InstallAllAction"
                 class="ru.meanmail.actions.InstallAllAction"
                 text="Install All Packages"
                 description="Install all packages for this requirements file.">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        </action>
+        <action id="NewRequirementsFile" class="ru.meanmail.actions.CreateRequirementsFileAction">
+            <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewXml"/>
         </action>
     </actions>
 </idea-plugin>
