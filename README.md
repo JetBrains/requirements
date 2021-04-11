@@ -2,6 +2,7 @@
 
 ![JetBrains IntelliJ Plugins](https://img.shields.io/jetbrains/plugin/r/stars/10837?label=JetBrans%20Marketplace)
 ![JetBrains IntelliJ plugins](https://img.shields.io/jetbrains/plugin/d/10837)
+![Twitter Follow](https://img.shields.io/twitter/follow/meanmaildev?style=plastic)
 
 https://plugins.jetbrains.com/plugin/10837
 
