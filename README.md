@@ -1,8 +1,8 @@
 # Requirements plugin
 
-![JetBrains IntelliJ Plugins](https://img.shields.io/jetbrains/plugin/r/stars/10837?label=JetBrans%20Marketplace)
-![JetBrains IntelliJ plugins](https://img.shields.io/jetbrains/plugin/d/10837)
-![Twitter Follow](https://img.shields.io/twitter/follow/meanmaildev?style=plastic)
+[![JetBrains IntelliJ Plugins](https://img.shields.io/jetbrains/plugin/r/stars/10837?label=JetBrans%20Marketplace)](https://plugins.jetbrains.com/plugin/10837)
+[![JetBrains IntelliJ plugins](https://img.shields.io/jetbrains/plugin/d/10837)](https://plugins.jetbrains.com/plugin/10837)
+[![Twitter Follow](https://img.shields.io/twitter/follow/meanmaildev?style=plastic)](https://twitter.com/meanmaildev)
 
 https://plugins.jetbrains.com/plugin/10837
 
