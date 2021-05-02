@@ -1,3 +1,8 @@
+## 2021.4 (May, 3, 2021)
+
++ Support additional pypi repositories
+* Fix Installed requirements in container not recognized
+
 ## 2021.3 (February, 27, 2021)
 
 + Create a new blank Requirements file
