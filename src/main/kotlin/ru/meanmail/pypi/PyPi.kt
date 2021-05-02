@@ -11,7 +11,10 @@ import com.jetbrains.python.packaging.PyPackageVersionComparator
 import com.jetbrains.python.packaging.PyPackageVersionNormalizer
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import ru.meanmail.*
+import ru.meanmail.compareTo
+import ru.meanmail.createVersionspec
+import ru.meanmail.formatPackageName
+import ru.meanmail.getSdk
 import ru.meanmail.pypi.serializers.PackageInfo
 import java.io.IOException
 import java.time.Duration
@@ -55,17 +58,17 @@ fun getPackageInfo(packageName: String): PackageInfo? {
     return packageInfo
 }
 
-fun getPythonVersion(markers: Map<String, String?>): String? {
-    var pythonVersion = markers.getOrDefault(IMPLEMENTATION_VERSION, null)
-    if (pythonVersion == "0") {
-        pythonVersion = markers.getOrDefault(PYTHON_FULL_VERSION, null)
-    }
-    return pythonVersion
+val PYTHON_VERSION_PATTERN = "Python (.*)".toRegex()
+
+fun getPythonVersion(project: Project): String? {
+    val sdk = getSdk(project) ?: return null
+    val versionString = sdk.versionString ?: return null
+    val matchResult = PYTHON_VERSION_PATTERN.find(versionString) ?: return null
+    return matchResult.groups[1]?.value
 }
 
-fun getVersionsList(
-    project: Project, packageName: String, pythonVersion: String?
-): List<PyPackageVersion> {
+fun getVersionsList(project: Project, packageName: String): List<PyPackageVersion> {
+    val pythonVersion = getPythonVersion(project)
     val packageInfo = ApplicationManager.getApplication()
         .executeOnPooledThread<PackageInfo?> {
             return@executeOnPooledThread getPackageInfo(packageName)
@@ -103,13 +106,9 @@ fun getVersionsList(
         .reversed()
 }
 
-fun getVersionsAsync(
-    project: Project, packageName: String, pythonVersion: String?
-): Future<List<PyPackageVersion>> {
+fun getVersionsAsync(project: Project, packageName: String): Future<List<PyPackageVersion>> {
     return ApplicationManager.getApplication()
         .executeOnPooledThread<List<PyPackageVersion>> {
-            return@executeOnPooledThread getVersionsList(
-                project, packageName, pythonVersion
-            )
+            return@executeOnPooledThread getVersionsList(project, packageName)
         }
 }

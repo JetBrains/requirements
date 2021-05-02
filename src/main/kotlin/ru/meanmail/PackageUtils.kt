@@ -1,7 +1,7 @@
 package ru.meanmail
 
 import com.intellij.execution.ExecutionException
-import com.intellij.openapi.application.ReadAction
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
@@ -26,31 +26,27 @@ fun getPackageManager(project: Project): PyPackageManager? {
     return PyPackageManager.getInstance(sdk)
 }
 
+fun getPackages(project: Project): List<PyPackage> {
+    val packageManager = getPackageManager(project) ?: return emptyList()
+    return ApplicationManager.getApplication()
+        .executeOnPooledThread<List<PyPackage>> {
+            try {
+                return@executeOnPooledThread packageManager.refreshAndGetPackages(false)
+            } catch (e: ExecutionException) {
+                return@executeOnPooledThread emptyList()
+            }
+        }.get() ?: return emptyList()
+}
+
 fun getPackage(project: Project, packageName: String): PyPackage? {
-    val packageManager = getPackageManager(project) ?: return null
-    val packages: List<PyPackage>
-    try {
-        packages = ReadAction.compute<List<PyPackage>, Throwable> {
-            packageManager.refreshAndGetPackages(false)
-        }
-    } catch (e: ExecutionException) {
-        return null
-    }
+    val packages = getPackages(project)
     val formattedPackageName = formatPackageName(packageName)
 
     return packages.firstOrNull { formatPackageName(it.name) == formattedPackageName }
 }
 
 fun getInstalledPackages(project: Project): List<PyPackage> {
-    val packageManager = getPackageManager(project) ?: return emptyList()
-    val packages: List<PyPackage>
-    try {
-        packages = ReadAction.compute<List<PyPackage>, Throwable> {
-            packageManager.refreshAndGetPackages(false)
-        }
-    } catch (e: ExecutionException) {
-        return emptyList()
-    }
+    val packages = getPackages(project)
 
     return packages.filter { it.isInstalled }
 }
@@ -100,7 +96,7 @@ fun installPackage(
                 }
                 val pyPackage = getPackage(project, packageName)
 
-                if (pyPackage == null) {
+                if (pyPackage == null || pyPackage.version != version) {
                     Notifier.notifyError(
                         project, title, "Failed. Not installed"
                     )
