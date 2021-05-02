@@ -1,16 +1,19 @@
+import json
 import os
 import platform
 import sys
 
-print("os_name: " + os.name)
-print("sys_platform: " + sys.platform)
-print("platform_machine: " + platform.machine())
-print("platform_python_implementation: " + platform.python_implementation())
-print("platform_release: " + platform.release())
-print("platform_system: " + platform.system())
-print("platform_version: " + platform.version())
-print("python_version: " + ".".join(platform.python_version_tuple()[:2]))
-print("python_full_version: " + platform.python_version())
+python_info = {
+    "osName": os.name,
+    "sysPlatform": sys.platform,
+    "platformMachine": platform.machine(),
+    "platformPythonImplementation": platform.python_implementation(),
+    "platformRelease": platform.release(),
+    "platformSystem": platform.system(),
+    "platformVersion": platform.version(),
+    "pythonVersion": ".".join(platform.python_version_tuple()[:2]),
+    "pythonFullVersion": platform.python_version(),
+}
 
 
 def format_full_version(info):
@@ -22,11 +25,10 @@ def format_full_version(info):
 
 
 if hasattr(sys, "implementation"):
-    implementation_version = format_full_version(sys.implementation.version)
-    implementation_name = sys.implementation.name
+    python_info["implementationVersion"] = format_full_version(sys.implementation.version)
+    python_info["implementationName"] = sys.implementation.name
 else:
-    implementation_version = "0"
-    implementation_name = ''
+    python_info["implementationVersion"] = "0"
+    python_info["implementationName"] = ''
 
-print("implementation_name: " + implementation_name)
-print("implementation_version: " + implementation_version)
+print(json.dumps(python_info))

@@ -4,7 +4,7 @@ import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.psi.FileViewProvider
 import ru.meanmail.fileTypes.RequirementsFileType
-import ru.meanmail.getMarkers
+import ru.meanmail.getPythonInfo
 import ru.meanmail.lang.RequirementsLanguage
 
 class RequirementsFile(viewProvider: FileViewProvider) :
@@ -30,11 +30,11 @@ class RequirementsFile(viewProvider: FileViewProvider) :
     }
 
     fun enabledRequirements(): List<Requirement> {
-        return requirements().filter { it.enabled(getMarkers(project)) }
+        return requirements().filter { it.enabled(getPythonInfo(project).map) }
     }
 
     fun disabledRequirements(): List<Requirement> {
-        return requirements().filter { !it.enabled(getMarkers(project)) }
+        return requirements().filter { !it.enabled(getPythonInfo(project).map) }
     }
 
 }
