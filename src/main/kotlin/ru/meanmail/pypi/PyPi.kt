@@ -162,7 +162,7 @@ fun getPackageInfo(packageName: String): PackageInfo? {
     return packageInfo
 }
 
-val PYTHON_VERSION_PATTERN = "Python (.*)".toRegex()
+val PYTHON_VERSION_PATTERN = "Python ([\\d.]+).*".toRegex()
 
 fun getPythonVersion(project: Project): String? {
     val sdk = getSdk(project) ?: return null

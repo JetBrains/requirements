@@ -3,9 +3,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    kotlin("jvm") version "1.4.30"
-    kotlin("plugin.serialization") version "1.4.30"
-    id("org.jetbrains.intellij") version "0.6.5"
+    kotlin("jvm") version "1.4.32"
+    kotlin("plugin.serialization") version "1.4.32"
+    id("org.jetbrains.intellij") version "0.7.3"
 }
 
 group = "ru.meanmail"
@@ -13,13 +13,12 @@ version = "${project.properties["version"]}-${project.properties["postfix"]}"
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
-    implementation("io.sentry:sentry:4.1.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
+    implementation("io.sentry:sentry:4.3.0")
     testImplementation("junit:junit:4.13.2")
 }
 
