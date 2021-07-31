@@ -10,7 +10,7 @@ import com.intellij.util.FileContentUtil
 import java.io.File
 
 fun formatPackageName(packageName: String): String {
-    return packageName.replace('_', '-').toLowerCase()
+    return packageName.replace('_', '-').lowercase()
 }
 
 fun resolveFile(filepath: String, base: VirtualFile): VirtualFile? {

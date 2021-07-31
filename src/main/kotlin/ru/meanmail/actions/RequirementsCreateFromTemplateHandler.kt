@@ -22,7 +22,7 @@ class RequirementsCreateFromTemplateHandler : DefaultCreateFromTemplateHandler()
         props["packages"] = getInstalledPackages(project).map {
             it.name + "==" + it.version
         }
-            .sortedBy { it.toLowerCase() }
+            .sortedBy { it.lowercase() }
             .joinToString("\n")
     }
 }

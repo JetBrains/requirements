@@ -1,19 +1,21 @@
-import org.jetbrains.intellij.tasks.PatchPluginXmlTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-plugins {
-    java
-    kotlin("jvm") version "1.4.32"
-    kotlin("plugin.serialization") version "1.4.32"
-    id("org.jetbrains.intellij") version "0.7.3"
-}
-
-group = "ru.meanmail"
-version = "${project.properties["version"]}-${project.properties["postfix"]}"
+fun config(name: String) = project.findProperty(name).toString()
 
 repositories {
     mavenCentral()
 }
+
+plugins {
+    java
+    kotlin("jvm") version "1.5.21"
+    kotlin("plugin.serialization") version "1.4.32"
+    id("org.jetbrains.intellij") version "1.1.4"
+}
+
+group = "dev.meanmail"
+version = "${config("version")}-${config("postfix")}"
+
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
@@ -22,42 +24,30 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
 }
 
-configure<JavaPluginConvention> {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "11"
-}
-
-tasks.withType<Wrapper> {
-    distributionType = Wrapper.DistributionType.ALL
-    gradleVersion = project.properties["gradleVersion"].toString()
-}
-
-tasks.test {
-    useJUnit()
-
-    maxHeapSize = "1G"
-}
-
 intellij {
-    pluginName = project.properties["pluginName"].toString()
-    version = if (project.properties["eap"].toString() == "true") {
-        "LATEST-EAP-SNAPSHOT"
-    } else {
-        project.properties["IdeVersion"].toString()
+    pluginName.set(config("pluginName"))
+    version.set(
+        if (config("ideVersion") == "eap") {
+            "LATEST-EAP-SNAPSHOT"
+        } else {
+            config("ideVersion")
+        }
+    )
+    type.set(config("ideType"))
+    val languages = config("languages").split(',').map {
+        it.trim().toLowerCase()
     }
-    type = project.properties["ideType"].toString()
-    when (type) {
-        "PY" -> {
-            setPlugins("python")
-        }
-        "PC" -> {
-            setPlugins("PythonCore")
-        }
-        else -> {
-            setPlugins(project.properties["pythonPluginVersion"].toString())
+    if ("python" in languages) {
+        when (type.get()) {
+            "PY" -> {
+                plugins.add("python")
+            }
+            "PC" -> {
+                plugins.add("PythonCore")
+            }
+            else -> {
+                plugins.add("PythonCore:${config("PythonCore")}")
+            }
         }
     }
 }
@@ -91,11 +81,40 @@ fun readChangeNotes(pathname: String): String {
         it.joinToString("<br>")
     } +
             "See the full change notes on the <a href='" +
-            project.properties["repository"] +
-            "/blob/master/ChangeNotes.md'>github</a>"
+            config("repository") +
+            "/blob/master/CHANGES.md'>github</a>"
 }
 
-tasks.withType<PatchPluginXmlTask> {
-    setPluginDescription(file("Description.html").readText())
-    setChangeNotes(readChangeNotes("ChangeNotes.md"))
+tasks {
+    withType<JavaCompile> {
+        sourceCompatibility = config("jvmVersion")
+        targetCompatibility = config("jvmVersion")
+    }
+    withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = config("jvmVersion")
+    }
+    withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = config("jvmVersion")
+    }
+    withType<Wrapper> {
+        distributionType = Wrapper.DistributionType.ALL
+        gradleVersion = config("gradleVersion")
+    }
+
+    test {
+        useJUnit()
+
+        maxHeapSize = "1G"
+    }
+
+    patchPluginXml {
+        pluginDescription.set(file("description.html").readText())
+        changeNotes.set(readChangeNotes("CHANGES.md"))
+    }
+
+    publishPlugin {
+        dependsOn("buildPlugin")
+        token.set(System.getenv("PUBLISH_TOKEN"))
+        channels.set(listOf(config("publishChannel")))
+    }
 }
