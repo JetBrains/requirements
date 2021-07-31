@@ -14,12 +14,14 @@ Your ratings and feedback are very important. The feature will appear the faster
 
 *Supported Products*
 
-- IntelliJ IDEA Education 2020.2 — 2020.3
-- PyCharm Professional 2020.2 — 2020.3
-- PyCharm Educational 2020.2 — 2020.3
-- IntelliJ IDEA Community 2020.2 — 2020.3
-- IntelliJ IDEA Ultimate 2020.2 — 2020.3
-- PyCharm Community 2020.2 — 2020.3
+2020.2 — 2021.2
+
+- IntelliJ IDEA Education
+- PyCharm Professional
+- PyCharm Educational
+- IntelliJ IDEA Community
+- IntelliJ IDEA Ultimate
+- PyCharm Community
 
 ## Syntax
 
