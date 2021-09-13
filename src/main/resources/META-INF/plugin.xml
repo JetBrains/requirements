@@ -17,7 +17,7 @@
                   language="requirements.txt"
                   order="first"
                   name="requirements.txt"
-                  fileNames="requirements.txt;constrains.txt"
+                  fileNames="requirements.txt;constraints.txt"
                   patterns="*requirements*.txt;*.txt"/>
         <fileTypeDetector implementation="ru.meanmail.fileTypes.RequirementsFileTypeDetector"
                           order="first"/>
