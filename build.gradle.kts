@@ -8,32 +8,33 @@ repositories {
 
 plugins {
     java
-    kotlin("jvm") version "1.5.21"
-    kotlin("plugin.serialization") version "1.4.32"
-    id("org.jetbrains.intellij") version "1.1.4"
+    kotlin("jvm") version "1.5.10"
+    kotlin("plugin.serialization") version "1.5.10"
+    id("org.jetbrains.intellij") version "1.3.0"
 }
 
-group = "dev.meanmail"
-version = "${config("version")}-${config("postfix")}"
-
+group = config("group")
+version = "${config("version")}-${config("platformVersion")}"
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
-    implementation("io.sentry:sentry:4.3.0")
+    compileOnly("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.10")
+    val serializationVersion = "1.2.1"
+    compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:$serializationVersion")
+    compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
+    implementation("io.sentry:sentry:5.4.0")
     testImplementation("junit:junit:4.13.2")
 }
 
 intellij {
     pluginName.set(config("pluginName"))
     version.set(
-        if (config("ideVersion") == "eap") {
+        if (config("platformVersion") == "eap") {
             "LATEST-EAP-SNAPSHOT"
         } else {
-            config("ideVersion")
+            config("platformVersion")
         }
     )
-    type.set(config("ideType"))
+    type.set(config("platformType"))
     val languages = config("languages").split(',').map {
         it.trim().toLowerCase()
     }
@@ -86,17 +87,17 @@ fun readChangeNotes(pathname: String): String {
 }
 
 tasks {
-    withType<JavaCompile> {
-        sourceCompatibility = config("jvmVersion")
-        targetCompatibility = config("jvmVersion")
+    config("jvmVersion").let {
+        withType<JavaCompile> {
+            sourceCompatibility = it
+            targetCompatibility = it
+        }
+        withType<KotlinCompile> {
+            kotlinOptions.jvmTarget = it
+        }
     }
-    withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = config("jvmVersion")
-    }
-    withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = config("jvmVersion")
-    }
-    withType<Wrapper> {
+
+    wrapper {
         distributionType = Wrapper.DistributionType.ALL
         gradleVersion = config("gradleVersion")
     }
@@ -108,6 +109,7 @@ tasks {
     }
 
     patchPluginXml {
+        version.set(project.version.toString())
         pluginDescription.set(file("description.html").readText())
         changeNotes.set(readChangeNotes("CHANGES.md"))
     }
@@ -116,5 +118,8 @@ tasks {
         dependsOn("buildPlugin")
         token.set(System.getenv("PUBLISH_TOKEN"))
         channels.set(listOf(config("publishChannel")))
+    }
+    buildSearchableOptions {
+        enabled = false
     }
 }
