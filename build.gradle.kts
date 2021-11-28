@@ -35,20 +35,26 @@ intellij {
         }
     )
     type.set(config("platformType"))
-    val languages = config("languages").split(',').map {
-        it.trim().toLowerCase()
-    }
-    if ("python" in languages) {
-        when (type.get()) {
-            "PY" -> {
-                plugins.add("python")
+
+    val usePlugins = config("usePlugins").split(',')
+    for (plugin in usePlugins) {
+        if (plugin.isEmpty()) {
+            continue
+        }
+        if (plugin == "python") {
+            when (type.get()) {
+                "PY" -> {
+                    plugins.add("python")
+                }
+                "PC" -> {
+                    plugins.add("PythonCore")
+                }
+                else -> {
+                    plugins.add("PythonCore:${config("python")}")
+                }
             }
-            "PC" -> {
-                plugins.add("PythonCore")
-            }
-            else -> {
-                plugins.add("PythonCore:${config("PythonCore")}")
-            }
+        } else {
+            plugins.add(plugin)
         }
     }
 }
