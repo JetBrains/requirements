@@ -9,8 +9,10 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.FileContentUtil
 import java.io.File
 
-fun formatPackageName(packageName: String): String {
-    return packageName.replace('_', '-').lowercase()
+val CANONICALIZE_REGEX = "[-_.]+".toRegex()
+
+fun canonicalizeName(name: String): String {
+    return CANONICALIZE_REGEX.replace("-", name).lowercase()
 }
 
 fun resolveFile(filepath: String, base: VirtualFile): VirtualFile? {

@@ -10,10 +10,7 @@ import com.jetbrains.python.packaging.PyPackageVersionComparator
 import com.jetbrains.python.packaging.PyPackageVersionNormalizer
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import ru.meanmail.compareTo
-import ru.meanmail.createVersionspec
-import ru.meanmail.formatPackageName
-import ru.meanmail.getSdk
+import ru.meanmail.*
 import ru.meanmail.pypi.serializers.FileInfo
 import ru.meanmail.pypi.serializers.Info
 import ru.meanmail.pypi.serializers.PackageInfo
@@ -143,10 +140,10 @@ fun loadPackage(packageName: String): PackageInfo {
 }
 
 fun getPackageInfo(packageName: String): PackageInfo? {
-    val formattedPackageName = formatPackageName(packageName)
+    val canonizedPackageName = canonicalizeName(packageName)
 
     var (packageInfo, instant) = cache.getOrDefault(
-        formattedPackageName, null to null
+        canonizedPackageName, null to null
     )
     if (packageInfo != null && instant?.isAfter(Instant.now()) == true) {
         return packageInfo
@@ -154,8 +151,8 @@ fun getPackageInfo(packageName: String): PackageInfo? {
 
     try {
         packageInfo = loadPackage(packageName)
-        cache[formattedPackageName] = packageInfo to Instant.now() + EXPIRATION_TIMEOUT
-    } catch (var3: IOException) {
+        cache[canonizedPackageName] = packageInfo to Instant.now() + EXPIRATION_TIMEOUT
+    } catch (exception: IOException) {
         return null
     }
 

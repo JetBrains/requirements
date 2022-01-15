@@ -40,9 +40,9 @@ fun getPackages(project: Project): List<PyPackage> {
 
 fun getPackage(project: Project, packageName: String): PyPackage? {
     val packages = getPackages(project)
-    val formattedPackageName = formatPackageName(packageName)
+    val canonizedPackageName = canonicalizeName(packageName)
 
-    return packages.firstOrNull { formatPackageName(it.name) == formattedPackageName }
+    return packages.firstOrNull { canonicalizeName(it.name) == canonizedPackageName }
 }
 
 fun getInstalledPackages(project: Project): List<PyPackage> {
