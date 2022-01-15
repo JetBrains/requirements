@@ -22,7 +22,8 @@ dependencies {
     compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:$serializationVersion")
     compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
     implementation("io.sentry:sentry:5.4.0")
-    testImplementation("junit:junit:4.13.2")
+    testImplementation(kotlin("test"))
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")
 }
 
 intellij {
