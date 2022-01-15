@@ -4,6 +4,7 @@ import com.intellij.codeInspection.LocalQuickFixOnPsiElement
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import ru.meanmail.getPythonSdk
 import ru.meanmail.psi.NameReq
 import ru.meanmail.reparseFile
 import ru.meanmail.uninstallPackage
@@ -23,8 +24,9 @@ class UninstallPackageQuickFix(
         val element = (startElement as? NameReq) ?: return
         val packageName = element.name.text ?: return
         val virtualFile = element.containingFile.virtualFile
+        val sdk = getPythonSdk(project, virtualFile) ?: return
 
-        uninstallPackage(project, packageName) {
+        uninstallPackage(project, sdk, packageName) {
             reparseFile(project, virtualFile)
         }
     }

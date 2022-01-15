@@ -6,6 +6,7 @@ import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
 import ru.meanmail.getInstalledVersion
+import ru.meanmail.getPythonSdk
 import ru.meanmail.psi.NameReq
 import ru.meanmail.quickfix.UninstallPackageQuickFix
 
@@ -28,7 +29,9 @@ class UninstalledPackageInspection : LocalInspectionTool() {
 
             override fun visitNameReq(element: NameReq) {
                 val packageName = element.name.text ?: return
-                val installed = getInstalledVersion(element.project, packageName)
+                val virtualFile = element.containingFile.virtualFile
+                val sdk = getPythonSdk(element.project, virtualFile) ?: return
+                val installed = getInstalledVersion(sdk, packageName)
 
                 if (installed != null) {
                     val message = "Uninstall '$packageName'"

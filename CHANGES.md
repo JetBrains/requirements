@@ -1,3 +1,6 @@
+## 2022.1 (January, 15, 2022)
++ Support multiple projects
+
 ## 2021.4.1 (May, 11, 2021)
 
 * Fix checking python version

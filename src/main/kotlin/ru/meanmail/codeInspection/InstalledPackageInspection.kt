@@ -11,6 +11,7 @@ import com.jetbrains.python.packaging.PyPackageVersionNormalizer
 import ru.meanmail.compareTo
 import ru.meanmail.getInstalledVersion
 import ru.meanmail.getPythonInfo
+import ru.meanmail.getPythonSdk
 import ru.meanmail.psi.NameReq
 import ru.meanmail.pypi.getVersionsAsync
 import ru.meanmail.quickfix.InstallPackageQuickFix
@@ -42,12 +43,14 @@ class InstalledPackageInspection : LocalInspectionTool() {
 
             override fun visitNameReq(element: NameReq) {
                 val project = element.project
-                val pythonInfo = getPythonInfo(project)
+                val virtualFile = element.containingFile.virtualFile
+                val sdk = getPythonSdk(project, virtualFile) ?: return
+                val pythonInfo = getPythonInfo(sdk)
                 if (!element.enabled(pythonInfo.map)) {
                     return
                 }
                 val packageName = element.name.text ?: return
-                val task = getVersionsAsync(project, packageName)
+                val task = getVersionsAsync(project, sdk, packageName)
                 val versions = task.get() ?: return
 
                 val suitableVersion: PyPackageVersion? = versions.find {
@@ -58,7 +61,7 @@ class InstalledPackageInspection : LocalInspectionTool() {
                     it.pre == null
                 }
 
-                val installed = getInstalledVersion(project, packageName)
+                val installed = getInstalledVersion(sdk, packageName)
 
                 val versionOneList = element.versionspec?.versionMany?.versionOneList
                 var exactRequired: PyPackageVersion? = null

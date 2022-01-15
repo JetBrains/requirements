@@ -3,12 +3,12 @@ package ru.meanmail.actions
 import com.intellij.ide.actions.CreateFileFromTemplateAction
 import com.intellij.ide.actions.CreateFileFromTemplateDialog
 import com.intellij.openapi.actionSystem.DataContext
+import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDirectory
-import com.jetbrains.python.sdk.PythonSdkType
 import ru.meanmail.AllIcons
-import ru.meanmail.getSdk
+import ru.meanmail.getPythonSdk
 
 class CreateRequirementsFileAction : CreateFileFromTemplateAction(
     "requirements.txt",
@@ -35,9 +35,10 @@ class CreateRequirementsFileAction : CreateFileFromTemplateAction(
     }
 
     override fun isAvailable(dataContext: DataContext): Boolean {
-        val project = dataContext.getData("project") as? Project ?: return false
-        val sdk = getSdk(project)
-        return sdk?.sdkType is PythonSdkType
+        val project = dataContext.getData(PlatformDataKeys.PROJECT) ?: return false
+        val virtualFile = project.projectFile ?: return false
+        val sdk = getPythonSdk(project, virtualFile)
+        return sdk != null
     }
 
     override fun hashCode(): Int = 0

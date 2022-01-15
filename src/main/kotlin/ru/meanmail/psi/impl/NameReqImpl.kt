@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.util.PsiTreeUtil.getChildrenOfTypeAsList
 import com.intellij.util.IncorrectOperationException
-import ru.meanmail.createVersionspec
+import ru.meanmail.fileTypes.createVersionspec
 import ru.meanmail.psi.*
 
 class NameReqImpl(node: ASTNode) : ASTWrapperPsiElement(node), NameReq {

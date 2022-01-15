@@ -2,7 +2,6 @@ package ru.meanmail
 
 import com.intellij.execution.process.ProcessOutput
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.projectRoots.Sdk
 import com.jetbrains.python.sdk.PySdkUtil
 import com.jetbrains.python.sdk.PythonSdkType
@@ -62,9 +61,7 @@ data class PythonInfo(
 
 val markersCache = mutableMapOf<String, Pair<PythonInfo, LocalDateTime>>()
 
-fun getPythonInfo(project: Project): PythonInfo {
-    val sdk = getSdk(project) ?: return PythonInfo()
-
+fun getPythonInfo(sdk: Sdk): PythonInfo {
     val cached = markersCache[sdk.name]
     if (cached != null) {
         val actual = cached.second.plusDays(1).isAfter(LocalDateTime.now())

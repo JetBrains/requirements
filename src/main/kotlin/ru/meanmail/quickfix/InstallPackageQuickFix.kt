@@ -4,6 +4,7 @@ import com.intellij.codeInspection.LocalQuickFixOnPsiElement
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import ru.meanmail.getPythonSdk
 import ru.meanmail.installPackage
 import ru.meanmail.psi.NameReq
 import ru.meanmail.reparseFile
@@ -19,7 +20,8 @@ class InstallPackageQuickFix(
     }
 
     override fun invoke(
-        project: Project, file: PsiFile,
+        project: Project,
+        file: PsiFile,
         startElement: PsiElement,
         endElement: PsiElement
     ) {
@@ -29,8 +31,9 @@ class InstallPackageQuickFix(
             element.setVersion("==${version}")
         }
         val virtualFile = element.containingFile.virtualFile
+        val sdk = getPythonSdk(project, virtualFile) ?: return
 
-        installPackage(project, packageName, version) {
+        installPackage(project, sdk, packageName, version) {
             reparseFile(project, virtualFile)
         }
     }

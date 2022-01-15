@@ -3,6 +3,7 @@ package ru.meanmail.pypi
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.projectRoots.Sdk
 import com.intellij.util.io.HttpRequests
 import com.jetbrains.python.packaging.PyPackageService
 import com.jetbrains.python.packaging.PyPackageVersion
@@ -10,7 +11,9 @@ import com.jetbrains.python.packaging.PyPackageVersionComparator
 import com.jetbrains.python.packaging.PyPackageVersionNormalizer
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import ru.meanmail.*
+import ru.meanmail.canonicalizeName
+import ru.meanmail.compareTo
+import ru.meanmail.fileTypes.createVersionspec
 import ru.meanmail.pypi.serializers.FileInfo
 import ru.meanmail.pypi.serializers.Info
 import ru.meanmail.pypi.serializers.PackageInfo
@@ -161,15 +164,14 @@ fun getPackageInfo(packageName: String): PackageInfo? {
 
 val PYTHON_VERSION_PATTERN = "Python ([\\d.]+).*".toRegex()
 
-fun getPythonVersion(project: Project): String? {
-    val sdk = getSdk(project) ?: return null
+fun getPythonVersion(sdk: Sdk): String? {
     val versionString = sdk.versionString ?: return null
     val matchResult = PYTHON_VERSION_PATTERN.find(versionString) ?: return null
     return matchResult.groups[1]?.value
 }
 
-fun getVersionsList(project: Project, packageName: String): List<PyPackageVersion> {
-    val pythonVersion = getPythonVersion(project)
+fun getVersionsList(project: Project, sdk: Sdk, packageName: String): List<PyPackageVersion> {
+    val pythonVersion = getPythonVersion(sdk)
     val packageInfo = ApplicationManager.getApplication()
         .executeOnPooledThread<PackageInfo?> {
             return@executeOnPooledThread getPackageInfo(packageName)
@@ -185,13 +187,13 @@ fun getVersionsList(project: Project, packageName: String): List<PyPackageVersio
 
     return packageInfo.releases
         .filter {
-            it.value.any {
-                if (it.requires_python == null || pythonVersion == null) {
+            it.value.any { fileInfo ->
+                if (fileInfo.requires_python == null || pythonVersion == null) {
                     return@any true
                 }
                 var isActual = false
                 ProgressManager.getInstance().runInReadActionWithWriteActionPriority({
-                    isActual = createVersionspec(project, it.requires_python)
+                    isActual = createVersionspec(project, fileInfo.requires_python)
                         ?.isActual(pythonVersion) ?: true
                 }, null)
                 return@any isActual
@@ -207,9 +209,9 @@ fun getVersionsList(project: Project, packageName: String): List<PyPackageVersio
         .reversed()
 }
 
-fun getVersionsAsync(project: Project, packageName: String): Future<List<PyPackageVersion>> {
+fun getVersionsAsync(project: Project, sdk: Sdk, packageName: String): Future<List<PyPackageVersion>> {
     return ApplicationManager.getApplication()
         .executeOnPooledThread<List<PyPackageVersion>> {
-            return@executeOnPooledThread getVersionsList(project, packageName)
+            return@executeOnPooledThread getVersionsList(project, sdk, packageName)
         }
 }

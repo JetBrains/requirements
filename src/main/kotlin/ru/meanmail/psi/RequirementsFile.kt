@@ -5,6 +5,7 @@ import com.intellij.openapi.fileTypes.FileType
 import com.intellij.psi.FileViewProvider
 import ru.meanmail.fileTypes.RequirementsFileType
 import ru.meanmail.getPythonInfo
+import ru.meanmail.getPythonSdk
 import ru.meanmail.lang.RequirementsLanguage
 
 class RequirementsFile(viewProvider: FileViewProvider) :
@@ -30,11 +31,13 @@ class RequirementsFile(viewProvider: FileViewProvider) :
     }
 
     fun enabledRequirements(): List<Requirement> {
-        return requirements().filter { it.enabled(getPythonInfo(project).map) }
+        val sdk = getPythonSdk(project, virtualFile) ?: return emptyList()
+        return requirements().filter { it.enabled(getPythonInfo(sdk).map) }
     }
 
     fun disabledRequirements(): List<Requirement> {
-        return requirements().filter { !it.enabled(getPythonInfo(project).map) }
+        val sdk = getPythonSdk(project, virtualFile) ?: return requirements()
+        return requirements().filter { !it.enabled(getPythonInfo(sdk).map) }
     }
 
 }

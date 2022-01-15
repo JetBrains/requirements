@@ -22,7 +22,7 @@ import java.awt.Component
 object SentryClient {
     init {
         Sentry.init {
-            it.dsn = "https://8d59d6d038bd4908bcdd0d169c6b5946@o428712.ingest.sentry.io/5554321";
+            it.dsn = "https://8d59d6d038bd4908bcdd0d169c6b5946@o428712.ingest.sentry.io/5554321"
         }
     }
 
@@ -59,9 +59,9 @@ class SentryErrorReporter : ErrorReportSubmitter() {
         parentComponent: Component,
         consumer: Consumer<in SubmittedReportInfo>
     ): Boolean {
-        val dataManager = DataManager.getInstance();
-        val context = dataManager.getDataContext(parentComponent);
-        val project = CommonDataKeys.PROJECT.getData(context);
+        val dataManager = DataManager.getInstance()
+        val context = dataManager.getDataContext(parentComponent)
+        val project = CommonDataKeys.PROJECT.getData(context)
 
         object : Task.Backgroundable(project, "Sending Error Report") {
             override fun run(indicator: ProgressIndicator) {
@@ -76,14 +76,12 @@ class SentryErrorReporter : ErrorReportSubmitter() {
                         event.environment = ideaEvent.plugin?.name
 
                         val applicationInfo = ApplicationInfo.getInstance()
-                        event.setTags(
-                            mapOf(
-                                "IDE version" to applicationInfo.fullVersion,
-                                "IDE name" to applicationInfo.fullApplicationName,
-                                "IDE company name" to applicationInfo.companyName,
-                                "IDE company url" to applicationInfo.companyURL,
-                                "IDE api version" to applicationInfo.apiVersion
-                            )
+                        event.tags = mapOf(
+                            "IDE version" to applicationInfo.fullVersion,
+                            "IDE name" to applicationInfo.fullApplicationName,
+                            "IDE company name" to applicationInfo.companyName,
+                            "IDE company url" to applicationInfo.companyURL,
+                            "IDE api version" to applicationInfo.apiVersion
                         )
                         event.setExtras(
                             mapOf(
@@ -108,7 +106,7 @@ class SentryErrorReporter : ErrorReportSubmitter() {
                 }
             }
         }.queue()
-        return true;
+        return true
     }
 
 }

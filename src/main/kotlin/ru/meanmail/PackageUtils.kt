@@ -2,32 +2,34 @@ package ru.meanmail
 
 import com.intellij.execution.ExecutionException
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.projectRoots.Sdk
-import com.intellij.openapi.roots.ProjectRootManager
+import com.intellij.openapi.vfs.VirtualFile
+import com.jetbrains.extensions.getSdk
 import com.jetbrains.python.packaging.*
 import com.jetbrains.python.sdk.PythonSdkType
 import ru.meanmail.notification.Notifier
 
-fun getSdk(project: Project): Sdk? {
-    val projectRootManager = ProjectRootManager.getInstance(project)
-    val projectSdk = projectRootManager.projectSdk ?: return null
-    if (projectSdk.sdkType is PythonSdkType) {
-        return projectSdk
+
+fun getPythonSdk(project: Project, virtualFile: VirtualFile): Sdk? {
+    val module = ModuleUtil.findModuleForFile(virtualFile, project)
+    val moduleSdk = module?.getSdk() ?: return null
+    if (moduleSdk.sdkType is PythonSdkType) {
+        return moduleSdk
     }
     return null
 }
 
-fun getPackageManager(project: Project): PyPackageManager? {
-    val sdk = getSdk(project) ?: return null
+fun getPackageManager(sdk: Sdk): PyPackageManager {
     return PyPackageManager.getInstance(sdk)
 }
 
-fun getPackages(project: Project): List<PyPackage> {
-    val packageManager = getPackageManager(project) ?: return emptyList()
+fun getPackages(sdk: Sdk): List<PyPackage> {
+    val packageManager = getPackageManager(sdk)
     return ApplicationManager.getApplication()
         .executeOnPooledThread<List<PyPackage>> {
             try {
@@ -38,21 +40,21 @@ fun getPackages(project: Project): List<PyPackage> {
         }.get() ?: return emptyList()
 }
 
-fun getPackage(project: Project, packageName: String): PyPackage? {
-    val packages = getPackages(project)
+fun getPackage(sdk: Sdk, packageName: String): PyPackage? {
+    val packages = getPackages(sdk)
     val canonizedPackageName = canonicalizeName(packageName)
 
     return packages.firstOrNull { canonicalizeName(it.name) == canonizedPackageName }
 }
 
-fun getInstalledPackages(project: Project): List<PyPackage> {
-    val packages = getPackages(project)
+fun getInstalledPackages(sdk: Sdk): List<PyPackage> {
+    val packages = getPackages(sdk)
 
     return packages.filter { it.isInstalled }
 }
 
-fun getInstalledVersion(project: Project, packageName: String): PyPackageVersion? {
-    val pyPackage = getPackage(project, packageName) ?: return null
+fun getInstalledVersion(sdk: Sdk, packageName: String): PyPackageVersion? {
+    val pyPackage = getPackage(sdk, packageName) ?: return null
     if (!pyPackage.isInstalled) {
         return null
     }
@@ -60,11 +62,13 @@ fun getInstalledVersion(project: Project, packageName: String): PyPackageVersion
 }
 
 fun installPackage(
-    project: Project, packageName: String,
+    project: Project,
+    sdk: Sdk,
+    packageName: String,
     version: String,
     onInstalled: (() -> Unit)?
 ) {
-    val installedVersion = getInstalledVersion(project, packageName)
+    val installedVersion = getInstalledVersion(sdk, packageName)
     if (installedVersion?.presentableText == version) {
         Notifier.notifyInformation(
             project, "$packageName (${version})", "Successfully installed"
@@ -84,17 +88,10 @@ fun installPackage(
             indicator.isIndeterminate = true
 
             try {
-                val packageManager = getPackageManager(project)
+                val packageManager = getPackageManager(sdk)
 
-                if (packageManager != null) {
-                    packageManager.install("$packageName==$version")
-                } else {
-                    Notifier.notifyError(
-                        project, title, "Package manager is not available"
-                    )
-                    return
-                }
-                val pyPackage = getPackage(project, packageName)
+                packageManager.install("$packageName==$version")
+                val pyPackage = getPackage(sdk, packageName)
 
                 if (pyPackage == null || pyPackage.version != version) {
                     Notifier.notifyError(
@@ -123,9 +120,12 @@ fun installPackage(
 }
 
 fun uninstallPackage(
-    project: Project, packageName: String, onInstalled: (() -> Unit)?
+    project: Project,
+    sdk: Sdk,
+    packageName: String,
+    onInstalled: (() -> Unit)?
 ) {
-    val installedVersion = getPackage(project, packageName)
+    val installedVersion = getPackage(sdk, packageName)
     if (installedVersion?.isInstalled != true) {
         Notifier.notifyInformation(
             project, packageName, "Successfully uninstalled"
@@ -144,16 +144,9 @@ fun uninstallPackage(
             indicator.isIndeterminate = true
 
             try {
-                val packageManager = getPackageManager(project)
+                val packageManager = getPackageManager(sdk)
 
-                if (packageManager != null) {
-                    packageManager.uninstall(listOf(installedVersion))
-                } else {
-                    Notifier.notifyError(
-                        project, title, "Package manager is not available"
-                    )
-                    return
-                }
+                packageManager.uninstall(listOf(installedVersion))
 
                 Notifier.notifyInformation(
                     project,
@@ -190,7 +183,7 @@ operator fun PyPackageVersion?.compareTo(other: PyPackageVersion?): Int {
     var a = this
     var b = other
     if (diff != 0) {
-        val tail = Array(kotlin.math.abs(diff)) { _ -> "0" }
+        val tail = Array(kotlin.math.abs(diff)) { "0" }
         if (diff > 0) {
             b = other.copy(
                 release = (partsOther + tail).joinToString(".")

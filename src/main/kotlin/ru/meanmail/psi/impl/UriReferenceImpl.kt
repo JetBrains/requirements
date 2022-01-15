@@ -8,7 +8,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiReference
 import ru.meanmail.Reference
-import ru.meanmail.createUriReference
+import ru.meanmail.fileTypes.createUriReference
 import ru.meanmail.psi.RelativeRef
 import ru.meanmail.psi.Uri
 import ru.meanmail.psi.UriReference

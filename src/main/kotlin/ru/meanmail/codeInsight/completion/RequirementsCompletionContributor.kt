@@ -6,6 +6,7 @@ import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.util.elementType
 import com.intellij.psi.util.prevLeaf
 import com.intellij.util.ProcessingContext
+import ru.meanmail.getPythonSdk
 import ru.meanmail.psi.Name
 import ru.meanmail.psi.Types
 import ru.meanmail.pypi.getVersionsAsync
@@ -32,7 +33,9 @@ class VersionCompletionProvider : CompletionProvider<CompletionParameters>() {
         context: ProcessingContext,
         result: CompletionResultSet
     ) {
-        val project = parameters.originalFile.project
+        val originalFile = parameters.originalFile
+        val project = originalFile.project
+        val sdk = getPythonSdk(project, originalFile.virtualFile) ?: return
         var packageName: String? = null
         var prevLeaf = parameters.originalPosition?.prevLeaf(true)
         while (prevLeaf != null) {
@@ -44,7 +47,7 @@ class VersionCompletionProvider : CompletionProvider<CompletionParameters>() {
         }
         packageName ?: return
 
-        val task = getVersionsAsync(project, packageName)
+        val task = getVersionsAsync(project, sdk, packageName)
         val versions = task.get() ?: return
         val latest = versions.firstOrNull {
             it.pre == null

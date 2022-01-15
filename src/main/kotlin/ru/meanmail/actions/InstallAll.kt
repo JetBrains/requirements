@@ -10,9 +10,13 @@ import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import ru.meanmail.getPackageManager
+import ru.meanmail.getPythonSdk
 import ru.meanmail.lang.RequirementsLanguage
 import ru.meanmail.notification.Notifier
-import ru.meanmail.psi.*
+import ru.meanmail.psi.NameReq
+import ru.meanmail.psi.PathReq
+import ru.meanmail.psi.RequirementsFile
+import ru.meanmail.psi.UrlReq
 import ru.meanmail.reparseFile
 
 
@@ -42,22 +46,24 @@ class InstallAllAction : AnAction() {
     }
 
     class InstallTask(
-        project: Project, val requirements: List<String>,
-        title: String, private val virtualFile: VirtualFile
+        project: Project,
+        val requirements: List<String>,
+        title: String,
+        private val virtualFile: VirtualFile
     ) :
         Task.Backgroundable(project, title, false) {
         override fun run(indicator: ProgressIndicator) {
             indicator.text = this.title
             indicator.isIndeterminate = true
-
-            val packageManager = getPackageManager(project)
-
-            if (packageManager == null) {
+            val sdk = getPythonSdk(project, virtualFile)
+            if (sdk == null) {
                 Notifier.notifyError(
-                    project, title, "Package manager is not available"
+                    project, title, "No Sdk"
                 )
                 return
             }
+            val packageManager = getPackageManager(sdk)
+
             for (requirement in requirements) {
                 indicator.text = requirement
                 try {
