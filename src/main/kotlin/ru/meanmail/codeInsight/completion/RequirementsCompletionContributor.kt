@@ -57,10 +57,13 @@ class VersionCompletionProvider : CompletionProvider<CompletionParameters>() {
             versions.map {
                 val isLatest = it == latest
                 val lookupElement = LookupElementBuilder.create(it.presentableText)
-                if (!isLatest) {
-                    return@map lookupElement
+                if (it.pre != null) {
+                    return@map lookupElement.withTypeText("pre")
                 }
-                return@map lookupElement.withTypeText("latest")
+                if (isLatest) {
+                    return@map lookupElement.withTypeText("latest")
+                }
+                return@map lookupElement
             }
         )
     }
