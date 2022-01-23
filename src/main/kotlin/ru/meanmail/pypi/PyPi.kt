@@ -11,9 +11,9 @@ import com.jetbrains.python.packaging.PyPackageVersionComparator
 import com.jetbrains.python.packaging.PyPackageVersionNormalizer
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import ru.meanmail.canonicalizeName
 import ru.meanmail.compareTo
 import ru.meanmail.fileTypes.createVersionspec
+import ru.meanmail.canonicalizeName
 import ru.meanmail.pypi.serializers.FileInfo
 import ru.meanmail.pypi.serializers.Info
 import ru.meanmail.pypi.serializers.PackageInfo
@@ -38,8 +38,14 @@ fun getExtraIndexes(): List<String> {
     return packageService.additionalRepositories
 }
 
-fun loadPackageFromPyPi(packageName: String): PackageInfo {
-    return HttpRequests.request("$PYPI_URL/pypi/$packageName/json")
+fun loadPackageFromPyPi(packageName: String, version: PyPackageVersion? = null): PackageInfo {
+    val url = if (version == null) {
+        "$PYPI_URL/pypi/$packageName/json"
+    } else {
+        "$PYPI_URL/pypi/$packageName/${version.presentableText}/json"
+    }
+
+    return HttpRequests.request(url)
         .productNameAsUserAgent().connect {
             return@connect format.decodeFromString<PackageInfo>(it.readString())
         }
@@ -129,12 +135,12 @@ fun loadPackageFromSimple(indexUrl: String, packageName: String): PackageInfo {
         }
 }
 
-fun loadPackage(packageName: String): PackageInfo {
+fun loadPackage(packageName: String, version: PyPackageVersion? = null): PackageInfo {
     val packageInfos: MutableList<PackageInfo> = mutableListOf()
     val packageService = PyPackageService.getInstance()
     val extraIndexes = getExtraIndexes()
     if (!packageService.PYPI_REMOVED || extraIndexes.isEmpty()) {
-        packageInfos.add(loadPackageFromPyPi(packageName))
+        packageInfos.add(loadPackageFromPyPi(packageName, version))
     }
     for (extraIndexUrl in extraIndexes) {
         packageInfos.add(loadPackageFromSimple(extraIndexUrl, packageName))
@@ -142,20 +148,23 @@ fun loadPackage(packageName: String): PackageInfo {
     return mergePackageInfos(packageInfos)
 }
 
-fun getPackageInfo(packageName: String): PackageInfo? {
+fun getPackageInfo(packageName: String, version: PyPackageVersion? = null): PackageInfo? {
     val canonizedPackageName = canonicalizeName(packageName)
+    val key = if (version != null)
+        "$canonizedPackageName@${version.presentableText}"
+    else canonizedPackageName
 
     var (packageInfo, instant) = cache.getOrDefault(
-        canonizedPackageName, null to null
+        key, null to null
     )
     if (packageInfo != null && instant?.isAfter(Instant.now()) == true) {
         return packageInfo
     }
 
     try {
-        packageInfo = loadPackage(packageName)
-        cache[canonizedPackageName] = packageInfo to Instant.now() + EXPIRATION_TIMEOUT
-    } catch (exception: IOException) {
+        packageInfo = loadPackage(packageName, version)
+        cache["$canonizedPackageName@${packageInfo.info.version}"] = packageInfo to Instant.now() + EXPIRATION_TIMEOUT
+    } catch (var3: IOException) {
         return null
     }
 
