@@ -233,17 +233,25 @@ fun compareVersions(
     }
 
     if (operation == ">=") {
-        return actual >= required
+        return compareVersions(actual, "==", required) ||
+                compareVersions(actual, ">", required)
     }
 
     if (operation == "<=") {
-        return actual <= required
+        return compareVersions(actual, "==", required) ||
+                compareVersions(actual, "<", required)
     }
 
     if (operation == ">") {
+        if (actual.pre != null) {
+            return false
+        }
         return actual > required
     }
     if (operation == "<") {
+        if (actual.pre != null) {
+            return false
+        }
         return actual < required
     }
 

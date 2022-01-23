@@ -54,7 +54,7 @@ class InstalledPackageInspection : LocalInspectionTool() {
                 val versions = task.get() ?: return
 
                 val suitableVersion: PyPackageVersion? = versions.find {
-                    it.pre == null && isVersionActual(element, it)
+                    isVersionActual(element, it)
                 }
 
                 val latest = versions.firstOrNull {

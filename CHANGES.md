@@ -1,3 +1,6 @@
+## 2022.2 (January, 23, 2022)
++ Support pre-release packages
+
 ## 2022.1 (January, 15, 2022)
 + Support multiple projects
 
