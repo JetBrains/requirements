@@ -4,10 +4,8 @@ import com.intellij.codeInspection.LocalInspectionTool
 import com.intellij.codeInspection.LocalInspectionToolSession
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.openapi.util.NlsSafe
 import com.intellij.psi.PsiElementVisitor
 import com.jetbrains.python.packaging.PyPackageVersion
-import com.jetbrains.python.packaging.PyPackageVersionNormalizer
 import ru.meanmail.compareTo
 import ru.meanmail.getInstalledVersion
 import ru.meanmail.getPythonInfo
@@ -62,83 +60,50 @@ class InstalledPackageInspection : LocalInspectionTool() {
                 }
 
                 val installed = getInstalledVersion(sdk, packageName)
-
-                val versionOneList = element.versionspec?.versionMany?.versionOneList
-                var exactRequired: PyPackageVersion? = null
-                if (versionOneList?.size == 1 && versionOneList[0].versionCmp.isExact) {
-                    exactRequired = PyPackageVersionNormalizer.normalize(versionOneList[0].version.text)
-                }
-
-                if (exactRequired != null) {
-                    if (exactRequired != installed) {
-                        exactRequiredIsNotInstalled(element, packageName, exactRequired, installed, latest)
-                    }
-
-                    if (latest != null && exactRequired != latest) {
-                        exactRequiredIsOutdated(element, packageName, exactRequired, installed, latest)
-                    }
-                } else {
-                    if (suitableVersion != null && installed < suitableVersion) {
-                        requiredIsNotInstalled(element, packageName, installed, latest, suitableVersion)
-                    }
-                    if (latest != null && latest != suitableVersion && installed < latest) {
-                        requiredIsOutdated(element, packageName, installed, latest)
-                    }
-                }
+                val isInstalledIsActual = installed != null && isVersionActual(element, installed)
+                val versionsInfo = getVersionsInfo(
+                    suitableVersion, installed, latest
+                )
 
                 if (suitableVersion == null) {
-                    noSuitableVersion(element, packageName, installed, latest, versions)
+                    if (latest != null) {
+                        noSuitableVersion(element, packageName, versionsInfo, latest)
+                    } else {
+                        noSuitablePackage(element, packageName)
+                    }
+                } else {
+                    if (isInstalledIsActual) {
+                        if (installed < suitableVersion) {
+                            installedPackageIsOutdated(element, packageName, versionsInfo, installed, suitableVersion)
+                        }
+                    } else {
+                        requiredPackageIsNotInstalled(element, packageName, versionsInfo, suitableVersion)
+                    }
+                }
+                if (latest != null && suitableVersion < latest) {
+                    requirementIsOutdated(element, packageName, versionsInfo, suitableVersion, latest)
                 }
             }
 
-            private fun exactRequiredIsNotInstalled(
+            private fun requirementIsOutdated(
                 element: NameReq,
-                packageName: @NlsSafe String,
-                exactRequired: PyPackageVersion,
-                installed: PyPackageVersion?,
-                latest: PyPackageVersion?
-            ) {
-                val versionsInfo = getVersionsInfo(
-                    exactRequired.presentableText, installed, latest
-                )
-                val message = "'$packageName' version '" +
-                        "${exactRequired.presentableText}' " +
-                        "is not installed ($versionsInfo)"
-                holder.registerProblem(
-                    element,
-                    message,
-                    InstallPackageQuickFix(
-                        element,
-                        "Install '$packageName' " +
-                                "version '${exactRequired.presentableText}' " +
-                                "($versionsInfo)",
-                        exactRequired.presentableText
-                    )
-                )
-            }
-
-            private fun exactRequiredIsOutdated(
-                element: NameReq,
-                packageName: @NlsSafe String,
-                exactRequired: PyPackageVersion,
-                installed: PyPackageVersion?,
+                packageName: String,
+                versionsInfo: String,
+                required: PyPackageVersion?,
                 latest: PyPackageVersion
             ) {
-                val versionsInfo = getVersionsInfo(
-                    exactRequired.presentableText, installed, latest
-                )
-
-                val message = "'$packageName' version '" +
-                        "${exactRequired.presentableText}' " +
-                        "is outdated ($versionsInfo)"
+                val message = "'$packageName " +
+                        "${required?.presentableText}': " +
+                        "the required version is outdated ($versionsInfo)"
                 holder.registerProblem(
                     element,
                     message,
+                    ProblemHighlightType.WEAK_WARNING,
                     InstallPackageQuickFix(
                         element,
-                        "Upgrade '$packageName' " +
-                                "to version '${latest.presentableText}' " +
-                                "and set new version " +
+                        "Upgrade '$packageName' requirement " +
+                                "to '==${latest.presentableText}' " +
+                                "and install latest version " +
                                 "($versionsInfo)",
                         latest.presentableText,
                         true
@@ -146,25 +111,17 @@ class InstalledPackageInspection : LocalInspectionTool() {
                 )
             }
 
-            private fun requiredIsNotInstalled(
+            private fun requiredPackageIsNotInstalled(
                 element: NameReq,
-                packageName: @NlsSafe String,
-                installed: PyPackageVersion?,
-                latest: PyPackageVersion?,
+                packageName: String,
+                versionsInfo: String,
                 suitableVersion: PyPackageVersion
             ) {
-                val versionsInfo = getVersionsInfo(
-                    element.versionspec?.text, installed, latest
-                )
-                val prefix = if (installed != null) {
-                    "'$packageName${installed.presentableText}'"
-                } else {
-                    "'$packageName'"
-                }
-
                 holder.registerProblem(
                     element,
-                    "$prefix is not installed ($versionsInfo)",
+                    "'$packageName ${suitableVersion.presentableText}' " +
+                            "is not installed ($versionsInfo)",
+                    ProblemHighlightType.WARNING,
                     InstallPackageQuickFix(
                         element,
                         "Install '$packageName' " +
@@ -175,29 +132,27 @@ class InstalledPackageInspection : LocalInspectionTool() {
                 )
             }
 
-            private fun requiredIsOutdated(
+            private fun installedPackageIsOutdated(
                 element: NameReq,
-                packageName: @NlsSafe String,
+                packageName: String,
+                versionsInfo: String,
                 installed: PyPackageVersion?,
                 latest: PyPackageVersion
             ) {
-                val versionsInfo = getVersionsInfo(
-                    element.versionspec?.text, installed, latest
-                )
                 val prefix = if (installed != null) {
-                    "'$packageName${installed.presentableText}'"
+                    "'$packageName ${installed.presentableText}'"
                 } else {
                     "'$packageName'"
                 }
-                val message = "$prefix is outdated ($versionsInfo)"
+                val message = "$prefix: installed package is outdated ($versionsInfo)"
                 holder.registerProblem(
                     element,
                     message,
+                    ProblemHighlightType.WEAK_WARNING,
                     InstallPackageQuickFix(
                         element,
-                        "Upgrade '$packageName' " +
+                        "Upgrade installed '$packageName' " +
                                 "to version '${latest.presentableText}' " +
-                                "and set new version " +
                                 "($versionsInfo)",
                         latest.presentableText,
                         true
@@ -207,52 +162,46 @@ class InstalledPackageInspection : LocalInspectionTool() {
 
             private fun noSuitableVersion(
                 element: NameReq,
-                packageName: @NlsSafe String,
-                installed: PyPackageVersion?,
-                latest: PyPackageVersion?,
-                versions: List<PyPackageVersion>
+                packageName: String,
+                versionsInfo: String,
+                latest: PyPackageVersion
             ) {
-                val versionsInfo = getVersionsInfo(
-                    element.versionspec?.text, installed, latest
-                )
-                val errorMessage = if (versions.isEmpty()) {
-                    "Package not found:"
-                } else {
-                    "No matching package version found:"
-                }
-                val fixes = if (latest != null) {
-                    arrayOf(
-                        InstallPackageQuickFix(
-                            element,
-                            "Install '$packageName' " +
-                                    "version '${latest.presentableText}' " +
-                                    "and set new version " +
-                                    "($versionsInfo)",
-                            latest.presentableText,
-                            true
-                        )
-                    )
-                } else {
-                    emptyArray()
-                }
                 holder.registerProblem(
                     element,
-                    "$errorMessage '$packageName${element.versionspec?.text}' ($versionsInfo)",
+                    "No matching package version found: '$packageName${element.versionspec?.text}' ($versionsInfo)",
                     ProblemHighlightType.ERROR,
-                    *fixes
+                    InstallPackageQuickFix(
+                        element,
+                        "Install '$packageName' " +
+                                "version '${latest.presentableText}' " +
+                                "and set latest version " +
+                                "($versionsInfo)",
+                        latest.presentableText,
+                        true
+                    )
+                )
+            }
+
+            private fun noSuitablePackage(
+                element: NameReq,
+                packageName: String
+            ) {
+                holder.registerProblem(
+                    element,
+                    "Package not found: '$packageName'",
+                    ProblemHighlightType.ERROR
                 )
             }
 
             private fun getVersionsInfo(
-                required: String?,
+                required: PyPackageVersion?,
                 installed: PyPackageVersion?,
                 latest: PyPackageVersion?
             ): String {
-                return "required: ${required ?: "<unknown>"}, " +
+                return "required: ${required?.presentableText ?: "<nothing>"}, " +
                         "installed: ${installed?.presentableText ?: "<nothing>"}, " +
                         "latest: ${latest?.presentableText ?: "<nothing>"}"
             }
-
 
         }
     }
