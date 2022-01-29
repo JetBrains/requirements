@@ -27,7 +27,7 @@ import javax.swing.text.html.HTMLEditorKit
 import javax.swing.text.html.parser.ParserDelegator
 
 const val PYPI_URL = "https://pypi.org"
-val EXPIRATION_TIMEOUT: Duration = Duration.ofHours(1L)
+val EXPIRATION_TIMEOUT: Duration = Duration.ofMinutes(5)
 val format = Json { ignoreUnknownKeys = true }
 val cache = mutableMapOf<String, Pair<PackageInfo, Instant>>()
 
@@ -163,7 +163,11 @@ fun getPackageInfo(packageName: String, version: PyPackageVersion? = null): Pack
 
     try {
         packageInfo = loadPackage(packageName, version)
-        cache["$canonizedPackageName@${packageInfo.info.version}"] = packageInfo to Instant.now() + EXPIRATION_TIMEOUT
+        val data = packageInfo to Instant.now()  + EXPIRATION_TIMEOUT
+        cache["$canonizedPackageName@${packageInfo.info.version}"] = data
+        if (version == null) {
+            cache[canonizedPackageName] = data
+        }
     } catch (var3: IOException) {
         return null
     }

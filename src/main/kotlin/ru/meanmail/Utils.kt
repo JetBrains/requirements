@@ -12,7 +12,7 @@ import java.io.File
 val CANONICALIZE_REGEX = "[-_.]+".toRegex()
 
 fun canonicalizeName(name: String): String {
-    return CANONICALIZE_REGEX.replace("-", name).lowercase()
+    return CANONICALIZE_REGEX.replace(name, "-").lowercase()
 }
 
 fun resolveFile(filepath: String, base: VirtualFile): VirtualFile? {
