@@ -5,6 +5,8 @@ import com.intellij.codeInspection.LocalInspectionToolSession
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElementVisitor
+import ru.meanmail.canonicalizeName
+import ru.meanmail.psi.NameReq
 import ru.meanmail.psi.RequirementsFile
 import ru.meanmail.quickfix.RemoveUnusedQuickFix
 
@@ -34,7 +36,11 @@ class DuplicatedInspection : LocalInspectionTool() {
                 val document = psiDocumentManager.getDocument(element.containingFile)
 
                 for (req in element.enabledRequirements()) {
-                    val text = req.displayName
+                    val text = if (req is NameReq) {
+                        canonicalizeName(req.displayName)
+                    } else {
+                        req.displayName
+                    }
                     val name = if (text.length <= MAX_LENGTH) {
                         text
                     } else {
