@@ -1,6 +1,8 @@
 ## 2022.3 (January, 30, 2022)
 
 * Improve inspections
+* Improve parser
+* Improve formatter
 * Fix regression
 
 ## 2022.2 (January, 23, 2022)

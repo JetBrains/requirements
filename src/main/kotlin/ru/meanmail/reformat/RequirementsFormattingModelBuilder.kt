@@ -22,8 +22,6 @@ class RequirementsFormattingModelBuilder : FormattingModelBuilder {
 
     private fun createSpaceBuilder(settings: CodeStyleSettings): SpacingBuilder {
         return SpacingBuilder(settings, RequirementsLanguage)
-            .around(Types.VERSIONSPEC)
-            .none()
             .around(Types.NAME_REQ)
             .none()
             .around(Types.URL_REQ)
@@ -39,6 +37,8 @@ class RequirementsFormattingModelBuilder : FormattingModelBuilder {
             .around(Types.EXTRAS_LIST)
             .none()
             .aroundInside(Types.COMMA, Types.EXTRAS_LIST)
+            .none()
+            .around(Types.VERSION_CMP_STMT)
             .none()
     }
 }
