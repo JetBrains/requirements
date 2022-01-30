@@ -55,6 +55,8 @@ public interface Types {
   IElementType PORT = new RequirementsElementType("PORT");
   IElementType PREFER_BINARY_REQ = new RequirementsElementType("PREFER_BINARY_REQ");
   IElementType PRE_REQ = new RequirementsElementType("PRE_REQ");
+  IElementType PYTHON_DQUOTE_STR = new RequirementsElementType("PYTHON_DQUOTE_STR");
+  IElementType PYTHON_SQUOTE_STR = new RequirementsElementType("PYTHON_SQUOTE_STR");
   IElementType PYTHON_STR = new RequirementsElementType("PYTHON_STR");
   IElementType QUERY = new RequirementsElementType("QUERY");
   IElementType QUOTED_MARKER = new RequirementsElementType("QUOTED_MARKER");
@@ -139,7 +141,6 @@ public interface Types {
   IElementType USE_FEATURE = new RequirementsTokenType("USE_FEATURE");
   IElementType VERSION = new RequirementsTokenType("VERSION");
   IElementType VERSION_CMP = new RequirementsTokenType("VERSION_CMP");
-  IElementType WHITE_SPACE = new RequirementsTokenType("WHITE_SPACE");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {
@@ -284,6 +285,12 @@ public interface Types {
       }
       else if (type == PRE_REQ) {
         return new PreReqImpl(node);
+      }
+      else if (type == PYTHON_DQUOTE_STR) {
+        return new PythonDquoteStrImpl(node);
+      }
+      else if (type == PYTHON_SQUOTE_STR) {
+        return new PythonSquoteStrImpl(node);
       }
       else if (type == PYTHON_STR) {
         return new PythonStrImpl(node);

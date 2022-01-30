@@ -2,6 +2,7 @@ package ru.meanmail.reformat
 
 import com.intellij.formatting.*
 import com.intellij.lang.ASTNode
+import com.intellij.psi.TokenType.WHITE_SPACE
 import com.intellij.psi.formatter.common.AbstractBlock
 import ru.meanmail.psi.Types
 import java.util.*
@@ -15,7 +16,7 @@ class Block constructor(
         val blocks = ArrayList<com.intellij.formatting.Block>()
         var child: ASTNode? = myNode.firstChildNode
         while (child != null) {
-            if (child.elementType !== Types.WHITE_SPACE) {
+            if (child.elementType !== WHITE_SPACE) {
                 val block = Block(
                     child,
                     Wrap.createWrap(WrapType.NONE, false),

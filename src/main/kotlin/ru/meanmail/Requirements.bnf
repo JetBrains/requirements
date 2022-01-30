@@ -18,36 +18,36 @@
 
 requirementsFile ::= line_*
 
-private line_ ::= (wsps specification wsps COMMENT? (EOL | <<eof>>)) | EOL
+private line_ ::= (specification COMMENT? (EOL | <<eof>>)) | EOL
 private specification ::= (name_req
                           | option
                           | path_req
                           | url_req)
-private wsps  ::= WHITE_SPACE*
 
-version_one   ::= version_cmp_stmt wsps version_stmt
+version_one   ::= version_cmp_stmt version_stmt
 version_cmp_stmt ::= VERSION_CMP
 version_stmt  ::= VERSION
-version_many  ::= version_one (wsps COMMA wsps version_one)*
-versionspec   ::= LPARENTHESIS wsps version_many wsps RPARENTHESIS | version_many
+version_many  ::= version_one (COMMA version_one)*
+versionspec   ::= LPARENTHESIS version_many RPARENTHESIS | version_many
 
 marker_op     ::= VERSION_CMP | IN | NOT IN
-python_str    ::= (SQUOTE (PYTHON_STR_C | DQUOTE)* SQUOTE |
-                   DQUOTE (PYTHON_STR_C | SQUOTE)* DQUOTE)
+python_dquote_str::= DQUOTE (PYTHON_STR_C)? DQUOTE {pin=1}
+python_squote_str::= SQUOTE (PYTHON_STR_C)? SQUOTE {pin=1}
+python_str    ::= python_dquote_str | python_squote_str
 marker_var    ::= ENV_VAR | python_str
-marker_expr   ::= (marker_var wsps marker_op wsps marker_var
-                  | LPARENTHESIS wsps marker wsps RPARENTHESIS)
-marker_and    ::= marker_expr (wsps AND wsps marker_expr)?
-marker_or     ::= marker_and (wsps OR wsps marker_and)?
+marker_expr   ::= (marker_var marker_op marker_var
+                  | LPARENTHESIS marker RPARENTHESIS)
+marker_and    ::= marker_expr (AND marker_expr)*
+marker_or     ::= marker_and (OR marker_and)*
 marker        ::= marker_or
-quoted_marker ::= SEMICOLON wsps marker
+quoted_marker ::= SEMICOLON marker
 
 name          ::= IDENTIFIER
-extras_list   ::= IDENTIFIER (wsps COMMA wsps IDENTIFIER)*
-extras        ::= LSBRACE wsps extras_list? wsps RSBRACE
+extras_list   ::= IDENTIFIER (COMMA IDENTIFIER)*
+extras        ::= LSBRACE extras_list? RSBRACE
 
-name_req      ::= (name wsps extras? wsps !AT wsps versionspec? wsps
-                   (LONG_OPTION hash_option wsps)* quoted_marker?) {pin=5}
+name_req      ::= (name extras? !AT versionspec?
+                   (LONG_OPTION hash_option)* quoted_marker?) {pin=5}
 
 option        ::= (SHORT_OPTION | LONG_OPTION) (
                    refer_req
@@ -82,10 +82,10 @@ trusted_host_req ::= TRUSTED_HOST host (COLON port)? {pin=1}
 use_feature_req ::= USE_FEATURE IDENTIFIER {pin=1}
 hash_option ::= HASH EQUAL IDENTIFIER COLON HEX {pin=1}
 
-path_req      ::= uri_reference wsps quoted_marker? {pin=1 }
-url_req       ::= name wsps extras? wsps urlspec wsps quoted_marker? {pin=5 }
+path_req      ::= uri_reference quoted_marker? {pin=1 }
+url_req       ::= name extras? urlspec quoted_marker? {pin=5 }
 
-urlspec       ::= AT wsps uri_reference
+urlspec       ::= AT uri_reference
 scheme        ::= LETTER (LETTER | DIGIT | PLUS | MINUS | DOT)*
 uri_reference ::= uri | relative_ref
 uri           ::= scheme (AT | COLON) hier_part (QUESTION_MARK query)? (SHARP fragment)? {pin=2}

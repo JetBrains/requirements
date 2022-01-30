@@ -14,6 +14,23 @@ import static ru.meanmail.psi.Types.*;
 @SuppressWarnings({"SimplifiableIfStatement", "UnusedAssignment"})
 public class RequirementsParser implements PsiParser, LightPsiParser {
 
+    public ASTNode parse(IElementType t, PsiBuilder b) {
+        parseLight(t, b);
+        return b.getTreeBuilt();
+    }
+
+    public void parseLight(IElementType t, PsiBuilder b) {
+        boolean r;
+        b = adapt_builder_(t, b, this, null);
+        Marker m = enter_section_(b, 0, _COLLAPSE_, null);
+        r = parse_root_(t, b);
+        exit_section_(b, 0, m, t, r, true, TRUE_CONDITION);
+    }
+
+    protected boolean parse_root_(IElementType t, PsiBuilder b) {
+        return parse_root_(t, b, 0);
+    }
+
     static boolean parse_root_(IElementType t, PsiBuilder b, int l) {
         return requirementsFile(b, l + 1);
     }
@@ -751,30 +768,28 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
     }
 
     /* ********************************************************** */
-    // LSBRACE wsps extras_list? wsps RSBRACE
+    // LSBRACE extras_list? RSBRACE
     public static boolean extras(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "extras")) return false;
         if (!nextTokenIs(b, LSBRACE)) return false;
         boolean r;
         Marker m = enter_section_(b);
         r = consumeToken(b, LSBRACE);
-        r = r && wsps(b, l + 1);
-        r = r && extras_2(b, l + 1);
-        r = r && wsps(b, l + 1);
+        r = r && extras_1(b, l + 1);
         r = r && consumeToken(b, RSBRACE);
         exit_section_(b, m, EXTRAS, r);
         return r;
     }
 
     // extras_list?
-    private static boolean extras_2(PsiBuilder b, int l) {
-        if (!recursion_guard_(b, l, "extras_2")) return false;
+    private static boolean extras_1(PsiBuilder b, int l) {
+        if (!recursion_guard_(b, l, "extras_1")) return false;
         extras_list(b, l + 1);
         return true;
     }
 
     /* ********************************************************** */
-    // IDENTIFIER (wsps COMMA wsps IDENTIFIER)*
+    // IDENTIFIER (COMMA IDENTIFIER)*
     public static boolean extras_list(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "extras_list")) return false;
         if (!nextTokenIs(b, IDENTIFIER)) return false;
@@ -786,7 +801,7 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
         return r;
     }
 
-    // (wsps COMMA wsps IDENTIFIER)*
+    // (COMMA IDENTIFIER)*
     private static boolean extras_list_1(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "extras_list_1")) return false;
         while (true) {
@@ -797,15 +812,12 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
         return true;
     }
 
-    // wsps COMMA wsps IDENTIFIER
+    // COMMA IDENTIFIER
     private static boolean extras_list_1_0(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "extras_list_1_0")) return false;
         boolean r;
         Marker m = enter_section_(b);
-        r = wsps(b, l + 1);
-        r = r && consumeToken(b, COMMA);
-        r = r && wsps(b, l + 1);
-        r = r && consumeToken(b, IDENTIFIER);
+        r = consumeTokens(b, 0, COMMA, IDENTIFIER);
         exit_section_(b, m, null, r);
         return r;
     }
@@ -985,7 +997,7 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
     }
 
     /* ********************************************************** */
-    // (wsps specification wsps COMMENT? (EOL | <<eof>>)) | EOL
+    // (specification COMMENT? (EOL | <<eof>>)) | EOL
     static boolean line_(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "line_")) return false;
         boolean r;
@@ -996,30 +1008,28 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
         return r;
     }
 
-    // wsps specification wsps COMMENT? (EOL | <<eof>>)
+    // specification COMMENT? (EOL | <<eof>>)
     private static boolean line__0(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "line__0")) return false;
         boolean r;
         Marker m = enter_section_(b);
-        r = wsps(b, l + 1);
-        r = r && specification(b, l + 1);
-        r = r && wsps(b, l + 1);
-        r = r && line__0_3(b, l + 1);
-        r = r && line__0_4(b, l + 1);
+        r = specification(b, l + 1);
+        r = r && line__0_1(b, l + 1);
+        r = r && line__0_2(b, l + 1);
         exit_section_(b, m, null, r);
         return r;
     }
 
     // COMMENT?
-    private static boolean line__0_3(PsiBuilder b, int l) {
-        if (!recursion_guard_(b, l, "line__0_3")) return false;
+    private static boolean line__0_1(PsiBuilder b, int l) {
+        if (!recursion_guard_(b, l, "line__0_1")) return false;
         consumeToken(b, COMMENT);
         return true;
     }
 
     // EOL | <<eof>>
-    private static boolean line__0_4(PsiBuilder b, int l) {
-        if (!recursion_guard_(b, l, "line__0_4")) return false;
+    private static boolean line__0_2(PsiBuilder b, int l) {
+        if (!recursion_guard_(b, l, "line__0_2")) return false;
         boolean r;
         Marker m = enter_section_(b);
         r = consumeToken(b, EOL);
@@ -1063,7 +1073,7 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
     }
 
     /* ********************************************************** */
-    // marker_expr (wsps AND wsps marker_expr)?
+    // marker_expr (AND marker_expr)*
     public static boolean marker_and(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "marker_and")) return false;
         boolean r;
@@ -1074,29 +1084,31 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
         return r;
     }
 
-    // (wsps AND wsps marker_expr)?
+    // (AND marker_expr)*
     private static boolean marker_and_1(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "marker_and_1")) return false;
-        marker_and_1_0(b, l + 1);
+        while (true) {
+            int c = current_position_(b);
+            if (!marker_and_1_0(b, l + 1)) break;
+            if (!empty_element_parsed_guard_(b, "marker_and_1", c)) break;
+        }
         return true;
     }
 
-    // wsps AND wsps marker_expr
+    // AND marker_expr
     private static boolean marker_and_1_0(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "marker_and_1_0")) return false;
         boolean r;
         Marker m = enter_section_(b);
-        r = wsps(b, l + 1);
-        r = r && consumeToken(b, AND);
-        r = r && wsps(b, l + 1);
+        r = consumeToken(b, AND);
         r = r && marker_expr(b, l + 1);
         exit_section_(b, m, null, r);
         return r;
     }
 
     /* ********************************************************** */
-    // marker_var wsps marker_op wsps marker_var
-    //                   | LPARENTHESIS wsps marker wsps RPARENTHESIS
+    // marker_var marker_op marker_var
+    //                   | LPARENTHESIS marker RPARENTHESIS
     public static boolean marker_expr(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "marker_expr")) return false;
         boolean r;
@@ -1107,29 +1119,25 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
         return r;
     }
 
-    // marker_var wsps marker_op wsps marker_var
+    // marker_var marker_op marker_var
     private static boolean marker_expr_0(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "marker_expr_0")) return false;
         boolean r;
         Marker m = enter_section_(b);
         r = marker_var(b, l + 1);
-        r = r && wsps(b, l + 1);
         r = r && marker_op(b, l + 1);
-        r = r && wsps(b, l + 1);
         r = r && marker_var(b, l + 1);
         exit_section_(b, m, null, r);
         return r;
     }
 
-    // LPARENTHESIS wsps marker wsps RPARENTHESIS
+    // LPARENTHESIS marker RPARENTHESIS
     private static boolean marker_expr_1(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "marker_expr_1")) return false;
         boolean r;
         Marker m = enter_section_(b);
         r = consumeToken(b, LPARENTHESIS);
-        r = r && wsps(b, l + 1);
         r = r && marker(b, l + 1);
-        r = r && wsps(b, l + 1);
         r = r && consumeToken(b, RPARENTHESIS);
         exit_section_(b, m, null, r);
         return r;
@@ -1149,7 +1157,7 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
     }
 
     /* ********************************************************** */
-    // marker_and (wsps OR wsps marker_and)?
+    // marker_and (OR marker_and)*
     public static boolean marker_or(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "marker_or")) return false;
         boolean r;
@@ -1160,21 +1168,23 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
         return r;
     }
 
-    // (wsps OR wsps marker_and)?
+    // (OR marker_and)*
     private static boolean marker_or_1(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "marker_or_1")) return false;
-        marker_or_1_0(b, l + 1);
+        while (true) {
+            int c = current_position_(b);
+            if (!marker_or_1_0(b, l + 1)) break;
+            if (!empty_element_parsed_guard_(b, "marker_or_1", c)) break;
+        }
         return true;
     }
 
-    // wsps OR wsps marker_and
+    // OR marker_and
     private static boolean marker_or_1_0(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "marker_or_1_0")) return false;
         boolean r;
         Marker m = enter_section_(b);
-        r = wsps(b, l + 1);
-        r = r && consumeToken(b, OR);
-        r = r && wsps(b, l + 1);
+        r = consumeToken(b, OR);
         r = r && marker_and(b, l + 1);
         exit_section_(b, m, null, r);
         return r;
@@ -1205,38 +1215,34 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
     }
 
     /* ********************************************************** */
-    // name wsps extras? wsps !AT wsps versionspec? wsps
-    //                    (LONG_OPTION hash_option wsps)* quoted_marker?
+    // name extras? !AT versionspec?
+    //                    (LONG_OPTION hash_option)* quoted_marker?
     public static boolean name_req(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "name_req")) return false;
         if (!nextTokenIs(b, IDENTIFIER)) return false;
         boolean r, p;
         Marker m = enter_section_(b, l, _NONE_, NAME_REQ, null);
         r = name(b, l + 1);
-        r = r && wsps(b, l + 1);
+        r = r && name_req_1(b, l + 1);
         r = r && name_req_2(b, l + 1);
-        r = r && wsps(b, l + 1);
+        r = r && name_req_3(b, l + 1);
         r = r && name_req_4(b, l + 1);
         p = r; // pin = 5
-        r = r && report_error_(b, wsps(b, l + 1));
-        r = p && report_error_(b, name_req_6(b, l + 1)) && r;
-        r = p && report_error_(b, wsps(b, l + 1)) && r;
-        r = p && report_error_(b, name_req_8(b, l + 1)) && r;
-        r = p && name_req_9(b, l + 1) && r;
+        r = r && name_req_5(b, l + 1);
         exit_section_(b, l, m, r, p, null);
         return r || p;
     }
 
     // extras?
-    private static boolean name_req_2(PsiBuilder b, int l) {
-        if (!recursion_guard_(b, l, "name_req_2")) return false;
+    private static boolean name_req_1(PsiBuilder b, int l) {
+        if (!recursion_guard_(b, l, "name_req_1")) return false;
         extras(b, l + 1);
         return true;
     }
 
     // !AT
-    private static boolean name_req_4(PsiBuilder b, int l) {
-        if (!recursion_guard_(b, l, "name_req_4")) return false;
+    private static boolean name_req_2(PsiBuilder b, int l) {
+        if (!recursion_guard_(b, l, "name_req_2")) return false;
         boolean r;
         Marker m = enter_section_(b, l, _NOT_);
         r = !consumeToken(b, AT);
@@ -1245,38 +1251,37 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
     }
 
     // versionspec?
-    private static boolean name_req_6(PsiBuilder b, int l) {
-        if (!recursion_guard_(b, l, "name_req_6")) return false;
+    private static boolean name_req_3(PsiBuilder b, int l) {
+        if (!recursion_guard_(b, l, "name_req_3")) return false;
         versionspec(b, l + 1);
         return true;
     }
 
-    // (LONG_OPTION hash_option wsps)*
-    private static boolean name_req_8(PsiBuilder b, int l) {
-        if (!recursion_guard_(b, l, "name_req_8")) return false;
+    // (LONG_OPTION hash_option)*
+    private static boolean name_req_4(PsiBuilder b, int l) {
+        if (!recursion_guard_(b, l, "name_req_4")) return false;
         while (true) {
             int c = current_position_(b);
-            if (!name_req_8_0(b, l + 1)) break;
-            if (!empty_element_parsed_guard_(b, "name_req_8", c)) break;
+            if (!name_req_4_0(b, l + 1)) break;
+            if (!empty_element_parsed_guard_(b, "name_req_4", c)) break;
         }
         return true;
     }
 
-    // LONG_OPTION hash_option wsps
-    private static boolean name_req_8_0(PsiBuilder b, int l) {
-        if (!recursion_guard_(b, l, "name_req_8_0")) return false;
+    // LONG_OPTION hash_option
+    private static boolean name_req_4_0(PsiBuilder b, int l) {
+        if (!recursion_guard_(b, l, "name_req_4_0")) return false;
         boolean r;
         Marker m = enter_section_(b);
         r = consumeToken(b, LONG_OPTION);
         r = r && hash_option(b, l + 1);
-        r = r && wsps(b, l + 1);
         exit_section_(b, m, null, r);
         return r;
     }
 
     // quoted_marker?
-    private static boolean name_req_9(PsiBuilder b, int l) {
-        if (!recursion_guard_(b, l, "name_req_9")) return false;
+    private static boolean name_req_5(PsiBuilder b, int l) {
+        if (!recursion_guard_(b, l, "name_req_5")) return false;
         quoted_marker(b, l + 1);
         return true;
     }
@@ -1550,22 +1555,21 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
     }
 
     /* ********************************************************** */
-    // uri_reference wsps quoted_marker?
+    // uri_reference quoted_marker?
     public static boolean path_req(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "path_req")) return false;
         boolean r, p;
         Marker m = enter_section_(b, l, _NONE_, PATH_REQ, "<path req>");
         r = uri_reference(b, l + 1);
         p = r; // pin = 1
-        r = r && report_error_(b, wsps(b, l + 1));
-        r = p && path_req_2(b, l + 1) && r;
+        r = r && path_req_1(b, l + 1);
         exit_section_(b, l, m, r, p, null);
         return r || p;
     }
 
     // quoted_marker?
-    private static boolean path_req_2(PsiBuilder b, int l) {
-        if (!recursion_guard_(b, l, "path_req_2")) return false;
+    private static boolean path_req_1(PsiBuilder b, int l) {
+        if (!recursion_guard_(b, l, "path_req_1")) return false;
         quoted_marker(b, l + 1);
         return true;
     }
@@ -1673,80 +1677,59 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
     }
 
     /* ********************************************************** */
-    // SQUOTE (PYTHON_STR_C | DQUOTE)* SQUOTE |
-    //                    DQUOTE (PYTHON_STR_C | SQUOTE)* DQUOTE
+    // DQUOTE (PYTHON_STR_C)? DQUOTE
+    public static boolean python_dquote_str(PsiBuilder b, int l) {
+        if (!recursion_guard_(b, l, "python_dquote_str")) return false;
+        if (!nextTokenIs(b, DQUOTE)) return false;
+        boolean r, p;
+        Marker m = enter_section_(b, l, _NONE_, PYTHON_DQUOTE_STR, null);
+        r = consumeToken(b, DQUOTE);
+        p = r; // pin = 1
+        r = r && report_error_(b, python_dquote_str_1(b, l + 1));
+        r = p && consumeToken(b, DQUOTE) && r;
+        exit_section_(b, l, m, r, p, null);
+        return r || p;
+    }
+
+    // (PYTHON_STR_C)?
+    private static boolean python_dquote_str_1(PsiBuilder b, int l) {
+        if (!recursion_guard_(b, l, "python_dquote_str_1")) return false;
+        consumeToken(b, PYTHON_STR_C);
+        return true;
+    }
+
+    /* ********************************************************** */
+    // SQUOTE (PYTHON_STR_C)? SQUOTE
+    public static boolean python_squote_str(PsiBuilder b, int l) {
+        if (!recursion_guard_(b, l, "python_squote_str")) return false;
+        if (!nextTokenIs(b, SQUOTE)) return false;
+        boolean r, p;
+        Marker m = enter_section_(b, l, _NONE_, PYTHON_SQUOTE_STR, null);
+        r = consumeToken(b, SQUOTE);
+        p = r; // pin = 1
+        r = r && report_error_(b, python_squote_str_1(b, l + 1));
+        r = p && consumeToken(b, SQUOTE) && r;
+        exit_section_(b, l, m, r, p, null);
+        return r || p;
+    }
+
+    // (PYTHON_STR_C)?
+    private static boolean python_squote_str_1(PsiBuilder b, int l) {
+        if (!recursion_guard_(b, l, "python_squote_str_1")) return false;
+        consumeToken(b, PYTHON_STR_C);
+        return true;
+    }
+
+    /* ********************************************************** */
+    // python_dquote_str | python_squote_str
     public static boolean python_str(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "python_str")) return false;
         if (!nextTokenIs(b, "<python str>", DQUOTE, SQUOTE)) return false;
         boolean r;
         Marker m = enter_section_(b, l, _NONE_, PYTHON_STR, "<python str>");
-        r = python_str_0(b, l + 1);
-        if (!r) r = python_str_1(b, l + 1);
+        r = python_dquote_str(b, l + 1);
+        if (!r) r = python_squote_str(b, l + 1);
         exit_section_(b, l, m, r, false, null);
-        return r;
-    }
-
-    // SQUOTE (PYTHON_STR_C | DQUOTE)* SQUOTE
-    private static boolean python_str_0(PsiBuilder b, int l) {
-        if (!recursion_guard_(b, l, "python_str_0")) return false;
-        boolean r;
-        Marker m = enter_section_(b);
-        r = consumeToken(b, SQUOTE);
-        r = r && python_str_0_1(b, l + 1);
-        r = r && consumeToken(b, SQUOTE);
-        exit_section_(b, m, null, r);
-        return r;
-    }
-
-    // (PYTHON_STR_C | DQUOTE)*
-    private static boolean python_str_0_1(PsiBuilder b, int l) {
-        if (!recursion_guard_(b, l, "python_str_0_1")) return false;
-        while (true) {
-            int c = current_position_(b);
-            if (!python_str_0_1_0(b, l + 1)) break;
-            if (!empty_element_parsed_guard_(b, "python_str_0_1", c)) break;
-        }
-        return true;
-    }
-
-    // PYTHON_STR_C | DQUOTE
-    private static boolean python_str_0_1_0(PsiBuilder b, int l) {
-        if (!recursion_guard_(b, l, "python_str_0_1_0")) return false;
-        boolean r;
-        r = consumeToken(b, PYTHON_STR_C);
-        if (!r) r = consumeToken(b, DQUOTE);
-        return r;
-    }
-
-    // DQUOTE (PYTHON_STR_C | SQUOTE)* DQUOTE
-    private static boolean python_str_1(PsiBuilder b, int l) {
-        if (!recursion_guard_(b, l, "python_str_1")) return false;
-        boolean r;
-        Marker m = enter_section_(b);
-        r = consumeToken(b, DQUOTE);
-        r = r && python_str_1_1(b, l + 1);
-        r = r && consumeToken(b, DQUOTE);
-        exit_section_(b, m, null, r);
-        return r;
-    }
-
-    // (PYTHON_STR_C | SQUOTE)*
-    private static boolean python_str_1_1(PsiBuilder b, int l) {
-        if (!recursion_guard_(b, l, "python_str_1_1")) return false;
-        while (true) {
-            int c = current_position_(b);
-            if (!python_str_1_1_0(b, l + 1)) break;
-            if (!empty_element_parsed_guard_(b, "python_str_1_1", c)) break;
-        }
-        return true;
-    }
-
-    // PYTHON_STR_C | SQUOTE
-    private static boolean python_str_1_1_0(PsiBuilder b, int l) {
-        if (!recursion_guard_(b, l, "python_str_1_1_0")) return false;
-        boolean r;
-        r = consumeToken(b, PYTHON_STR_C);
-        if (!r) r = consumeToken(b, SQUOTE);
         return r;
     }
 
@@ -1775,14 +1758,13 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
     }
 
     /* ********************************************************** */
-    // SEMICOLON wsps marker
+    // SEMICOLON marker
     public static boolean quoted_marker(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "quoted_marker")) return false;
         if (!nextTokenIs(b, SEMICOLON)) return false;
         boolean r;
         Marker m = enter_section_(b);
         r = consumeToken(b, SEMICOLON);
-        r = r && wsps(b, l + 1);
         r = r && marker(b, l + 1);
         exit_section_(b, m, QUOTED_MARKER, r);
         return r;
@@ -2159,47 +2141,42 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
     }
 
     /* ********************************************************** */
-    // name wsps extras? wsps urlspec wsps quoted_marker?
+    // name extras? urlspec quoted_marker?
     public static boolean url_req(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "url_req")) return false;
         if (!nextTokenIs(b, IDENTIFIER)) return false;
-        boolean r, p;
-        Marker m = enter_section_(b, l, _NONE_, URL_REQ, null);
+        boolean r;
+        Marker m = enter_section_(b);
         r = name(b, l + 1);
-        r = r && wsps(b, l + 1);
-        r = r && url_req_2(b, l + 1);
-        r = r && wsps(b, l + 1);
+        r = r && url_req_1(b, l + 1);
         r = r && urlspec(b, l + 1);
-        p = r; // pin = 5
-        r = r && report_error_(b, wsps(b, l + 1));
-        r = p && url_req_6(b, l + 1) && r;
-        exit_section_(b, l, m, r, p, null);
-        return r || p;
+        r = r && url_req_3(b, l + 1);
+        exit_section_(b, m, URL_REQ, r);
+        return r;
     }
 
     // extras?
-    private static boolean url_req_2(PsiBuilder b, int l) {
-        if (!recursion_guard_(b, l, "url_req_2")) return false;
+    private static boolean url_req_1(PsiBuilder b, int l) {
+        if (!recursion_guard_(b, l, "url_req_1")) return false;
         extras(b, l + 1);
         return true;
     }
 
     // quoted_marker?
-    private static boolean url_req_6(PsiBuilder b, int l) {
-        if (!recursion_guard_(b, l, "url_req_6")) return false;
+    private static boolean url_req_3(PsiBuilder b, int l) {
+        if (!recursion_guard_(b, l, "url_req_3")) return false;
         quoted_marker(b, l + 1);
         return true;
     }
 
     /* ********************************************************** */
-    // AT wsps uri_reference
+    // AT uri_reference
     public static boolean urlspec(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "urlspec")) return false;
         if (!nextTokenIs(b, AT)) return false;
         boolean r;
         Marker m = enter_section_(b);
         r = consumeToken(b, AT);
-        r = r && wsps(b, l + 1);
         r = r && uri_reference(b, l + 1);
         exit_section_(b, m, URLSPEC, r);
         return r;
@@ -2292,7 +2269,7 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
     }
 
     /* ********************************************************** */
-    // version_one (wsps COMMA wsps version_one)*
+    // version_one (COMMA version_one)*
     public static boolean version_many(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "version_many")) return false;
         if (!nextTokenIs(b, VERSION_CMP)) return false;
@@ -2304,7 +2281,7 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
         return r;
     }
 
-    // (wsps COMMA wsps version_one)*
+    // (COMMA version_one)*
     private static boolean version_many_1(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "version_many_1")) return false;
         while (true) {
@@ -2315,28 +2292,25 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
         return true;
     }
 
-    // wsps COMMA wsps version_one
+    // COMMA version_one
     private static boolean version_many_1_0(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "version_many_1_0")) return false;
         boolean r;
         Marker m = enter_section_(b);
-        r = wsps(b, l + 1);
-        r = r && consumeToken(b, COMMA);
-        r = r && wsps(b, l + 1);
+        r = consumeToken(b, COMMA);
         r = r && version_one(b, l + 1);
         exit_section_(b, m, null, r);
         return r;
     }
 
     /* ********************************************************** */
-    // version_cmp_stmt wsps version_stmt
+    // version_cmp_stmt version_stmt
     public static boolean version_one(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "version_one")) return false;
         if (!nextTokenIs(b, VERSION_CMP)) return false;
         boolean r;
         Marker m = enter_section_(b);
         r = version_cmp_stmt(b, l + 1);
-        r = r && wsps(b, l + 1);
         r = r && version_stmt(b, l + 1);
         exit_section_(b, m, VERSION_ONE, r);
         return r;
@@ -2355,7 +2329,7 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
     }
 
     /* ********************************************************** */
-    // LPARENTHESIS wsps version_many wsps RPARENTHESIS | version_many
+    // LPARENTHESIS version_many RPARENTHESIS | version_many
     public static boolean versionspec(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "versionspec")) return false;
         if (!nextTokenIs(b, "<versionspec>", LPARENTHESIS, VERSION_CMP)) return false;
@@ -2367,47 +2341,16 @@ public class RequirementsParser implements PsiParser, LightPsiParser {
         return r;
     }
 
-    // LPARENTHESIS wsps version_many wsps RPARENTHESIS
+    // LPARENTHESIS version_many RPARENTHESIS
     private static boolean versionspec_0(PsiBuilder b, int l) {
         if (!recursion_guard_(b, l, "versionspec_0")) return false;
         boolean r;
         Marker m = enter_section_(b);
         r = consumeToken(b, LPARENTHESIS);
-        r = r && wsps(b, l + 1);
         r = r && version_many(b, l + 1);
-        r = r && wsps(b, l + 1);
         r = r && consumeToken(b, RPARENTHESIS);
         exit_section_(b, m, null, r);
         return r;
-    }
-
-    /* ********************************************************** */
-    // WHITE_SPACE*
-    static boolean wsps(PsiBuilder b, int l) {
-        if (!recursion_guard_(b, l, "wsps")) return false;
-        while (true) {
-            int c = current_position_(b);
-            if (!consumeToken(b, WHITE_SPACE)) break;
-            if (!empty_element_parsed_guard_(b, "wsps", c)) break;
-        }
-        return true;
-    }
-
-    public ASTNode parse(IElementType t, PsiBuilder b) {
-        parseLight(t, b);
-        return b.getTreeBuilt();
-    }
-
-    public void parseLight(IElementType t, PsiBuilder b) {
-        boolean r;
-        b = adapt_builder_(t, b, this, null);
-        Marker m = enter_section_(b, 0, _COLLAPSE_, null);
-        r = parse_root_(t, b);
-        exit_section_(b, 0, m, t, r, true, TRUE_CONDITION);
-    }
-
-    protected boolean parse_root_(IElementType t, PsiBuilder b) {
-        return parse_root_(t, b, 0);
     }
 
 }

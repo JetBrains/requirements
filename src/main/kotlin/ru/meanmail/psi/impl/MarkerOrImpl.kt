@@ -19,10 +19,11 @@ class MarkerOrImpl(node: ASTNode) :
     }
 
     override fun accept(visitor: PsiElementVisitor) {
-        if (visitor is Visitor)
+        if (visitor is Visitor) {
             accept(visitor)
-        else
+        } else {
             super.accept(visitor)
+        }
     }
 
 }

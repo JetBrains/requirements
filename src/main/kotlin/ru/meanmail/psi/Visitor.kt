@@ -192,6 +192,14 @@ class Visitor : PsiElementVisitor() {
         visitPsiElement(o)
     }
 
+    fun visitPythonDquoteStr(o: PythonDquoteStr) {
+        visitPsiElement(o)
+    }
+
+    fun visitPythonSquoteStr(o: PythonSquoteStr) {
+        visitPsiElement(o)
+    }
+
     fun visitPythonStr(o: PythonStr) {
         visitPsiElement(o)
     }

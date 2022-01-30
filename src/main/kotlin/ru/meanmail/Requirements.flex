@@ -295,13 +295,13 @@ HASH = "hash"
 }
 
 <DQUOTE_STR> {
-    {DQUOTE}                 { yypop(); return DQUOTE; }
-    {PYTHON_STR_C}           { return PYTHON_STR_C; }
+    {DQUOTE}                     { yypop(); return DQUOTE; }
+    ({PYTHON_STR_C} | {SQUOTE})+ { return PYTHON_STR_C; }
 }
 
 <SQUOTE_STR> {
-    {SQUOTE}                 { yypop(); return SQUOTE; }
-    {PYTHON_STR_C}           { return PYTHON_STR_C; }
+    {SQUOTE}                     { yypop(); return SQUOTE; }
+    ({PYTHON_STR_C} | {DQUOTE})+ { return PYTHON_STR_C; }
 }
 
 {WHITE_SPACE}                { return WHITE_SPACE; }
