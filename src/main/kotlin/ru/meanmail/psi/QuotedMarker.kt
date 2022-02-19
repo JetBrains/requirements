@@ -5,10 +5,10 @@ import ru.meanmail.Logical
 
 interface QuotedMarker : PsiElement {
 
-    val marker: Marker
+    val markerOr: MarkerOr
 
     fun logical(): Logical {
-        return marker.logical()
+        return markerOr.logical()
     }
 
 }

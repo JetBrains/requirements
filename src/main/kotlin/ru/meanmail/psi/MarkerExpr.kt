@@ -8,14 +8,14 @@ import ru.meanmail.True
 
 interface MarkerExpr : PsiElement {
 
-    val marker: Marker?
-
     val markerOp: MarkerOp?
+
+    val markerOr: MarkerOr?
 
     val markerVarList: List<MarkerVar>
 
     fun logical(): Logical {
-        val marker = marker
+        val marker = markerOr
 
         if (marker != null) {
             return marker.logical()

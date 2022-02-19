@@ -27,24 +27,24 @@ private specification ::= (name_req
 version_one   ::= version_cmp_stmt version_stmt
 version_cmp_stmt ::= VERSION_CMP
 version_stmt  ::= VERSION
-version_many  ::= version_one (COMMA version_one)*
+private version_many  ::= version_one (COMMA version_one)*
 versionspec   ::= LPARENTHESIS version_many RPARENTHESIS | version_many
 
 marker_op     ::= VERSION_CMP | IN | NOT IN
-python_dquote_str::= DQUOTE (PYTHON_STR_C)? DQUOTE {pin=1}
-python_squote_str::= SQUOTE (PYTHON_STR_C)? SQUOTE {pin=1}
+private python_dquote_str::= DQUOTE (PYTHON_STR_C)? DQUOTE {pin=1}
+private python_squote_str::= SQUOTE (PYTHON_STR_C)? SQUOTE {pin=1}
 python_str    ::= python_dquote_str | python_squote_str
 marker_var    ::= ENV_VAR | python_str
 marker_expr   ::= (marker_var marker_op marker_var
                   | LPARENTHESIS marker RPARENTHESIS)
-marker_and    ::= marker_expr (AND marker_expr)*
-marker_or     ::= marker_and (OR marker_and)*
-marker        ::= marker_or
-quoted_marker ::= SEMICOLON marker
+marker_and    ::= marker_expr (AND marker_expr)* {pin(".*")=1}
+marker_or     ::= marker_and (OR marker_and)* {pin(".*")=1}
+private marker::= marker_or
+quoted_marker ::= SEMICOLON marker {pin=1}
 
 name          ::= IDENTIFIER
-extras_list   ::= IDENTIFIER (COMMA IDENTIFIER)*
-extras        ::= LSBRACE extras_list? RSBRACE
+extras_list   ::= IDENTIFIER (COMMA IDENTIFIER)* {pin(".*")=1}
+extras        ::= LSBRACE extras_list? RSBRACE {pin=1}
 
 name_req      ::= (name extras? !AT versionspec?
                    (LONG_OPTION hash_option)* quoted_marker?) {pin=5}
@@ -83,9 +83,9 @@ use_feature_req ::= USE_FEATURE IDENTIFIER {pin=1}
 hash_option ::= HASH EQUAL IDENTIFIER COLON HEX {pin=1}
 
 path_req      ::= uri_reference quoted_marker? {pin=1 }
-url_req       ::= name extras? urlspec quoted_marker? {pin=5 }
+url_req       ::= name extras? urlspec quoted_marker?
 
-urlspec       ::= AT uri_reference
+urlspec       ::= AT uri_reference {pin=1 }
 scheme        ::= LETTER (LETTER | DIGIT | PLUS | MINUS | DOT)*
 uri_reference ::= uri | relative_ref
 uri           ::= scheme (AT | COLON) hier_part (QUESTION_MARK query)? (SHARP fragment)? {pin=2}

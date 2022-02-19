@@ -9,8 +9,8 @@ import ru.meanmail.psi.*
 class MarkerExprImpl(node: ASTNode) :
     ASTWrapperPsiElement(node), MarkerExpr {
 
-    override val marker: Marker?
-        get() = findChildByClass(Marker::class.java)
+    override val markerOr: MarkerOr?
+        get() = findChildByClass(MarkerOr::class.java)
 
     override val markerOp: MarkerOp?
         get() = findChildByClass(MarkerOp::class.java)

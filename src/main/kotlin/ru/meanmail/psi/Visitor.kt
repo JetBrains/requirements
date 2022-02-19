@@ -96,10 +96,6 @@ class Visitor : PsiElementVisitor() {
         visitPsiElement(o)
     }
 
-    fun visitMarker(o: Marker) {
-        visitPsiElement(o)
-    }
-
     fun visitMarkerAnd(o: MarkerAnd) {
         visitPsiElement(o)
     }
@@ -192,14 +188,6 @@ class Visitor : PsiElementVisitor() {
         visitPsiElement(o)
     }
 
-    fun visitPythonDquoteStr(o: PythonDquoteStr) {
-        visitPsiElement(o)
-    }
-
-    fun visitPythonSquoteStr(o: PythonSquoteStr) {
-        visitPsiElement(o)
-    }
-
     fun visitPythonStr(o: PythonStr) {
         visitPsiElement(o)
     }
@@ -285,10 +273,6 @@ class Visitor : PsiElementVisitor() {
     }
 
     fun visitVersionCmpStmt(o: VersionCmpStmt) {
-        visitPsiElement(o)
-    }
-
-    fun visitVersionMany(o: VersionMany) {
         visitPsiElement(o)
     }
 

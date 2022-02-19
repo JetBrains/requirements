@@ -4,8 +4,7 @@ import com.intellij.psi.PsiElement
 
 interface Versionspec : PsiElement {
 
-    val versionMany: VersionMany
-
+    val versionOneList: List<VersionOne?>
     fun isActual(version: String): Boolean
 
 }
