@@ -8,20 +8,20 @@ repositories {
 
 plugins {
     java
-    kotlin("jvm") version "1.5.10"
-    kotlin("plugin.serialization") version "1.5.10"
-    id("org.jetbrains.intellij") version "1.4.0"
+    kotlin("jvm") version "1.6.20"
+    kotlin("plugin.serialization") version "1.6.20"
+    id("org.jetbrains.intellij") version "1.6.0"
 }
 
 group = config("group")
 version = "${config("version")}-${config("platformVersion")}"
 
 dependencies {
-    compileOnly("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.10")
-    val serializationVersion = "1.2.1"
+    compileOnly("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.20")
+    val serializationVersion = "1.3.2"
     compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:$serializationVersion")
     compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
-    implementation("io.sentry:sentry:5.6.1")
+    implementation("io.sentry:sentry:5.7.4")
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")
 }
