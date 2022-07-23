@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class FileInfo(
-    val comment_text: String = "",
+    val comment_text: String? = null,
     val digests: Map<String, String> = mapOf(),
     val downloads: Int = -1,
     val filename: String,
