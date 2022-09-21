@@ -28,7 +28,7 @@ import javax.swing.text.html.parser.ParserDelegator
 
 const val PYPI_URL = "https://pypi.org"
 val EXPIRATION_TIMEOUT: Duration = Duration.ofMinutes(5)
-val format = Json { ignoreUnknownKeys = true }
+val format = Json { ignoreUnknownKeys = true; coerceInputValues = true }
 val cache = mutableMapOf<String, Pair<PackageInfo, Instant>>()
 
 
