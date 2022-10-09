@@ -1,3 +1,7 @@
+## 2022.3.1 (October, 9, 2022)
+
+* Fix JsonDecodingException
+
 ## 2022.3 (January, 30, 2022)
 
 * Improve inspections

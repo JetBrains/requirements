@@ -10,7 +10,7 @@ plugins {
     java
     kotlin("jvm") version "1.6.20"
     kotlin("plugin.serialization") version "1.6.20"
-    id("org.jetbrains.intellij") version "1.6.0"
+    id("org.jetbrains.intellij") version "1.9.0"
 }
 
 group = config("group")
@@ -21,7 +21,7 @@ dependencies {
     val serializationVersion = "1.3.2"
     compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:$serializationVersion")
     compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
-    implementation("io.sentry:sentry:5.7.4")
+    implementation("io.sentry:sentry:6.4.3")
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")
 }
