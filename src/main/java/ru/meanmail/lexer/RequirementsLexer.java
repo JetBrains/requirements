@@ -24,6 +24,12 @@ public class RequirementsLexer implements FlexLexer {
      * This character denotes the end of file
      */
     public static final int YYEOF = -1;
+
+    /**
+     * initial size of the lookahead buffer
+     */
+    private static final int ZZ_BUFFERSIZE = 16384;
+
     /**
      * lexical states
      */
@@ -43,24 +49,7 @@ public class RequirementsLexer implements FlexLexer {
     public static final int WAITING_COLON = 26;
     public static final int WAITING_HASH_VALUE = 28;
     public static final int WAITING_IDENTIFIER = 30;
-    /* The ZZ_CMAP_Z table has 68 entries */
-    static final char ZZ_CMAP_Z[] = zzUnpackCMap(
-            "\1\0\103\200");
-    /* The ZZ_CMAP_Y table has 256 entries */
-    static final char ZZ_CMAP_Y[] = zzUnpackCMap(
-            "\1\0\1\1\53\2\1\3\22\2\1\4\37\2\1\3\237\2");
-    /* The ZZ_CMAP_A table has 640 entries */
-    static final char ZZ_CMAP_A[] = zzUnpackCMap(
-            "\11\35\1\0\1\30\2\31\1\30\22\35\1\0\1\12\1\64\1\15\1\14\1\16\1\26\1\65\1\37" +
-                    "\1\40\1\3\1\1\1\6\1\2\1\21\1\17\12\33\1\4\1\5\1\36\1\25\1\36\1\7\1\13\6\66" +
-                    "\24\32\1\10\1\20\1\11\1\63\1\22\1\63\1\57\1\71\1\61\1\67\1\50\1\54\1\32\1" +
-                    "\44\1\53\1\32\1\72\1\56\1\60\1\46\1\45\1\41\1\70\1\51\1\52\1\43\1\55\1\47" +
-                    "\1\32\1\62\1\42\1\32\1\23\1\34\1\24\1\27\6\35\1\31\32\35\1\0\337\35\1\0\177" +
-                    "\35\13\0\35\35\2\31\5\35\1\0\57\35\1\0\40\35");
-    /**
-     * initial size of the lookahead buffer
-     */
-    private static final int ZZ_BUFFERSIZE = 16384;
+
     /**
      * ZZ_LEXSTATE[l] is the state in the DFA for the lexical state l
      * ZZ_LEXSTATE[l+1] is the state in the DFA for the lexical state l
@@ -71,6 +60,38 @@ public class RequirementsLexer implements FlexLexer {
             0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7,
             8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15
     };
+
+    /**
+     * Translates characters to character classes
+     * Chosen bits are [7, 7, 7]
+     * Total runtime size is 1928 bytes
+     */
+    public static int ZZ_CMAP(int ch) {
+        return ZZ_CMAP_A[(ZZ_CMAP_Y[ZZ_CMAP_Z[ch >> 14] | ((ch >> 7) & 0x7f)] << 7) | (ch & 0x7f)];
+    }
+
+    /* The ZZ_CMAP_Z table has 68 entries */
+    static final char ZZ_CMAP_Z[] = zzUnpackCMap(
+            "\1\0\103\200");
+
+    /* The ZZ_CMAP_Y table has 256 entries */
+    static final char ZZ_CMAP_Y[] = zzUnpackCMap(
+            "\1\0\1\1\53\2\1\3\22\2\1\4\37\2\1\3\237\2");
+
+    /* The ZZ_CMAP_A table has 640 entries */
+    static final char ZZ_CMAP_A[] = zzUnpackCMap(
+            "\11\35\1\0\1\30\2\31\1\30\22\35\1\0\1\12\1\64\1\15\1\14\1\16\1\26\1\65\1\37" +
+                    "\1\40\1\3\1\1\1\6\1\2\1\21\1\17\12\33\1\4\1\5\1\36\1\25\1\36\1\7\1\13\6\66" +
+                    "\24\32\1\10\1\20\1\11\1\63\1\22\1\63\1\57\1\71\1\61\1\67\1\50\1\54\1\32\1" +
+                    "\44\1\53\1\32\1\72\1\56\1\60\1\46\1\45\1\41\1\70\1\51\1\52\1\43\1\55\1\47" +
+                    "\1\32\1\62\1\42\1\32\1\23\1\34\1\24\1\27\6\35\1\31\32\35\1\0\337\35\1\0\177" +
+                    "\35\13\0\35\35\2\31\5\35\1\0\57\35\1\0\40\35");
+
+    /**
+     * Translates DFA states to action switch labels.
+     */
+    private static final int[] ZZ_ACTION = zzUnpackAction();
+
     private static final String ZZ_ACTION_PACKED_0 =
             "\20\0\1\1\1\2\1\3\1\4\1\2\1\5\1\6" +
                     "\1\5\1\7\1\10\1\11\1\12\1\11\1\13\1\2" +
@@ -86,10 +107,32 @@ public class RequirementsLexer implements FlexLexer {
                     "\1\100\17\0\1\101\21\0\1\102\30\0\1\103\20\0" +
                     "\1\104\37\0\1\105\2\0\1\106\10\0\1\107\10\0" +
                     "\1\110\7\0\1\111\2\0\1\112\13\0";
+
+    private static int[] zzUnpackAction() {
+        int[] result = new int[332];
+        int offset = 0;
+        offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
+        return result;
+    }
+
+    private static int zzUnpackAction(String packed, int offset, int[] result) {
+        int i = 0;       /* index in packed string  */
+        int j = offset;  /* index in unpacked array */
+        int l = packed.length();
+        while (i < l) {
+            int count = packed.charAt(i++);
+            int value = packed.charAt(i++);
+            do result[j++] = value; while (--count > 0);
+        }
+        return j;
+    }
+
+
     /**
-     * Translates DFA states to action switch labels.
+     * Translates a state to a row index in the transition table
      */
-    private static final int[] ZZ_ACTION = zzUnpackAction();
+    private static final int[] ZZ_ROWMAP = zzUnpackRowMap();
+
     private static final String ZZ_ROWMAP_PACKED_0 =
             "\0\0\0\73\0\166\0\261\0\354\0\u0127\0\u0162\0\u019d" +
                     "\0\u01d8\0\u0213\0\u024e\0\u0289\0\u02c4\0\u02ff\0\u033a\0\u0375" +
@@ -133,10 +176,30 @@ public class RequirementsLexer implements FlexLexer {
                     "\0\u3963\0\u399e\0\u39d9\0\u3a14\0\u3a4f\0\u03eb\0\u3a8a\0\u3ac5" +
                     "\0\u03eb\0\u3b00\0\u3b3b\0\u3b76\0\u3bb1\0\u3bec\0\u3c27\0\u3c62" +
                     "\0\u3c9d\0\u3cd8\0\u3d13\0\u3d4e";
+
+    private static int[] zzUnpackRowMap() {
+        int[] result = new int[332];
+        int offset = 0;
+        offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
+        return result;
+    }
+
+    private static int zzUnpackRowMap(String packed, int offset, int[] result) {
+        int i = 0;  /* index in packed string  */
+        int j = offset;  /* index in unpacked array */
+        int l = packed.length();
+        while (i < l) {
+            int high = packed.charAt(i++) << 16;
+            result[j++] = high | packed.charAt(i++);
+        }
+        return j;
+    }
+
     /**
-     * Translates a state to a row index in the transition table
+     * The transition table of the DFA
      */
-    private static final int[] ZZ_ROWMAP = zzUnpackRowMap();
+    private static final int[] ZZ_TRANS = zzUnpackTrans();
+
     private static final String ZZ_TRANS_PACKED_0 =
             "\1\21\1\22\1\23\12\22\1\24\2\22\1\25\1\26" +
                     "\6\22\1\27\1\21\2\30\1\27\4\22\22\30\3\22" +
@@ -254,141 +317,6 @@ public class RequirementsLexer implements FlexLexer {
                     "\1\u0145\107\0\1\u0146\64\0\1\u0147\102\0\1\u0148\62\0" +
                     "\1\u0149\70\0\1\u014a\67\0\1\u014b\106\0\1\u014c\56\0" +
                     "\1\u0117\27\0";
-    /**
-     * The transition table of the DFA
-     */
-    private static final int[] ZZ_TRANS = zzUnpackTrans();
-    /* error codes */
-    private static final int ZZ_UNKNOWN_ERROR = 0;
-    private static final int ZZ_NO_MATCH = 1;
-    private static final int ZZ_PUSHBACK_2BIG = 2;
-    /* error messages for the codes above */
-    private static final String[] ZZ_ERROR_MSG = {
-            "Unknown internal scanner error",
-            "Error: could not match input",
-            "Error: pushback value was too large"
-    };
-    private static final String ZZ_ATTRIBUTE_PACKED_0 =
-            "\20\0\1\1\1\11\3\1\2\11\4\1\1\11\1\1" +
-                    "\1\11\4\1\2\11\7\1\2\11\1\1\23\11\2\1" +
-                    "\2\11\1\1\2\11\3\1\5\11\15\1\1\11\1\1" +
-                    "\1\11\4\1\2\11\1\0\1\11\2\0\1\11\4\0" +
-                    "\1\11\2\0\2\11\25\0\1\11\3\0\1\11\1\1" +
-                    "\41\0\1\11\3\0\1\11\17\0\1\11\21\0\1\11" +
-                    "\30\0\1\11\20\0\1\11\37\0\1\11\2\0\1\11" +
-                    "\10\0\1\11\10\0\1\11\7\0\1\11\2\0\1\11" +
-                    "\13\0";
-    /**
-     * ZZ_ATTRIBUTE[aState] contains the attributes of state <code>aState</code>
-     */
-    private static final int[] ZZ_ATTRIBUTE = zzUnpackAttribute();
-    Deque<Integer> stack = new ArrayDeque<Integer>();
-    /**
-     * the input device
-     */
-    private java.io.Reader zzReader;
-    /**
-     * the current state of the DFA
-     */
-    private int zzState;
-    /**
-     * the current lexical state
-     */
-    private int zzLexicalState = YYINITIAL;
-    /**
-     * this buffer contains the current text to be matched and is
-     * the source of the yytext() string
-     */
-    private CharSequence zzBuffer = "";
-    /**
-     * the textposition at the last accepting state
-     */
-    private int zzMarkedPos;
-    /**
-     * the current text position in the buffer
-     */
-    private int zzCurrentPos;
-    /**
-     * startRead marks the beginning of the yytext() string in the buffer
-     */
-    private int zzStartRead;
-    /**
-     * endRead marks the last character in the buffer, that has been read
-     * from input
-     */
-    private int zzEndRead;
-    /**
-     * zzAtBOL == true <=> the scanner is currently at the beginning of a line
-     */
-    private boolean zzAtBOL = true;
-    /**
-     * zzAtEOF == true <=> the scanner is at the EOF
-     */
-    private boolean zzAtEOF;
-    /**
-     * denotes if the user-EOF-code has already been executed
-     */
-    private boolean zzEOFDone;
-
-    /* user code: */
-    public RequirementsLexer() {
-        this((java.io.Reader) null);
-    }
-
-    /**
-     * Creates a new scanner
-     *
-     * @param in the java.io.Reader to read input from.
-     */
-    public RequirementsLexer(java.io.Reader in) {
-        this.zzReader = in;
-    }
-
-    /**
-     * Translates characters to character classes
-     * Chosen bits are [7, 7, 7]
-     * Total runtime size is 1928 bytes
-     */
-    public static int ZZ_CMAP(int ch) {
-        return ZZ_CMAP_A[(ZZ_CMAP_Y[ZZ_CMAP_Z[ch >> 14] | ((ch >> 7) & 0x7f)] << 7) | (ch & 0x7f)];
-    }
-
-    private static int[] zzUnpackAction() {
-        int[] result = new int[332];
-        int offset = 0;
-        offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
-        return result;
-    }
-
-    private static int zzUnpackAction(String packed, int offset, int[] result) {
-        int i = 0;       /* index in packed string  */
-        int j = offset;  /* index in unpacked array */
-        int l = packed.length();
-        while (i < l) {
-            int count = packed.charAt(i++);
-            int value = packed.charAt(i++);
-            do result[j++] = value; while (--count > 0);
-        }
-        return j;
-    }
-
-    private static int[] zzUnpackRowMap() {
-        int[] result = new int[332];
-        int offset = 0;
-        offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
-        return result;
-    }
-
-    private static int zzUnpackRowMap(String packed, int offset, int[] result) {
-        int i = 0;  /* index in packed string  */
-        int j = offset;  /* index in unpacked array */
-        int l = packed.length();
-        while (i < l) {
-            int high = packed.charAt(i++) << 16;
-            result[j++] = high | packed.charAt(i++);
-        }
-        return j;
-    }
 
     private static int[] zzUnpackTrans() {
         int[] result = new int[15753];
@@ -410,6 +338,35 @@ public class RequirementsLexer implements FlexLexer {
         return j;
     }
 
+
+    /* error codes */
+    private static final int ZZ_UNKNOWN_ERROR = 0;
+    private static final int ZZ_NO_MATCH = 1;
+    private static final int ZZ_PUSHBACK_2BIG = 2;
+
+    /* error messages for the codes above */
+    private static final String[] ZZ_ERROR_MSG = {
+            "Unknown internal scanner error",
+            "Error: could not match input",
+            "Error: pushback value was too large"
+    };
+
+    /**
+     * ZZ_ATTRIBUTE[aState] contains the attributes of state <code>aState</code>
+     */
+    private static final int[] ZZ_ATTRIBUTE = zzUnpackAttribute();
+
+    private static final String ZZ_ATTRIBUTE_PACKED_0 =
+            "\20\0\1\1\1\11\3\1\2\11\4\1\1\11\1\1" +
+                    "\1\11\4\1\2\11\7\1\2\11\1\1\23\11\2\1" +
+                    "\2\11\1\1\2\11\3\1\5\11\15\1\1\11\1\1" +
+                    "\1\11\4\1\2\11\1\0\1\11\2\0\1\11\4\0" +
+                    "\1\11\2\0\2\11\25\0\1\11\3\0\1\11\1\1" +
+                    "\41\0\1\11\3\0\1\11\17\0\1\11\21\0\1\11" +
+                    "\30\0\1\11\20\0\1\11\37\0\1\11\2\0\1\11" +
+                    "\10\0\1\11\10\0\1\11\7\0\1\11\2\0\1\11" +
+                    "\13\0";
+
     private static int[] zzUnpackAttribute() {
         int[] result = new int[332];
         int offset = 0;
@@ -430,26 +387,68 @@ public class RequirementsLexer implements FlexLexer {
     }
 
     /**
-     * Unpacks the compressed character translation table.
-     *
-     * @param packed the packed character translation table
-     * @return the unpacked character translation table
+     * the input device
      */
-    private static char[] zzUnpackCMap(String packed) {
-        int size = 0;
-        for (int i = 0, length = packed.length(); i < length; i += 2) {
-            size += packed.charAt(i);
-        }
-        char[] map = new char[size];
-        int i = 0;  /* index in packed string  */
-        int j = 0;  /* index in unpacked array */
-        while (i < packed.length()) {
-            int count = packed.charAt(i++);
-            char value = packed.charAt(i++);
-            do map[j++] = value; while (--count > 0);
-        }
-        return map;
+    private java.io.Reader zzReader;
+
+    /**
+     * the current state of the DFA
+     */
+    private int zzState;
+
+    /**
+     * the current lexical state
+     */
+    private int zzLexicalState = YYINITIAL;
+
+    /**
+     * this buffer contains the current text to be matched and is
+     * the source of the yytext() string
+     */
+    private CharSequence zzBuffer = "";
+
+    /**
+     * the textposition at the last accepting state
+     */
+    private int zzMarkedPos;
+
+    /**
+     * the current text position in the buffer
+     */
+    private int zzCurrentPos;
+
+    /**
+     * startRead marks the beginning of the yytext() string in the buffer
+     */
+    private int zzStartRead;
+
+    /**
+     * endRead marks the last character in the buffer, that has been read
+     * from input
+     */
+    private int zzEndRead;
+
+    /**
+     * zzAtBOL == true <=> the scanner is currently at the beginning of a line
+     */
+    private boolean zzAtBOL = true;
+
+    /**
+     * zzAtEOF == true <=> the scanner is at the EOF
+     */
+    private boolean zzAtEOF;
+
+    /**
+     * denotes if the user-EOF-code has already been executed
+     */
+    private boolean zzEOFDone;
+
+    /* user code: */
+    public RequirementsLexer() {
+        this((java.io.Reader) null);
     }
+
+    Deque<Integer> stack = new ArrayDeque<Integer>();
 
     public final void yypush(int newState) {
         yybegin(newState);
@@ -476,6 +475,39 @@ public class RequirementsLexer implements FlexLexer {
     public final void yyinitial() {
         stack.clear();
         yypush(YYINITIAL);
+    }
+
+
+    /**
+     * Creates a new scanner
+     *
+     * @param in the java.io.Reader to read input from.
+     */
+    public RequirementsLexer(java.io.Reader in) {
+        this.zzReader = in;
+    }
+
+
+    /**
+     * Unpacks the compressed character translation table.
+     *
+     * @param packed the packed character translation table
+     * @return the unpacked character translation table
+     */
+    private static char[] zzUnpackCMap(String packed) {
+        int size = 0;
+        for (int i = 0, length = packed.length(); i < length; i += 2) {
+            size += packed.charAt(i);
+        }
+        char[] map = new char[size];
+        int i = 0;  /* index in packed string  */
+        int j = 0;  /* index in unpacked array */
+        while (i < packed.length()) {
+            int count = packed.charAt(i++);
+            char value = packed.charAt(i++);
+            do map[j++] = value; while (--count > 0);
+        }
+        return map;
     }
 
     public final int getTokenStart() {

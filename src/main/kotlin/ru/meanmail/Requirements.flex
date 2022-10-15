@@ -1,4 +1,4 @@
-package ru.meanmail;
+package ru.meanmail.lexer;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
