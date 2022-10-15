@@ -1,3 +1,7 @@
+## 2022.4 (October, 15, 2022)
+
+* Fix NullPointerException
+
 ## 2022.3.1 (October, 9, 2022)
 
 * Fix JsonDecodingException
