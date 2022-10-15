@@ -129,7 +129,7 @@ tasks {
 
     publishPlugin {
         dependsOn("buildPlugin")
-        token.set(file("token.txt").readText())
+        token.set(file("token.txt").readLines()[0])
         channels.set(listOf(config("publishChannel")))
     }
 
