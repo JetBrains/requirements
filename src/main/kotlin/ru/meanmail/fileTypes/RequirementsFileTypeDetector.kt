@@ -9,7 +9,7 @@ class RequirementsFileTypeDetector : FileTypeRegistry.FileTypeDetector {
     override fun detect(
         file: VirtualFile, firstBytes: ByteSequence, firstCharsIfText: CharSequence?
     ): FileType? {
-        if (file.parent.name == "requirements") {
+        if (file.parent != null && file.parent.name == "requirements") {
             return RequirementsFileType
         }
 
