@@ -2,6 +2,7 @@ package ru.meanmail.codeInsight.completion
 
 import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElementBuilder
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.util.elementType
 import com.intellij.psi.util.prevLeaf
@@ -10,6 +11,7 @@ import ru.meanmail.getPythonSdk
 import ru.meanmail.psi.Name
 import ru.meanmail.psi.Types
 import ru.meanmail.pypi.getVersionsAsync
+
 
 
 class RequirementsCompletionContributor : CompletionContributor() {
@@ -48,25 +50,30 @@ class VersionCompletionProvider : CompletionProvider<CompletionParameters>() {
         packageName ?: return
 
         val task = getVersionsAsync(project, sdk, packageName)
-        val versions = task.get() ?: return
-        val latest = versions.firstOrNull {
-            it.pre == null
-        }
-
-        result.addAllElements(
-            versions.map {
-                val isLatest = it == latest
-                val lookupElement = LookupElementBuilder.create(it.presentableText)
-                if (it.pre != null) {
-                    return@map lookupElement.withTypeText("pre")
+        val application = ApplicationManager.getApplication()
+        application.executeOnPooledThread {
+            val versions = task.get()
+            application.runReadAction {
+                val latest = versions.firstOrNull {
+                    it.pre == null
                 }
-                if (isLatest) {
-                    return@map lookupElement.withTypeText("latest")
-                }
-                return@map lookupElement
+                result.addAllElements(
+                    versions.map {
+                        val isLatest = it == latest
+                        val lookupElement = LookupElementBuilder.create(it.presentableText)
+                        if (it.pre != null) {
+                            return@map lookupElement.withTypeText("pre")
+                        }
+                        if (isLatest) {
+                            return@map lookupElement.withTypeText("latest")
+                        }
+                        return@map lookupElement
+                    }
+                )
             }
-        )
+        }
     }
+
 }
 
 class ShortOptionCompletionProvider : CompletionProvider<CompletionParameters>() {

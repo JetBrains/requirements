@@ -4,6 +4,7 @@ import com.intellij.codeInspection.LocalInspectionTool
 import com.intellij.codeInspection.LocalInspectionToolSession
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.psi.PsiElementVisitor
 import com.jetbrains.python.packaging.PyPackageVersion
 import ru.meanmail.compareTo
@@ -13,6 +14,7 @@ import ru.meanmail.getPythonSdk
 import ru.meanmail.psi.NameReq
 import ru.meanmail.pypi.getVersionsAsync
 import ru.meanmail.quickfix.InstallPackageQuickFix
+
 
 class InstalledPackageInspection : LocalInspectionTool() {
     override fun buildVisitor(
@@ -49,39 +51,51 @@ class InstalledPackageInspection : LocalInspectionTool() {
                 }
                 val packageName = element.name.text ?: return
                 val task = getVersionsAsync(project, sdk, packageName)
-                val versions = task.get() ?: return
-
-                val suitableVersion: PyPackageVersion? = versions.find {
-                    isVersionActual(element, it)
-                }
-
-                val latest = versions.firstOrNull {
-                    it.pre == null
-                }
-
-                val installed = getInstalledVersion(sdk, packageName)
-                val isInstalledIsActual = installed != null && isVersionActual(element, installed)
-                val versionsInfo = getVersionsInfo(
-                    suitableVersion, installed, latest
-                )
-
-                if (suitableVersion == null) {
-                    if (latest != null) {
-                        noSuitableVersion(element, packageName, versionsInfo, latest)
-                    } else {
-                        noSuitablePackage(element, packageName)
-                    }
-                } else {
-                    if (isInstalledIsActual) {
-                        if (installed < suitableVersion) {
-                            installedPackageIsOutdated(element, packageName, versionsInfo, installed, suitableVersion)
+                val application = ApplicationManager.getApplication()
+                application.executeOnPooledThread {
+                    val versions = task.get()
+                    application.runReadAction {
+                        val suitableVersion: PyPackageVersion? = versions.find {
+                            isVersionActual(element, it)
                         }
-                    } else {
-                        requiredPackageIsNotInstalled(element, packageName, versionsInfo, suitableVersion)
+
+                        val latest = versions.firstOrNull {
+                            it.pre == null
+                        }
+
+                        val installed = getInstalledVersion(sdk, packageName)
+                        val isInstalledIsActual = installed != null && isVersionActual(element, installed)
+                        val versionsInfo = getVersionsInfo(
+                            suitableVersion, installed, latest
+                        )
+
+                        if (suitableVersion == null) {
+                            if (latest != null) {
+                                noSuitableVersion(element, packageName, versionsInfo, latest)
+                            } else {
+                                noSuitablePackage(element, packageName)
+                            }
+                        } else {
+                            if (isInstalledIsActual) {
+                                if (installed < suitableVersion) {
+                                    installedPackageIsOutdated(
+                                        element,
+                                        packageName,
+                                        versionsInfo,
+                                        installed,
+                                        suitableVersion
+                                    )
+                                }
+                            } else {
+                                requiredPackageIsNotInstalled(element, packageName, versionsInfo, suitableVersion)
+                            }
+                        }
+                        if (latest != null && suitableVersion < latest) {
+                            requirementIsOutdated(element, packageName, versionsInfo, suitableVersion, latest)
+                        }
                     }
-                }
-                if (latest != null && suitableVersion < latest) {
-                    requirementIsOutdated(element, packageName, versionsInfo, suitableVersion, latest)
+
+
                 }
             }
 
