@@ -4,6 +4,7 @@
 * Fix PluginException for INFORMATION level problem in batch mode
 * Fix PluginException `already taken by action 'requirements.txt (Create a new requirements.txt file)'`
 * Fix RunCanceledByUserException
+* Fix deadlock is coming
 
 ## 2022.3.2 (October, 15, 2022)
 

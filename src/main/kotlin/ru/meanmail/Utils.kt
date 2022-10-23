@@ -34,8 +34,6 @@ fun reparseOpenedFiles(project: Project) {
         if (isDisposed) {
             return@invokeLater
         }
-        WriteAction.run<Throwable> {
-            FileContentUtil.reparseOpenedFiles()
-        }
+        FileContentUtil.reparseOpenedFiles()
     }
 }
