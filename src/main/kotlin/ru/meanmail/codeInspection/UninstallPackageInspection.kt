@@ -28,8 +28,11 @@ class UninstalledPackageInspection : LocalInspectionTool() {
             BaseInspectionVisitor(holder, onTheFly, session) {
 
             override fun visitNameReq(element: NameReq) {
+                if (!onTheFly) {
+                    return
+                }
                 val packageName = element.name.text ?: return
-                val sdk = getPythonSdk(session.file) ?: return
+                val sdk = getPythonSdk(holder.file) ?: return
                 val installed = getInstalledVersion(sdk, packageName)
 
                 if (installed != null) {

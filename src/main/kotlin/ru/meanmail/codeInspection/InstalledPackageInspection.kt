@@ -40,13 +40,13 @@ class InstalledPackageInspection : LocalInspectionTool() {
             }
 
             override fun visitNameReq(element: NameReq) {
-                val sdk = getPythonSdk(session.file) ?: return
+                val sdk = getPythonSdk(holder.file) ?: return
                 val pythonInfo = getPythonInfo(sdk)
                 if (!element.enabled(pythonInfo.map)) {
                     return
                 }
                 val packageName = element.name.text ?: return
-                val project = session.file.project
+                val project = holder.project
                 val task = getVersionsAsync(project, sdk, packageName)
                 val versions = task.get() ?: return
 

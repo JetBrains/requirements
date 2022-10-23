@@ -1,6 +1,7 @@
 ## 2022.3.3 (October, 23, 2022)
 
 * Fix NullPointerException
+* Fix PluginException for INFORMATION level problem in batch mode
 
 ## 2022.3.2 (October, 15, 2022)
 
