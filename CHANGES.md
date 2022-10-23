@@ -6,6 +6,7 @@
 * Fix RunCanceledByUserException
 * Fix deadlock is coming
 * Fix Fail when Cannot find remote credentials
+* Fix Fail when Cannot start process, the working directory does not exist
 
 ## 2022.3.2 (October, 15, 2022)
 

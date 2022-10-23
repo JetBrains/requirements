@@ -1,5 +1,6 @@
 package ru.meanmail
 
+import com.intellij.execution.ExecutionException
 import com.intellij.execution.RunCanceledByUserException
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.module.ModuleUtil
@@ -117,6 +118,10 @@ fun installPackage(
             } catch (e: PyExecutionException) {
                 Notifier.notifyError(
                     project, e.command, e.toString()
+                )
+            } catch (e: ExecutionException) {
+                Notifier.notifyError(
+                    project, "$packageName==$version", e.toString()
                 )
             } catch (e: RunCanceledByUserException) {
                 // ignore
