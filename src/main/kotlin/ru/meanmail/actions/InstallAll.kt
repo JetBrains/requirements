@@ -19,9 +19,6 @@ import ru.meanmail.reparseOpenedFiles
 
 
 class InstallAllAction : AnAction() {
-    override fun getActionUpdateThread(): ActionUpdateThread {
-        return ActionUpdateThread.BGT
-    }
 
     override fun update(e: AnActionEvent) {
         val psiFile = e.getData(LangDataKeys.PSI_FILE)
