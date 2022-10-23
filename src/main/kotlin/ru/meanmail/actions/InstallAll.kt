@@ -1,6 +1,7 @@
 package ru.meanmail.actions
 
 import com.intellij.execution.ExecutionException
+import com.intellij.execution.RunCanceledByUserException
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
@@ -53,32 +54,36 @@ class InstallAllAction : AnAction() {
         override fun run(indicator: ProgressIndicator) {
             indicator.text = this.title
             indicator.isIndeterminate = true
-            val sdk = getPythonSdk(psiFile)
-            if (sdk == null) {
-                Notifier.notifyError(
-                    project, title, "No Sdk"
-                )
-                return
-            }
-            val packageManager = getPackageManager(sdk)
-
-            for (requirement in requirements) {
-                indicator.text = requirement
-                try {
-                    val requirementString = packageManager.parseRequirement(requirement)
-                    if (requirementString != null) {
-                        packageManager.install(listOf(requirementString), emptyList())
-                        Notifier.notifyInformation(
-                            project, requirement, "Successfully installed",
-                        )
-                    } else {
-                        Notifier.notifyError(project, requirement, "Can't install")
-                    }
-                } catch (e: ExecutionException) {
-                    Notifier.notifyError(project, requirement, e.localizedMessage)
+            try {
+                val sdk = getPythonSdk(psiFile)
+                if (sdk == null) {
+                    Notifier.notifyError(
+                        project, title, "No Sdk"
+                    )
+                    return
                 }
+                val packageManager = getPackageManager(sdk)
+
+                for (requirement in requirements) {
+                    indicator.text = requirement
+                    try {
+                        val requirementString = packageManager.parseRequirement(requirement)
+                        if (requirementString != null) {
+                            packageManager.install(listOf(requirementString), emptyList())
+                            Notifier.notifyInformation(
+                                project, requirement, "Successfully installed",
+                            )
+                        } else {
+                            Notifier.notifyError(project, requirement, "Can't install")
+                        }
+                    } catch (e: ExecutionException) {
+                        Notifier.notifyError(project, requirement, e.localizedMessage)
+                    }
+                }
+                reparseOpenedFiles(project)
+            } catch (e: RunCanceledByUserException) {
+                // ignore
             }
-            reparseOpenedFiles(project)
         }
     }
 }

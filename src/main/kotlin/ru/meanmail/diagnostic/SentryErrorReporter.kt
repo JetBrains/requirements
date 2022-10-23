@@ -1,6 +1,7 @@
 package ru.meanmail.diagnostic
 
 import com.intellij.diagnostic.IdeaReportingEvent
+import com.intellij.execution.RunCanceledByUserException
 import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.application.ApplicationInfo
@@ -65,44 +66,48 @@ class SentryErrorReporter : ErrorReportSubmitter() {
 
         object : Task.Backgroundable(project, "Sending Error Report") {
             override fun run(indicator: ProgressIndicator) {
-                for (ideaEvent in events) {
-                    if (ideaEvent is IdeaReportingEvent) {
-                        val event = SentryEvent(ideaEvent.data.throwable)
-                        val message = Message()
-                        message.message = ideaEvent.message
-                        event.message = message
-                        event.release = ideaEvent.plugin?.version
-                        event.level = SentryLevel.ERROR
-                        event.environment = ideaEvent.plugin?.name
+                try {
+                    for (ideaEvent in events) {
+                        if (ideaEvent is IdeaReportingEvent) {
+                            val event = SentryEvent(ideaEvent.data.throwable)
+                            val message = Message()
+                            message.message = ideaEvent.message
+                            event.message = message
+                            event.release = ideaEvent.plugin?.version
+                            event.level = SentryLevel.ERROR
+                            event.environment = ideaEvent.plugin?.name
 
-                        val applicationInfo = ApplicationInfo.getInstance()
-                        event.tags = mapOf(
-                            "IDE version" to applicationInfo.fullVersion,
-                            "IDE name" to applicationInfo.fullApplicationName,
-                            "IDE company name" to applicationInfo.companyName,
-                            "IDE company url" to applicationInfo.companyURL,
-                            "IDE api version" to applicationInfo.apiVersion
+                            val applicationInfo = ApplicationInfo.getInstance()
+                            event.tags = mapOf(
+                                "IDE version" to applicationInfo.fullVersion,
+                                "IDE name" to applicationInfo.fullApplicationName,
+                                "IDE company name" to applicationInfo.companyName,
+                                "IDE company url" to applicationInfo.companyURL,
+                                "IDE api version" to applicationInfo.apiVersion
+                            )
+                            event.setExtras(
+                                mapOf(
+                                    "Additional info" to additionalInfo,
+                                    "Event date" to ideaEvent.data.date
+                                )
+                            )
+                            SentryClient.captureEvent(event)
+                        }
+                    }
+
+                    ApplicationManager.getApplication().invokeLater {
+                        Messages.showInfoMessage(
+                            parentComponent,
+                            "Thank you for submitting your report!", "Error Report"
                         )
-                        event.setExtras(
-                            mapOf(
-                                "Additional info" to additionalInfo,
-                                "Event date" to ideaEvent.data.date
+                        consumer.consume(
+                            SubmittedReportInfo(
+                                SubmittedReportInfo.SubmissionStatus.NEW_ISSUE
                             )
                         )
-                        SentryClient.captureEvent(event)
                     }
-                }
-
-                ApplicationManager.getApplication().invokeLater {
-                    Messages.showInfoMessage(
-                        parentComponent,
-                        "Thank you for submitting your report!", "Error Report"
-                    )
-                    consumer.consume(
-                        SubmittedReportInfo(
-                            SubmittedReportInfo.SubmissionStatus.NEW_ISSUE
-                        )
-                    )
+                } catch (e: RunCanceledByUserException) {
+                    // ignore
                 }
             }
         }.queue()

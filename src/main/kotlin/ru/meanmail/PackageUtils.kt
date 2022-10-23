@@ -1,6 +1,7 @@
 package ru.meanmail
 
 import com.intellij.execution.ExecutionException
+import com.intellij.execution.RunCanceledByUserException
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.progress.ProgressIndicator
@@ -118,6 +119,8 @@ fun installPackage(
                 Notifier.notifyError(
                     project, e.command, e.toString()
                 )
+            } catch (e: RunCanceledByUserException) {
+                // ignore
             }
         }
     }
@@ -166,7 +169,13 @@ fun uninstallPackage(
                 Notifier.notifyError(
                     project, e.command, e.toString()
                 )
+            } catch (e: RunCanceledByUserException) {
+                // ignore
             }
+        }
+
+        override fun onCancel() {
+            onSuccess()
         }
     }
 
