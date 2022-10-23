@@ -29,8 +29,7 @@ class UninstalledPackageInspection : LocalInspectionTool() {
 
             override fun visitNameReq(element: NameReq) {
                 val packageName = element.name.text ?: return
-                val virtualFile = element.containingFile.virtualFile
-                val sdk = getPythonSdk(element.project, virtualFile) ?: return
+                val sdk = getPythonSdk(session.file) ?: return
                 val installed = getInstalledVersion(sdk, packageName)
 
                 if (installed != null) {

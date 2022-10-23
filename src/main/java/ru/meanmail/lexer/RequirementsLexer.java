@@ -448,7 +448,7 @@ public class RequirementsLexer implements FlexLexer {
         this((java.io.Reader) null);
     }
 
-    Deque<Integer> stack = new ArrayDeque<Integer>();
+    Deque<Integer> stack = new ArrayDeque<>();
 
     public final void yypush(int newState) {
         yybegin(newState);

@@ -34,8 +34,7 @@ class VersionCompletionProvider : CompletionProvider<CompletionParameters>() {
         result: CompletionResultSet
     ) {
         val originalFile = parameters.originalFile
-        val project = originalFile.project
-        val sdk = getPythonSdk(project, originalFile.virtualFile) ?: return
+        val sdk = getPythonSdk(originalFile) ?: return
         var packageName: String? = null
         var prevLeaf = parameters.originalPosition?.prevLeaf(true)
         while (prevLeaf != null) {
@@ -47,6 +46,7 @@ class VersionCompletionProvider : CompletionProvider<CompletionParameters>() {
         }
         packageName ?: return
 
+        val project = originalFile.project
         val task = getVersionsAsync(project, sdk, packageName)
         val versions = task.get() ?: return
         val latest = versions.firstOrNull {
@@ -83,6 +83,7 @@ class ShortOptionCompletionProvider : CompletionProvider<CompletionParameters>()
                 result.addElement(LookupElementBuilder.create("c"))
                 result.addElement(LookupElementBuilder.create("-"))
             }
+
             prevLeaf?.elementType == Types.LONG_OPTION -> {
                 result.addElement(LookupElementBuilder.create("requirement"))
                 result.addElement(LookupElementBuilder.create("constraint"))
@@ -99,6 +100,7 @@ class ShortOptionCompletionProvider : CompletionProvider<CompletionParameters>()
                 result.addElement(LookupElementBuilder.create("trusted-host"))
                 result.addElement(LookupElementBuilder.create("use-feature"))
             }
+
             prevLeaf?.prevLeaf(true)
                 .elementType in listOf(Types.ONLY_BINARY, Types.NO_BINARY) -> {
                 result.addElement(LookupElementBuilder.create(":all:"))

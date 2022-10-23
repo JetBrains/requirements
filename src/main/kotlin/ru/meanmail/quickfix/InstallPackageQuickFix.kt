@@ -7,7 +7,7 @@ import com.intellij.psi.PsiFile
 import ru.meanmail.getPythonSdk
 import ru.meanmail.installPackage
 import ru.meanmail.psi.NameReq
-import ru.meanmail.reparseFile
+import ru.meanmail.reparseOpenedFiles
 
 class InstallPackageQuickFix(
     element: NameReq,
@@ -30,11 +30,10 @@ class InstallPackageQuickFix(
         if (setVersion) {
             element.setVersion("==${version}")
         }
-        val virtualFile = element.containingFile.virtualFile
-        val sdk = getPythonSdk(project, virtualFile) ?: return
+        val sdk = getPythonSdk(file) ?: return
 
         installPackage(project, sdk, packageName, version) {
-            reparseFile(project, virtualFile)
+            reparseOpenedFiles(project)
         }
     }
 

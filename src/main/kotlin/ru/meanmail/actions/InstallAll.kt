@@ -1,14 +1,11 @@
 package ru.meanmail.actions
 
 import com.intellij.execution.ExecutionException
-import com.intellij.openapi.actionSystem.AnAction
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.LangDataKeys
+import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiFile
 import ru.meanmail.getPackageManager
 import ru.meanmail.getPythonSdk
 import ru.meanmail.lang.RequirementsLanguage
@@ -17,10 +14,14 @@ import ru.meanmail.psi.NameReq
 import ru.meanmail.psi.PathReq
 import ru.meanmail.psi.RequirementsFile
 import ru.meanmail.psi.UrlReq
-import ru.meanmail.reparseFile
+import ru.meanmail.reparseOpenedFiles
 
 
 class InstallAllAction : AnAction() {
+    override fun getActionUpdateThread(): ActionUpdateThread {
+        return ActionUpdateThread.BGT
+    }
+
     override fun update(e: AnActionEvent) {
         val psiFile = e.getData(LangDataKeys.PSI_FILE)
         e.presentation.isEnabledAndVisible = psiFile?.language == RequirementsLanguage
@@ -28,8 +29,6 @@ class InstallAllAction : AnAction() {
 
     override fun actionPerformed(e: AnActionEvent) {
         val psiFile = e.getData(LangDataKeys.PSI_FILE) as? RequirementsFile ?: return
-        val project: Project = e.project ?: return
-        val virtualFile = psiFile.virtualFile
 
         val requirements = psiFile.enabledRequirements().mapNotNull {
             return@mapNotNull when (it) {
@@ -40,22 +39,21 @@ class InstallAllAction : AnAction() {
             }
         }
 
-        val title = "Installing ${virtualFile.name}"
-        val task = InstallTask(project, requirements, title, virtualFile)
+        val title = "Installing ${psiFile.name}"
+        val task = InstallTask(requirements, title, psiFile)
         ProgressManager.getInstance().run(task)
     }
 
     class InstallTask(
-        project: Project,
         val requirements: List<String>,
         title: String,
-        private val virtualFile: VirtualFile
+        private val psiFile: PsiFile
     ) :
-        Task.Backgroundable(project, title, false) {
+        Task.Backgroundable(psiFile.project, title, false) {
         override fun run(indicator: ProgressIndicator) {
             indicator.text = this.title
             indicator.isIndeterminate = true
-            val sdk = getPythonSdk(project, virtualFile)
+            val sdk = getPythonSdk(psiFile)
             if (sdk == null) {
                 Notifier.notifyError(
                     project, title, "No Sdk"
@@ -74,13 +72,13 @@ class InstallAllAction : AnAction() {
                             project, requirement, "Successfully installed",
                         )
                     } else {
-                        Notifier.notifyError(project, requirement, "Can not install")
+                        Notifier.notifyError(project, requirement, "Can't install")
                     }
                 } catch (e: ExecutionException) {
                     Notifier.notifyError(project, requirement, e.localizedMessage)
                 }
             }
-            reparseFile(project, virtualFile)
+            reparseOpenedFiles(project)
         }
     }
 }

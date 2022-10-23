@@ -9,6 +9,7 @@ import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.projectRoots.Sdk
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiFile
 import com.jetbrains.extensions.getSdk
 import com.jetbrains.python.packaging.*
 import com.jetbrains.python.sdk.PythonSdkType
@@ -16,12 +17,17 @@ import ru.meanmail.notification.Notifier
 
 
 fun getPythonSdk(project: Project, virtualFile: VirtualFile): Sdk? {
-    val module = ModuleUtil.findModuleForFile(virtualFile, project)
-    val moduleSdk = module?.getSdk() ?: return null
+    val module = ModuleUtil.findModuleForFile(virtualFile, project) ?: return null
+    val moduleSdk = module.getSdk() ?: return null
     if (moduleSdk.sdkType is PythonSdkType) {
         return moduleSdk
     }
     return null
+}
+
+fun getPythonSdk(psiFile: PsiFile): Sdk? {
+    val virtualFile = psiFile.virtualFile ?: return null
+    return getPythonSdk(psiFile.project, virtualFile)
 }
 
 fun getPackageManager(sdk: Sdk): PyPackageManager {

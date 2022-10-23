@@ -40,14 +40,13 @@ class InstalledPackageInspection : LocalInspectionTool() {
             }
 
             override fun visitNameReq(element: NameReq) {
-                val project = element.project
-                val virtualFile = element.containingFile.virtualFile
-                val sdk = getPythonSdk(project, virtualFile) ?: return
+                val sdk = getPythonSdk(session.file) ?: return
                 val pythonInfo = getPythonInfo(sdk)
                 if (!element.enabled(pythonInfo.map)) {
                     return
                 }
                 val packageName = element.name.text ?: return
+                val project = session.file.project
                 val task = getVersionsAsync(project, sdk, packageName)
                 val versions = task.get() ?: return
 
@@ -103,7 +102,7 @@ class InstalledPackageInspection : LocalInspectionTool() {
                         element,
                         "Upgrade '$packageName' requirement " +
                                 "to '==${latest.presentableText}' " +
-                                "and install latest version " +
+                                "and install the latest version " +
                                 "($versionsInfo)",
                         latest.presentableText,
                         true

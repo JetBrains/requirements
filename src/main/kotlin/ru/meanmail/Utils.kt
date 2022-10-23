@@ -6,6 +6,7 @@ import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiDirectory
 import com.intellij.util.FileContentUtil
 import java.io.File
 
@@ -15,16 +16,16 @@ fun canonicalizeName(name: String): String {
     return CANONICALIZE_REGEX.replace(name, "-").lowercase()
 }
 
-fun resolveFile(filepath: String, base: VirtualFile): VirtualFile? {
+fun resolveFile(filepath: String, base: PsiDirectory? = null): VirtualFile? {
     val target = File(filepath)
     return if (target.isAbsolute) {
         LocalFileSystem.getInstance().findFileByIoFile(target)
     } else {
-        base.findFileByRelativePath(filepath)
+        base?.virtualFile?.findFileByRelativePath(filepath)
     }
 }
 
-fun reparseFile(project: Project, virtualFile: VirtualFile) {
+fun reparseOpenedFiles(project: Project) {
     ApplicationManager.getApplication().invokeLater {
         var isDisposed = false
         ReadAction.run<Throwable> {
@@ -34,7 +35,7 @@ fun reparseFile(project: Project, virtualFile: VirtualFile) {
             return@invokeLater
         }
         WriteAction.run<Throwable> {
-            FileContentUtil.reparseFiles(project, listOf(virtualFile), true)
+            FileContentUtil.reparseOpenedFiles()
         }
     }
 }

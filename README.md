@@ -8,7 +8,7 @@ https://plugins.jetbrains.com/plugin/10837
 
 [meanmail.dev](https://meanmail.dev/plugin/1?utm_source=guthub&utm_medium=readme&utm_campaign=requirements&utm_content=meanmail.dev)
 
-Your ratings and feedback are very important. The feature will appear the faster the more people request it.
+Your feedback is important. The feature will appear the faster, the more people request it.
 
 ## Supported versions of Intellij:
 

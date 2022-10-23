@@ -2,6 +2,7 @@ package ru.meanmail.psi
 
 import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.openapi.fileTypes.FileType
+import com.intellij.openapi.projectRoots.Sdk
 import com.intellij.psi.FileViewProvider
 import ru.meanmail.fileTypes.RequirementsFileType
 import ru.meanmail.getPythonInfo
@@ -30,13 +31,18 @@ class RequirementsFile(viewProvider: FileViewProvider) :
         return requirements
     }
 
+    val sdk: Sdk?
+        get() {
+            return getPythonSdk(this)
+        }
+
     fun enabledRequirements(): List<Requirement> {
-        val sdk = getPythonSdk(project, virtualFile) ?: return emptyList()
+        val sdk = sdk ?: return emptyList()
         return requirements().filter { it.enabled(getPythonInfo(sdk).map) }
     }
 
     fun disabledRequirements(): List<Requirement> {
-        val sdk = getPythonSdk(project, virtualFile) ?: return requirements()
+        val sdk = sdk ?: return requirements()
         return requirements().filter { !it.enabled(getPythonInfo(sdk).map) }
     }
 

@@ -6,7 +6,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import ru.meanmail.getPythonSdk
 import ru.meanmail.psi.NameReq
-import ru.meanmail.reparseFile
+import ru.meanmail.reparseOpenedFiles
 import ru.meanmail.uninstallPackage
 
 class UninstallPackageQuickFix(
@@ -23,11 +23,10 @@ class UninstallPackageQuickFix(
     ) {
         val element = (startElement as? NameReq) ?: return
         val packageName = element.name.text ?: return
-        val virtualFile = element.containingFile.virtualFile
-        val sdk = getPythonSdk(project, virtualFile) ?: return
+        val sdk = getPythonSdk(file) ?: return
 
         uninstallPackage(project, sdk, packageName) {
-            reparseFile(project, virtualFile)
+            reparseOpenedFiles(project)
         }
     }
 

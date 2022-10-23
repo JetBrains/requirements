@@ -15,7 +15,8 @@ class CreateRequirementsFileAction : CreateFileFromTemplateAction(
     "Create a new requirements.txt file",
     AllIcons.FILE
 ), DumbAware {
-    override fun buildDialog(project: Project, directory: PsiDirectory, builder: CreateFileFromTemplateDialog.Builder) {
+    override fun buildDialog(project: Project, directory: PsiDirectory,
+                             builder: CreateFileFromTemplateDialog.Builder) {
         builder.setTitle("Create a new requirements.txt file").addKind(
             "Blank Requirements file",
             AllIcons.FILE,
@@ -36,7 +37,7 @@ class CreateRequirementsFileAction : CreateFileFromTemplateAction(
 
     override fun isAvailable(dataContext: DataContext): Boolean {
         val project = dataContext.getData(PlatformDataKeys.PROJECT) ?: return false
-        val virtualFile = project.projectFile ?: return false
+        val virtualFile = dataContext.getData(PlatformDataKeys.VIRTUAL_FILE) ?: return false
         val sdk = getPythonSdk(project, virtualFile)
         return sdk != null
     }
