@@ -17,7 +17,8 @@ class UninstallPackageQuickFix(
     }
 
     override fun invoke(
-        project: Project, file: PsiFile,
+        project: Project,
+        file: PsiFile,
         startElement: PsiElement,
         endElement: PsiElement
     ) {

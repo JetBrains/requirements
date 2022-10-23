@@ -5,8 +5,7 @@ import com.intellij.codeInspection.LocalInspectionToolSession
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
-import ru.meanmail.getInstalledVersion
-import ru.meanmail.getPythonSdk
+import ru.meanmail.isInstalled
 import ru.meanmail.psi.NameReq
 import ru.meanmail.quickfix.UninstallPackageQuickFix
 
@@ -16,35 +15,31 @@ class UninstalledPackageInspection : LocalInspectionTool() {
         isOnTheFly: Boolean,
         session: LocalInspectionToolSession
     ): PsiElementVisitor {
-        return Visitor(holder, isOnTheFly, session)
+        return UninstalledPackageInspectionVisitor(holder, isOnTheFly, session)
     }
+}
 
-    companion object {
-        class Visitor(
-            holder: ProblemsHolder,
-            onTheFly: Boolean,
-            session: LocalInspectionToolSession
-        ) :
-            BaseInspectionVisitor(holder, onTheFly, session) {
-
-            override fun visitNameReq(element: NameReq) {
-                if (!onTheFly) {
-                    return
-                }
-                val packageName = element.name.text ?: return
-                val sdk = getPythonSdk(holder.file) ?: return
-                val installed = getInstalledVersion(sdk, packageName)
-
-                if (installed != null) {
-                    val message = "Uninstall '$packageName'"
-                    holder.registerProblem(
-                        element,
-                        message,
-                        ProblemHighlightType.INFORMATION,
-                        UninstallPackageQuickFix(element, message)
-                    )
-                }
-            }
+class UninstalledPackageInspectionVisitor(
+    holder: ProblemsHolder,
+    onTheFly: Boolean,
+    session: LocalInspectionToolSession
+) : BaseInspectionVisitor(holder, onTheFly, session) {
+    override fun visitNameReq(element: NameReq) {
+        if (!onTheFly) {
+            return
         }
+        val packageName = element.name.text ?: return
+        val sdk = sdk ?: return
+        if (!isInstalled(sdk, packageName)) {
+            return
+        }
+
+        val message = "Uninstall '$packageName'"
+        holder.registerProblem(
+            element,
+            message,
+            ProblemHighlightType.INFORMATION,
+            UninstallPackageQuickFix(element, message)
+        )
     }
 }

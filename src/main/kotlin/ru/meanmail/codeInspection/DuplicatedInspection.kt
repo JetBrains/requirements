@@ -17,52 +17,48 @@ class DuplicatedInspection : LocalInspectionTool() {
         isOnTheFly: Boolean,
         session: LocalInspectionToolSession
     ): PsiElementVisitor {
-        return Visitor(holder, isOnTheFly, session)
+        return DuplicatedInspectionVisitor(holder, isOnTheFly, session)
     }
+}
 
-    companion object {
-        const val MAX_LENGTH: Int = 32
+const val MAX_LENGTH: Int = 32
 
-        class Visitor(
-            holder: ProblemsHolder,
-            onTheFly: Boolean,
-            session: LocalInspectionToolSession
-        ) :
-            BaseInspectionVisitor(holder, onTheFly, session) {
+private class DuplicatedInspectionVisitor(
+    holder: ProblemsHolder,
+    onTheFly: Boolean,
+    session: LocalInspectionToolSession
+) : BaseInspectionVisitor(holder, onTheFly, session) {
+    override fun visitRequirementsFile(element: RequirementsFile) {
+        val names = mutableMapOf<String, Int>()
+        val psiDocumentManager = PsiDocumentManager.getInstance(element.project)
+        val document = psiDocumentManager.getDocument(element.containingFile)
 
-            override fun visitRequirementsFile(element: RequirementsFile) {
-                val names = mutableMapOf<String, Int>()
-                val psiDocumentManager = PsiDocumentManager.getInstance(element.project)
-                val document = psiDocumentManager.getDocument(element.containingFile)
+        for (req in element.enabledRequirements()) {
+            val text = if (req is NameReq) {
+                canonicalizeName(req.displayName)
+            } else {
+                req.displayName
+            }
+            val name = if (text.length <= MAX_LENGTH) {
+                text
+            } else {
+                text.substring(0, MAX_LENGTH - 3) + "..."
+            }
+            val type = req.type.kind
+            val textOffset = req.textOffset
+            val lineNumber = document!!.getLineNumber(textOffset) + 1
 
-                for (req in element.enabledRequirements()) {
-                    val text = if (req is NameReq) {
-                        canonicalizeName(req.displayName)
-                    } else {
-                        req.displayName
-                    }
-                    val name = if (text.length <= MAX_LENGTH) {
-                        text
-                    } else {
-                        text.substring(0, MAX_LENGTH - 3) + "..."
-                    }
-                    val type = req.type.kind
-                    val textOffset = req.textOffset
-                    val lineNumber = document!!.getLineNumber(textOffset) + 1
+            if (text in names) {
+                val line = names[text]
 
-                    if (text in names) {
-                        val line = names[text]
-
-                        val message = "The '$name' $type on line $lineNumber " +
-                                "is already defined on line $line"
-                        holder.registerProblem(
-                            req, message,
-                            RemoveUnusedQuickFix(req, "Remove duplicate")
-                        )
-                    } else {
-                        names[text] = lineNumber
-                    }
-                }
+                val message = "The '$name' $type on line $lineNumber " +
+                        "is already defined on line $line"
+                holder.registerProblem(
+                    req, message,
+                    RemoveUnusedQuickFix(req, "Remove duplicate")
+                )
+            } else {
+                names[text] = lineNumber
             }
         }
     }

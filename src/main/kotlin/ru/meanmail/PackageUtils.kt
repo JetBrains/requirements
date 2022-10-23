@@ -68,6 +68,11 @@ fun getInstalledVersion(sdk: Sdk, packageName: String): PyPackageVersion? {
     return PyPackageVersionNormalizer.normalize(pyPackage.version)
 }
 
+fun isInstalled(sdk: Sdk, packageName: String): Boolean {
+    val pyPackage = getPackage(sdk, packageName) ?: return false
+    return pyPackage.isInstalled
+}
+
 fun installPackage(
     project: Project,
     sdk: Sdk,
@@ -80,9 +85,7 @@ fun installPackage(
         Notifier.notifyInformation(
             project, "$packageName (${version})", "Successfully installed"
         )
-        if (onInstalled != null) {
-            onInstalled()
-        }
+        onInstalled?.invoke()
         return
     }
 
@@ -112,9 +115,7 @@ fun installPackage(
                     "${pyPackage.name} (${pyPackage.version})",
                     "Successfully installed"
                 )
-                if (onInstalled != null) {
-                    onInstalled()
-                }
+                onInstalled?.invoke()
             } catch (e: PyExecutionException) {
                 Notifier.notifyError(
                     project, e.command, e.toString()
@@ -136,16 +137,14 @@ fun uninstallPackage(
     project: Project,
     sdk: Sdk,
     packageName: String,
-    onInstalled: (() -> Unit)?
+    onUninstalled: (() -> Unit)?
 ) {
     val installedVersion = getPackage(sdk, packageName)
     if (installedVersion?.isInstalled != true) {
         Notifier.notifyInformation(
             project, packageName, "Successfully uninstalled"
         )
-        if (onInstalled != null) {
-            onInstalled()
-        }
+        onUninstalled?.invoke()
         return
     }
 
@@ -166,9 +165,7 @@ fun uninstallPackage(
                     packageName,
                     "Successfully uninstalled"
                 )
-                if (onInstalled != null) {
-                    onInstalled()
-                }
+                onUninstalled?.invoke()
             } catch (e: PyExecutionException) {
                 Notifier.notifyError(
                     project, e.command, e.toString()
