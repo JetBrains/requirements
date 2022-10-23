@@ -46,7 +46,8 @@
                 description="Install all packages for this requirements file.">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </action>
-        <action id="NewRequirementsFile" class="ru.meanmail.actions.CreateRequirementsFileAction">
+        <action id="requirements.NewRequirementsFile"
+                class="ru.meanmail.actions.CreateRequirementsFileAction">
             <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewXml"/>
         </action>
     </actions>
