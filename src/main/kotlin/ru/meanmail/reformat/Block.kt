@@ -33,7 +33,8 @@ class Block constructor(
         return Indent.getNoneIndent()
     }
 
-    override fun getSpacing(child1: com.intellij.formatting.Block?, child2: com.intellij.formatting.Block): Spacing? {
+    override fun getSpacing(child1: com.intellij.formatting.Block?,
+                            child2: com.intellij.formatting.Block): Spacing? {
         return spacingBuilder.getSpacing(this, child1, child2)
     }
 

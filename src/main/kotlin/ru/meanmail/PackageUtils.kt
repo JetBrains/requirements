@@ -1,6 +1,5 @@
 package ru.meanmail
 
-import com.intellij.execution.ExecutionException
 import com.intellij.execution.RunCanceledByUserException
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.module.ModuleUtil
@@ -41,7 +40,7 @@ fun getPackages(sdk: Sdk): List<PyPackage> {
         .executeOnPooledThread<List<PyPackage>> {
             try {
                 return@executeOnPooledThread packageManager.refreshAndGetPackages(false)
-            } catch (e: ExecutionException) {
+            } catch (e: Exception) {
                 return@executeOnPooledThread emptyList()
             }
         }.get() ?: return emptyList()

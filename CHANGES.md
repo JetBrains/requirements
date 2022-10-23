@@ -5,6 +5,7 @@
 * Fix PluginException `already taken by action 'requirements.txt (Create a new requirements.txt file)'`
 * Fix RunCanceledByUserException
 * Fix deadlock is coming
+* Fix Fail when Cannot find remote credentials
 
 ## 2022.3.2 (October, 15, 2022)
 
