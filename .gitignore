@@ -125,3 +125,5 @@ build
 src/main/gen
 .idea/csv-plugin.xml
 token.txt
+private.pem
+chain.crt
