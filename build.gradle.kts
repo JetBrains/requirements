@@ -127,13 +127,15 @@ tasks {
         sinceBuild.set(config("platformSinceBuild"))
     }
 
+    signPlugin {
+        certificateChain.set(file("sign/chain.crt").readText().trim())
+        privateKey.set(file("sign/private.pem").readText().trim())
+        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
+    }
+
     publishPlugin {
         dependsOn("buildPlugin")
         token.set(file("token.txt").readLines()[0])
         channels.set(listOf(config("publishChannel")))
-    }
-
-    buildSearchableOptions {
-        enabled = false
     }
 }
