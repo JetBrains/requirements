@@ -46,7 +46,9 @@ class RequirementsFile(viewProvider: FileViewProvider) :
 
     fun enabledRequirements(): List<Requirement> {
         val sdk = sdk ?: return emptyList()
-        return requirements().filter { it.enabled(getPythonInfo(sdk).map) }
+        return requirements().filter {
+            it.enabled(getPythonInfo(sdk).map)
+        }
     }
 
     fun disabledRequirements(): List<Requirement> {

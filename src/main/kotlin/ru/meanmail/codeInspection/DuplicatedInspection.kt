@@ -1,12 +1,14 @@
 package ru.meanmail.codeInspection
 
-import com.intellij.codeInspection.LocalInspectionTool
 import com.intellij.codeInspection.LocalInspectionToolSession
 import com.intellij.codeInspection.ProblemsHolder
+import com.intellij.openapi.editor.Document
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElementVisitor
 import ru.meanmail.canonicalizeName
+import ru.meanmail.notification.Notifier
 import ru.meanmail.psi.NameReq
+import ru.meanmail.psi.Requirement
 import ru.meanmail.psi.RequirementsFile
 import ru.meanmail.quickfix.RemoveUnusedQuickFix
 
@@ -21,7 +23,6 @@ class DuplicatedInspection : RequirementsInspection() {
     }
 }
 
-const val MAX_LENGTH: Int = 32
 
 private class DuplicatedInspectionVisitor(
     holder: ProblemsHolder,
@@ -32,34 +33,47 @@ private class DuplicatedInspectionVisitor(
         val names = mutableMapOf<String, Int>()
         val psiDocumentManager = PsiDocumentManager.getInstance(element.project)
         val document = psiDocumentManager.getDocument(element.containingFile)
+        element.enabledRequirements().mapNotNull {
+            it as? NameReq
+        }.filter {
+            it.extras != null
+        }.forEach {
+            names.putIfAbsent(getName(it), getLineNumber(it, document))
+        }
 
         for (req in element.enabledRequirements()) {
-            val text = if (req is NameReq) {
-                canonicalizeName(req.displayName)
-            } else {
-                req.displayName
-            }
-            val name = if (text.length <= MAX_LENGTH) {
-                text
-            } else {
-                text.substring(0, MAX_LENGTH - 3) + "..."
-            }
+            val name = getName(req)
             val type = req.type.kind
-            val textOffset = req.textOffset
-            val lineNumber = document!!.getLineNumber(textOffset) + 1
+            val lineNumber = getLineNumber(req, document)
 
-            if (text in names) {
-                val line = names[text]
-
-                val message = "The '$name' $type on line $lineNumber " +
-                        "is already defined on line $line"
-                holder.registerProblem(
-                    req, message,
-                    RemoveUnusedQuickFix(req, "Remove duplicate")
-                )
+            if (name in names) {
+                if ((req as? NameReq)?.extras == null) {
+                    val line = names[name]
+                    val message = "The '$name' $type on line $lineNumber " +
+                            "is already defined on line $line"
+                    holder.registerProblem(
+                        req, message,
+                        RemoveUnusedQuickFix(req, "Remove duplicate")
+                    )
+                }
             } else {
-                names[text] = lineNumber
+                names[name] = lineNumber
             }
         }
+    }
+
+    private fun getLineNumber(req: Requirement, document: Document?): Int {
+        val textOffset = req.textOffset
+        val lineNumber = document!!.getLineNumber(textOffset) + 1
+        return lineNumber
+    }
+
+    private fun getName(req: Requirement): String {
+        val name = if (req is NameReq) {
+            canonicalizeName(req.displayName)
+        } else {
+            req.displayName
+        }
+        return name
     }
 }

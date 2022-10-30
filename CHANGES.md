@@ -3,6 +3,7 @@
 * Fix: Must not start write action from within read action in the other thread - deadlock is coming
 * Fix: Inspection has no description
 * Fix error message for `Install all packages` action
+* Fix DuplicatedInspection for packages with extras
 
 ## 2022.3.3 (October, 23, 2022)
 
