@@ -1,4 +1,4 @@
-## 2022.3.4 (October, 30, 2022)
+## 2022.4 (October, 30, 2022)
 
 * Fix: Must not start write action from within read action in the other thread - deadlock is coming
 * Fix: Inspection has no description
