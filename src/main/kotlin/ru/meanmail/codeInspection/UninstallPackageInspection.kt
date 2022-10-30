@@ -9,7 +9,7 @@ import ru.meanmail.isInstalled
 import ru.meanmail.psi.NameReq
 import ru.meanmail.quickfix.UninstallPackageQuickFix
 
-class UninstalledPackageInspection : LocalInspectionTool() {
+class UninstalledPackageInspection : RequirementsInspection() {
     override fun buildVisitor(
         holder: ProblemsHolder,
         isOnTheFly: Boolean,

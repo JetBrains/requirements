@@ -9,7 +9,7 @@ import ru.meanmail.psi.RequirementsFile
 import ru.meanmail.quickfix.RemoveUnusedQuickFix
 
 
-class UnusedInspection : LocalInspectionTool() {
+class UnusedInspection : RequirementsInspection() {
     override fun buildVisitor(
         holder: ProblemsHolder,
         isOnTheFly: Boolean,

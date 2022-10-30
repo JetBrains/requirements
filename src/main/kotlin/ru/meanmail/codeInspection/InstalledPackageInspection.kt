@@ -13,7 +13,7 @@ import ru.meanmail.psi.NameReq
 import ru.meanmail.pypi.getVersionsAsync
 import ru.meanmail.quickfix.InstallPackageQuickFix
 
-class InstalledPackageInspection : LocalInspectionTool() {
+class InstalledPackageInspection : RequirementsInspection() {
     override fun buildVisitor(
         holder: ProblemsHolder,
         isOnTheFly: Boolean,

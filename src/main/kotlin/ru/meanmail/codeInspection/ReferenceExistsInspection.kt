@@ -8,7 +8,7 @@ import com.intellij.psi.PsiFileSystemItem
 import ru.meanmail.psi.EditableReq
 import ru.meanmail.psi.UriReference
 
-class ReferenceExistsInspection : LocalInspectionTool() {
+class ReferenceExistsInspection : RequirementsInspection() {
     override fun buildVisitor(
         holder: ProblemsHolder,
         isOnTheFly: Boolean,

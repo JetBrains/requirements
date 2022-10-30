@@ -11,7 +11,7 @@ import ru.meanmail.psi.RequirementsFile
 import ru.meanmail.quickfix.RemoveUnusedQuickFix
 
 
-class DuplicatedInspection : LocalInspectionTool() {
+class DuplicatedInspection : RequirementsInspection() {
     override fun buildVisitor(
         holder: ProblemsHolder,
         isOnTheFly: Boolean,
