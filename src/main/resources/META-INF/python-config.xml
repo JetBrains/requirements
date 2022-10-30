@@ -32,6 +32,14 @@
                          level="WARNING"
                          displayName="Uninstall package"
                          implementationClass="ru.meanmail.codeInspection.UninstalledPackageInspection"/>
+        <localInspection language="requirements.txt"
+                         shortName="requirements.MergeExtrasInspection"
+                         suppressId="MergeExtrasInspection"
+                         groupName="Requirements"
+                         enabledByDefault="true"
+                         level="WARNING"
+                         displayName="Merge package extras"
+                         implementationClass="ru.meanmail.codeInspection.MergeExtrasInspection"/>
         <completion.contributor language="requirements.txt"
                                 implementationClass="ru.meanmail.codeInsight.completion.RequirementsCompletionContributor"/>
         <internalFileTemplate name="Blank Requirements File"/>

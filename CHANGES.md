@@ -4,6 +4,7 @@
 * Fix: Inspection has no description
 * Fix error message for `Install all packages` action
 * Fix DuplicatedInspection for packages with extras
++ New Inspection: merge package extras
 
 ## 2022.3.3 (October, 23, 2022)
 
