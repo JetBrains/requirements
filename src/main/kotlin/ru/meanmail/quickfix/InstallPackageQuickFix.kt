@@ -1,6 +1,7 @@
 package ru.meanmail.quickfix
 
 import com.intellij.codeInspection.LocalQuickFixOnPsiElement
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
@@ -28,7 +29,9 @@ class InstallPackageQuickFix(
         val element = (startElement as? NameReq) ?: return
         val packageName = element.name.text ?: return
         if (setVersion) {
-            element.setVersion("==${version}")
+            ApplicationManager.getApplication().runWriteAction {
+                element.setVersion("==${version}")
+            }
         }
         val sdk = getPythonSdk(file) ?: return
 
