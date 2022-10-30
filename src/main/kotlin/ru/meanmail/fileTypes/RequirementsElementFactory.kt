@@ -2,10 +2,7 @@ package ru.meanmail.fileTypes
 
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFileFactory
-import ru.meanmail.psi.NameReq
-import ru.meanmail.psi.RequirementsFile
-import ru.meanmail.psi.UriReference
-import ru.meanmail.psi.Versionspec
+import ru.meanmail.psi.*
 
 
 fun createFileFromText(project: Project, text: String): RequirementsFile {
@@ -32,4 +29,15 @@ fun createVersionspec(project: Project, version: String): Versionspec? {
         .joinToString(",")
     val nameReq = createNameReq(project, "packageName${preparedVersion}")
     return nameReq?.children?.find { it is Versionspec } as? Versionspec
+}
+
+fun createExtras(project: Project, extras: List<String>): Extras? {
+    val preparedExtras = extras.map { it.trim() }
+        .filter { it.isNotEmpty() }
+        .joinToString(",")
+    if (preparedExtras.isEmpty()) {
+        return null
+    }
+    val nameReq = createNameReq(project, "packageName[${preparedExtras}]")
+    return nameReq?.extras
 }

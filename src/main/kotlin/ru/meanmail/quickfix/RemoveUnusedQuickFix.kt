@@ -7,6 +7,7 @@ import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import ru.meanmail.deleteElementWithEol
 import ru.meanmail.psi.Requirement
 
 class RemoveUnusedQuickFix(
@@ -26,7 +27,7 @@ class RemoveUnusedQuickFix(
             WriteAction.run<Throwable> {
                 WriteCommandAction.runWriteCommandAction(project,
                     text, "Requirements", {
-                        startElement.delete()
+                        deleteElementWithEol(startElement)
                     })
             }
         }

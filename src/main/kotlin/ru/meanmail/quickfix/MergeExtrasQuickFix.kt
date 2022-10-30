@@ -8,7 +8,8 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import ru.meanmail.canonicalizeName
-import ru.meanmail.notification.Notifier
+import ru.meanmail.deleteElementWithEol
+import ru.meanmail.fileTypes.createExtras
 import ru.meanmail.psi.NameReq
 import ru.meanmail.psi.Requirement
 import ru.meanmail.psi.RequirementsFile
@@ -40,12 +41,21 @@ class MergeExtrasQuickFix(
             *(firstRequirement.extras?.extrasList?.text?.split(',')?.toTypedArray() ?: emptyArray()),
             *(startElement.extras?.extrasList?.text?.split(',')?.toTypedArray() ?: emptyArray())
         )
-
         ApplicationManager.getApplication().invokeLater {
             WriteAction.run<Throwable> {
                 WriteCommandAction.runWriteCommandAction(project,
                     text, "Requirements", {
-                       Notifier.notifyInformation(project, "Merge", extras.joinToString(","))
+                        val newExtras = createExtras(project, extras.sorted())?.node
+                        if (newExtras != null) {
+                            val oldExtras = firstRequirement.extras?.node
+                            val node = firstRequirement.node
+                            if (oldExtras == null) {
+                                node.addChild(newExtras)
+                            } else {
+                                node.replaceChild(oldExtras, newExtras)
+                            }
+                            deleteElementWithEol(startElement)
+                        }
                     })
             }
         }
