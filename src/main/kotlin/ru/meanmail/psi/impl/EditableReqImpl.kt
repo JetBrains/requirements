@@ -37,4 +37,7 @@ class EditableReqImpl(node: ASTNode) : ASTWrapperPsiElement(node), EditableReq {
         return uriReference
     }
 
+    override val requirement: String
+        get() = "-$text"
+
 }

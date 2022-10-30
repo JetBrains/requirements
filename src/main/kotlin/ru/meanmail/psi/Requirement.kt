@@ -9,6 +9,8 @@ interface Requirement : PsiElement {
 
     val displayName: String
 
+    val requirement: String
+
     fun enabled(values: Map<String, String?>): Boolean
 
 }

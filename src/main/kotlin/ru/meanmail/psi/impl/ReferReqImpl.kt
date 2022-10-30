@@ -37,4 +37,7 @@ class ReferReqImpl(node: ASTNode) : ASTWrapperPsiElement(node), ReferReq {
         return uriReference
     }
 
+    override val requirement: String
+        get() = "-$text"
+
 }

@@ -41,4 +41,7 @@ class PathReqImpl(node: ASTNode) : ASTWrapperPsiElement(node), PathReq {
         return uriReference
     }
 
+    override val requirement: String
+        get() = text
+
 }

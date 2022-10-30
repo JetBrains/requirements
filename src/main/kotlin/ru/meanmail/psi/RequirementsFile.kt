@@ -25,6 +25,14 @@ class RequirementsFile(viewProvider: FileViewProvider) :
         for (child in this.children) {
             if (child is Requirement) {
                 requirements.add(child)
+            } else if (child is Option) {
+                val editableReq = child.editableReq
+                val referReq = child.referReq
+                if (editableReq != null) {
+                    requirements.add(editableReq)
+                } else if (referReq != null) {
+                    requirements.add(referReq)
+                }
             }
         }
 

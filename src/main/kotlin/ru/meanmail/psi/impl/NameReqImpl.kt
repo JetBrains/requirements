@@ -50,6 +50,9 @@ class NameReqImpl(node: ASTNode) : ASTWrapperPsiElement(node), NameReq {
         return name
     }
 
+    override val requirement: String
+        get() = text
+
     override fun setVersion(newVersion: String) {
         WriteCommandAction.runWriteCommandAction(project,
             "Update package version",

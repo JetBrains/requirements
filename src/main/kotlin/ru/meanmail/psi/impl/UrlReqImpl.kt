@@ -44,4 +44,7 @@ class UrlReqImpl(node: ASTNode) : ASTWrapperPsiElement(node), UrlReq {
         return name
     }
 
+    override val requirement: String
+        get() = text
+
 }

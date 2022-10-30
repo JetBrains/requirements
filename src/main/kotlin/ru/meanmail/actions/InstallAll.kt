@@ -2,7 +2,9 @@ package ru.meanmail.actions
 
 import com.intellij.execution.ExecutionException
 import com.intellij.execution.RunCanceledByUserException
-import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.actionSystem.AnAction
+import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
@@ -28,13 +30,10 @@ class InstallAllAction : AnAction() {
     override fun actionPerformed(e: AnActionEvent) {
         val psiFile = e.getData(LangDataKeys.PSI_FILE) as? RequirementsFile ?: return
 
-        val requirements = psiFile.enabledRequirements().mapNotNull {
-            return@mapNotNull when (it) {
-                is NameReq -> it.requirement
-                is PathReq -> it.text
-                is UrlReq -> it.text
-                else -> null
-            }
+        val requirements = psiFile.enabledRequirements().filter {
+            it is NameReq || it is PathReq || it is UrlReq
+        }.map {
+            return@map it.requirement
         }
 
         val title = "Installing ${psiFile.name}"
@@ -46,17 +45,13 @@ class InstallAllAction : AnAction() {
         val requirements: List<String>,
         title: String,
         private val psiFile: PsiFile
-    ) :
-        Task.Backgroundable(psiFile.project, title, false) {
+    ) : Task.Backgroundable(psiFile.project, title, false) {
         override fun run(indicator: ProgressIndicator) {
-            indicator.text = this.title
             indicator.isIndeterminate = true
             try {
                 val sdk = getPythonSdk(psiFile)
                 if (sdk == null) {
-                    Notifier.notifyError(
-                        project, title, "No Sdk"
-                    )
+                    Notifier.notifyError(project, title, "No Sdk")
                     return
                 }
                 val packageManager = getPackageManager(sdk)
@@ -74,7 +69,7 @@ class InstallAllAction : AnAction() {
                             Notifier.notifyError(project, requirement, "Can't install")
                         }
                     } catch (e: ExecutionException) {
-                        Notifier.notifyError(project, requirement, e.localizedMessage)
+                        Notifier.notifyError(project, requirement, e.toString())
                     }
                 }
                 reparseOpenedFiles(project)
