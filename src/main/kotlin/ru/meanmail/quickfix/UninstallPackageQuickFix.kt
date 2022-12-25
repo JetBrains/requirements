@@ -1,6 +1,8 @@
 package ru.meanmail.quickfix
 
+import com.intellij.codeInsight.intention.preview.IntentionPreviewInfo
 import com.intellij.codeInspection.LocalQuickFixOnPsiElement
+import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
@@ -14,6 +16,10 @@ class UninstallPackageQuickFix(
 ) : LocalQuickFixOnPsiElement(element) {
     override fun getText(): String {
         return description
+    }
+
+    override fun generatePreview(project: Project, previewDescriptor: ProblemDescriptor): IntentionPreviewInfo {
+        return IntentionPreviewInfo.EMPTY
     }
 
     override fun invoke(

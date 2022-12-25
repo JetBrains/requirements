@@ -7,14 +7,15 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilder.Marker;
 import com.intellij.lang.PsiParser;
 import com.intellij.psi.tree.IElementType;
+import org.jetbrains.annotations.NotNull;
 
 import static com.intellij.lang.parser.GeneratedParserUtilBase.*;
 import static ru.meanmail.psi.Types.*;
 
-@SuppressWarnings({"SimplifiableIfStatement", "UnusedAssignment"})
+@SuppressWarnings({"SimplifiableIfStatement"})
 public class RequirementsParser implements PsiParser, LightPsiParser {
-
-    public ASTNode parse(IElementType t, PsiBuilder b) {
+    @NotNull
+    public ASTNode parse(@NotNull IElementType t, @NotNull PsiBuilder b) {
         parseLight(t, b);
         return b.getTreeBuilt();
     }

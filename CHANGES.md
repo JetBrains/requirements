@@ -1,3 +1,7 @@
+## 2022.4.1 (December, 25, 2022)
+
+* Fix: Access is allowed from write thread only
+
 ## 2022.4 (October, 30, 2022)
 
 * Fix: Must not start write action from within read action in the other thread - deadlock is coming
